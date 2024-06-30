@@ -7,7 +7,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('AllEventPage'),
+        child: Text(
+          '안녕, 세상!',
+          style: TextStyle(fontFamily: "EF_Diary"),
+        ),
       ),
     );
   }
