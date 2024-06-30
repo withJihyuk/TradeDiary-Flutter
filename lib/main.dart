@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       title: '교환일기',
       theme: ThemeData(
         useMaterial3: true,
+        fontFamily: 'PretendardJP',
       ),
       routeInformationParser: PageRouter.router.routeInformationParser,
       routeInformationProvider: PageRouter.router.routeInformationProvider,
