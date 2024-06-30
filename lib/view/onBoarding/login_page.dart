@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trade_diary/view/components/button.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
