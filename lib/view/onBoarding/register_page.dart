@@ -65,7 +65,7 @@ class RegisterPage extends StatelessWidget {
                                 const SizedBox(height: 20),
                                 TextButton(
                                   onPressed: () {
-                                    print('입력됨');
+                                    context.go('/register/terms');
                                   }, //context.go('/onBoarding')
                                   style: TextButton.styleFrom(
                                     minimumSize: const Size(200, 50), // 버튼 크기

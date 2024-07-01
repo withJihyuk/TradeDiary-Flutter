@@ -1,16 +1,16 @@
 # trade_diary
 
-A new Flutter project.
+추후 스크린샷과 함께 작성 예정입니다.
 
-## Getting Started
+## To-Do
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- 회원 약관 작성하기
+- 분석 페이지 퍼블리싱
+- 탐험 페이지 퍼블리싱
+- 설정 페이지 퍼블리싱
+- 홈 페이지 퍼블리싱
+- 읽기/쓰기 페이지 퍼블리싱
+- 뒤로 가기 버튼 go_router 연결
+- 페이지 요소 컴포넌트화
+- 백엔드 연동
+- 테스트 유닛 작성
