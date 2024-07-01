@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/home/home_page.dart';
-import 'package:trade_diary/view/onBoarding/register.dart';
+import 'package:trade_diary/view/onBoarding/register_page.dart';
 import 'package:trade_diary/view/setting/setting_page.dart';
 import 'package:trade_diary/view/onBoarding/start_page.dart';
 import 'package:trade_diary/view/onBoarding/login_page.dart';

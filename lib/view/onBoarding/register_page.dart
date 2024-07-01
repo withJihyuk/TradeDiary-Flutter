@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatelessWidget {
+  const RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          forceMaterialTransparency: true,
-          title: const Text(
-            '로그인',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-        ),
+        appBar: AppBar(),
         body: SafeArea(
             child: SingleChildScrollView(
                 child: Padding(
@@ -25,7 +18,7 @@ class LoginPage extends StatelessWidget {
                         children: [
                           const SizedBox(height: 40),
                           const Text(
-                            "럭키비키 이용자라면?",
+                            "이메일로 회원가입",
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.w600),
                           ),
@@ -36,7 +29,7 @@ class LoginPage extends StatelessWidget {
                               children: [
                                 TextField(
                                   decoration: InputDecoration(
-                                    hintText: '이메일',
+                                    hintText: 'example@gmail.com',
                                     filled: true,
                                     fillColor: Colors.grey[200],
                                     border: OutlineInputBorder(
@@ -48,7 +41,19 @@ class LoginPage extends StatelessWidget {
                                 const SizedBox(height: 10),
                                 TextField(
                                   decoration: InputDecoration(
-                                    hintText: '비밀번호',
+                                    hintText: '영문, 숫자, 특수문자를 포함 8자 이상의 비밀번호',
+                                    filled: true,
+                                    fillColor: Colors.grey[200],
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                TextField(
+                                  decoration: InputDecoration(
+                                    hintText: '재치있는 닉네임으로 정해주세요',
                                     filled: true,
                                     fillColor: Colors.grey[200],
                                     border: OutlineInputBorder(
@@ -69,20 +74,10 @@ class LoginPage extends StatelessWidget {
                                     backgroundColor: Colors.black,
                                   ),
                                   child: const Text(
-                                    '로그인',
+                                    '회원가입',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    context.go('/register');
-                                  },
-                                  child: const Text(
-                                    '아직이면? 회원가입 하기',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 14),
                                   ),
                                 ),
                               ],
