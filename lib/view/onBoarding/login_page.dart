@@ -75,14 +75,16 @@ class LoginPage extends StatelessWidget {
                                         fontSize: 16),
                                   ),
                                 ),
+                                const SizedBox(height: 10),
                                 TextButton(
                                   onPressed: () {
                                     context.go('/register');
                                   },
-                                  child: const Text(
-                                    '아직이면? 회원가입 하기',
+                                  child: Text(
+                                    '회원가입',
                                     style: TextStyle(
-                                        color: Colors.black, fontSize: 14),
+                                        color: Colors.grey.shade600,
+                                        fontSize: 14),
                                   ),
                                 ),
                               ],

@@ -7,23 +7,22 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-      child: Column(
-        children: [
-          const Text(
-            '안녕, 세상!',
-            style: TextStyle(fontFamily: "EF_Diary"),
+        appBar: AppBar(
+            
+            leadingWidth: 120,
+            leading: const Text(
+              '럭키비키',
+              style: TextStyle(fontFamily: 'EF_Diary', fontSize: 30),
+            )),
+        body: const SafeArea(
+          child: Column(
+            children: [
+              Text(
+                '안녕, 세상!',
+                style: TextStyle(fontFamily: "EF_Diary"),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () => context.go('/onBoarding'),
-            child: const Text('온보딩', style: TextStyle(color: Colors.black)),
-          ),
-          ElevatedButton(
-            onPressed: () => context.go('/onBoarding'),
-            child: const Text('온보딩', style: TextStyle(color: Colors.black)),
-          ),
-        ],
-      ),
-    ));
+        ));
   }
 }
