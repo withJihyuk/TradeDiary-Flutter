@@ -11,6 +11,7 @@ class FirstPage extends StatelessWidget {
         body: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      const SizedBox(height: 40),
       const Text(
         "럭키비키",
         textAlign: TextAlign.center,
