@@ -10,8 +10,14 @@ class HomePage extends StatelessWidget {
           child: SingleChildScrollView(
         child: Padding(
             padding: EdgeInsets.all(20),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, children: [])),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('교환일기',
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontFamily: 'EF_Diary',
+                      color: Colors.black)),
+            ])),
       )),
     );
   }

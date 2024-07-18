@@ -22,18 +22,17 @@ class FirstPage extends StatelessWidget {
         "남들과 함께 하여 더 즐겁게 일기를 써봐요 ",
         style: TextStyle(fontSize: 18),
       ),
+      SvgPicture.asset(
+        'assets/images/hamster.svg',
+        width: 500,
+        height: 500,
+      ),
       const SizedBox(height: 20),
       const Button(
         buttonName: '시작하기',
         route: '/login',
         isRoute: true,
       ),
-      SvgPicture.asset(
-        'assets/images/hamster.svg',
-        width: 500,
-        height: 500,
-      ),
-      const SizedBox(height: 8),
     ])));
   }
 }
