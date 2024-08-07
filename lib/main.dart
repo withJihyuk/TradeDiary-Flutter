@@ -15,12 +15,12 @@ class MyApp extends StatelessWidget {
       title: '교환일기',
       theme: ThemeData(
         useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFF2F4F6),
         fontFamily: 'PretendardJP',
       ),
       routeInformationParser: PageRouter.router.routeInformationParser,
       routeInformationProvider: PageRouter.router.routeInformationProvider,
       routerDelegate: PageRouter.router.routerDelegate,
-      
     );
   }
 }

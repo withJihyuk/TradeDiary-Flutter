@@ -25,7 +25,7 @@ class LoginPage extends StatelessWidget {
                         children: [
                           const SizedBox(height: 40),
                           const Text(
-                            "럭키비키 이용자라면?",
+                            "로그인 해주세요",
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.w600),
                           ),
@@ -34,59 +34,49 @@ class LoginPage extends StatelessWidget {
                             alignment: Alignment.center,
                             child: Column(
                               children: [
-                                TextField(
-                                  decoration: InputDecoration(
-                                    hintText: '이메일',
-                                    filled: true,
-                                    fillColor: Colors.grey[200],
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                TextField(
-                                  decoration: InputDecoration(
-                                    hintText: '비밀번호',
-                                    filled: true,
-                                    fillColor: Colors.grey[200],
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                TextButton(
-                                  onPressed: () {
-                                    print('입력됨');
-                                  }, //context.go('/onBoarding')
-                                  style: TextButton.styleFrom(
-                                    minimumSize: const Size(200, 50), // 버튼 크기
-                                    padding: const EdgeInsets.all(10), // 패딩
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: Colors.black,
-                                  ),
-                                  child: const Text(
-                                    '로그인',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                TextButton(
-                                  onPressed: () {
-                                    context.go('/register');
-                                  },
-                                  child: Text(
-                                    '회원가입',
-                                    style: TextStyle(
-                                        color: Colors.grey.shade600,
-                                        fontSize: 14),
-                                  ),
-                                ),
+                                InkWell(
+                                    onTap: () => context.go("/home"),
+                                    child: Container(
+                                        padding: const EdgeInsets.all(20),
+                                        height: 70,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: Colors.white),
+                                        child: Row(children: [
+                                          Image.asset(
+                                            'assets/images/google.png',
+                                            width: 40,
+                                            height: 40,
+                                          ),
+                                          const SizedBox(width: 20),
+                                          const Text("Google로 계속하기 ",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w600))
+                                        ]))),
+                                const SizedBox(height: 8),
+                                InkWell(
+                                    onTap: () => context.go("/home"),
+                                    child: Container(
+                                        padding: const EdgeInsets.all(20),
+                                        height: 70,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: Colors.white),
+                                        child: Row(children: [
+                                          Image.asset(
+                                            'assets/images/apple.png',
+                                            width: 40,
+                                            height: 40,
+                                          ),
+                                          const SizedBox(width: 20),
+                                          const Text("Apple로 계속하기",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w600))
+                                        ])))
                               ],
                             ),
                           ),

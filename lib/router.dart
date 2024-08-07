@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/home/home_page.dart';
 import 'package:trade_diary/view/test_page.dart';
-import 'package:trade_diary/view/onBoarding/register_page.dart';
 import 'package:trade_diary/view/home/setting_page.dart';
 import 'package:trade_diary/view/onBoarding/start_page.dart';
 import 'package:trade_diary/view/onBoarding/login_page.dart';
@@ -34,10 +33,6 @@ class PageRouter {
           GoRoute(
             path: _loginPage,
             builder: (context, state) => const LoginPage(),
-          ),
-          GoRoute(
-            path: _registerPage,
-            builder: (context, state) => const RegisterPage(),
           ),
           GoRoute(
             path: _termsPage,
