@@ -11,7 +11,6 @@ class PageRouter {
   static const _settingPage = "sub";
   static const _onBoardingPage = "onBoarding";
   static const _loginPage = "login";
-  static const _registerPage = "register";
   static const _termsPage = "terms";
   static const _mainPage = "home";
 
