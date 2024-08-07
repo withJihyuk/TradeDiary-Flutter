@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:trade_diary/view/components/box_widget.dart';
 import 'package:trade_diary/view/components/box_widget_value.dart';
+import 'package:trade_diary/view/components/post_list.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -31,16 +31,29 @@ class HomePage extends StatelessWidget {
         Column(children: [
           const Boxwidget(title: "오늘의 일기", children: [
             Boxwidgetvalue(
-                title: "오늘의 일기", subtitle: "오늘의 일기를 작성해보세요", icon: Icons.book),
+                title: "작성하기", subtitle: "오늘의 일기를 작성해보세요", icon: Icons.book),
           ]),
           const SizedBox(height: 20),
           Boxwidget(title: "일기 교환", children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.grey),
+            Row(
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.grey),
+                ),
+                const SizedBox(width: 20),
+                Icon(Icons.plus_one_rounded, size: 24, color: Colors.grey[400]),
+              ],
             )
+          ]),
+          const SizedBox(height: 20),
+          const Boxwidget(title: "커뮤니티", children: [
+            PostListWidget(postList: [
+              {'title': '제목', 'content': '내용'},
+              {'title': '제목', 'content': '내용'},
+            ])
           ])
         ])
       ]),
