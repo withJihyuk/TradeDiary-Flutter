@@ -10,66 +10,74 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
+            bottom: false,
             child: SingleChildScrollView(
                 child: Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("교환일기",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
-            Row(children: [
-              Icon(Icons.settings, size: 24, color: Colors.grey),
-              SizedBox(width: 20),
-              Icon(Icons.notifications, size: 24, color: Colors.grey)
-            ])
-          ],
-        ),
-        const SizedBox(height: 20),
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(26),
-          width: 390,
-          height: 200,
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(18))),
-          child: const Column(children: [Text("안녕하세요")]),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Column(children: [
-          const Boxwidget(title: "오늘의 일기", children: [
-            Boxwidgetvalue(
-                title: "작성하기", subtitle: "오늘의 일기를 작성해보세요", icon: Icons.book),
-          ]),
-          const SizedBox(height: 20),
-          Boxwidget(title: "일기 교환", children: [
-            Row(
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.grey),
-                ),
-                const SizedBox(width: 20),
-                Icon(Icons.plus_one_rounded, size: 24, color: Colors.grey[400]),
-              ],
-            )
-          ]),
-          const SizedBox(height: 20),
-          const Boxwidget(title: "커뮤니티", children: [
-            PostListWidget(postList: [
-              {'title': '제목', 'content': '내용'},
-              {'title': '제목', 'content': '내용'},
-            ])
-          ])
-        ])
-      ]),
-    ))));
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("교환일기",
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.w600)),
+                        Row(children: [
+                          Icon(Icons.settings, size: 24, color: Colors.grey),
+                          SizedBox(width: 20),
+                          Icon(Icons.notifications,
+                              size: 24, color: Colors.grey)
+                        ])
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(26),
+                      width: 390,
+                      height: 200,
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(18))),
+                      child: const Column(children: [Text("안녕하세요")]),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Column(children: [
+                      const Boxwidget(title: "오늘의 일기", children: [
+                        Boxwidgetvalue(
+                            title: "작성하기",
+                            subtitle: "오늘의 일기를 작성해보세요",
+                            icon: Icons.book),
+                      ]),
+                      const SizedBox(height: 20),
+                      Boxwidget(title: "일기 교환", children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle, color: Colors.grey),
+                            ),
+                            const SizedBox(width: 20),
+                            Icon(Icons.plus_one_rounded,
+                                size: 24, color: Colors.grey[400]),
+                          ],
+                        )
+                      ]),
+                      const SizedBox(height: 20),
+                      const Boxwidget(title: "커뮤니티", children: [
+                        PostListWidget(postList: [
+                          {'title': '제목', 'content': '내용'},
+                          {'title': '제목', 'content': '내용'},
+                        ])
+                      ])
+                    ])
+                  ]),
+            ))));
   }
 }
