@@ -28,6 +28,19 @@ class HomePage extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 20),
+        Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.all(26),
+          width: 390,
+          height: 200,
+          decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(18))),
+          child: const Column(children: [Text("안녕하세요")]),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
         Column(children: [
           const Boxwidget(title: "오늘의 일기", children: [
             Boxwidgetvalue(
