@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/components/box_widget.dart';
 import 'package:trade_diary/view/components/box_widget_value.dart';
 import 'package:trade_diary/view/components/post_list.dart';
@@ -41,7 +42,7 @@ class HomePage extends StatelessWidget {
                       decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(18))),
-                      child: const Column(children: [Text("안녕하세요")]),
+                      child: const Column(children: [Text("캐릭터")]),
                     ),
                     const SizedBox(
                       height: 20,
@@ -57,12 +58,15 @@ class HomePage extends StatelessWidget {
                       Boxwidget(title: "일기 교환", children: [
                         Row(
                           children: [
-                            Container(
-                              width: 50,
-                              height: 50,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle, color: Colors.grey),
-                            ),
+                            InkWell(
+                                onTap: () => context.go("/read"),
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey),
+                                )),
                             const SizedBox(width: 20),
                             Icon(Icons.plus_one_rounded,
                                 size: 24, color: Colors.grey[400]),
