@@ -7,16 +7,20 @@ class PostListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
         child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: postList
           .map((post) =>
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(
+                  post['category'] ?? "없엉",
+                  style: const TextStyle(color: Colors.blue),
+                ),
+                Text(
                   post['title'] ?? "없엉",
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20),
+                      fontSize: 16, fontWeight: FontWeight.w400),
                 ),
-                Text(post['content'] ?? "없엉"),
-                const SizedBox(height: 20),
+                const SizedBox(height: 14),
               ]))
           .toList(),
     ));

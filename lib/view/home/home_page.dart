@@ -72,8 +72,8 @@ class HomePage extends StatelessWidget {
                       const SizedBox(height: 20),
                       const Boxwidget(title: "커뮤니티", children: [
                         PostListWidget(postList: [
-                          {'title': '제목', 'content': '내용'},
-                          {'title': '제목', 'content': '내용'},
+                          {'title': '나랑 일기 교환할래?', 'category': '구해요'},
+                          {'title': '나 곱창 먹었는데 맛있겠징', 'category': '일상'},
                         ])
                       ])
                     ])
