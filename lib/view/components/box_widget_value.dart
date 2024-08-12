@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trade_diary/desginSystem/color.dart';
 
 class Boxwidgetvalue extends StatelessWidget {
   final String title;
@@ -17,7 +18,7 @@ class Boxwidgetvalue extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 16),
         child: Row(
           children: [
-            Icon(icon, size: 40, color: Colors.blueAccent),
+            Icon(icon, size: 40, color: DiaryColorBlue.normal),
             const SizedBox(width: 14),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

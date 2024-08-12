@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:trade_diary/view/components/global_appbar.dart';
 
 class ReadPage extends StatelessWidget {
   const ReadPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          title: const Text(
-            "지혁이의 일기",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
+    return const Scaffold(
+        appBar: GlobalAppbar(
+          title: "안녕",
         ),
-        body: const SafeArea(
+        body: SafeArea(
           child: Column(
             children: [
               Text(

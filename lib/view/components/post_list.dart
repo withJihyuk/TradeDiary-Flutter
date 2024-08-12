@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trade_diary/desginSystem/color.dart';
 
 class PostListWidget extends StatelessWidget {
   final List<Map<String, String>> postList;
@@ -15,7 +16,7 @@ class PostListWidget extends StatelessWidget {
                   children: [
                     Text(
                       post['category'] ?? "없엉",
-                      style: const TextStyle(color: Colors.blue),
+                      style: const TextStyle(color: DiaryColorBlue.normal),
                     ),
                     const SizedBox(width: 6),
                     Text(
