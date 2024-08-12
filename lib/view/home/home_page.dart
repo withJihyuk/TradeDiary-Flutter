@@ -78,6 +78,8 @@ class HomePage extends StatelessWidget {
                         PostListWidget(postList: [
                           {'title': '나랑 일기 교환할래?', 'category': '구해요'},
                           {'title': '나 곱창 먹었는데 맛있겠징', 'category': '일상'},
+                          {'title': '어떻게 하루종일 아프냐', 'category': '일상'},
+                          {'title': '집가고싶다', 'category': '일상'},
                         ])
                       ])
                     ])

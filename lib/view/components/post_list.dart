@@ -11,16 +11,21 @@ class PostListWidget extends StatelessWidget {
       children: postList
           .map((post) =>
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  post['category'] ?? "없엉",
-                  style: const TextStyle(color: Colors.blue),
+                Row(
+                  children: [
+                    Text(
+                      post['category'] ?? "없엉",
+                      style: const TextStyle(color: Colors.blue),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      post['title'] ?? "없엉",
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w400),
+                    ),
+                  ],
                 ),
-                Text(
-                  post['title'] ?? "없엉",
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w400),
-                ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 12),
               ]))
           .toList(),
     ));
