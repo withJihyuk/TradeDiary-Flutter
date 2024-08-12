@@ -6,15 +6,19 @@ class PostListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        width: 200,
-        height: 200,
         child: Column(
-          children: postList
-              .map((post) => ListTile(
-                    title: Text(post['title'] ?? "없엉"),
-                    subtitle: Text(post['content'] ?? "없엉"),
-                  ))
-              .toList(),
-        ));
+      children: postList
+          .map((post) =>
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  post['title'] ?? "없엉",
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                Text(post['content'] ?? "없엉"),
+                const SizedBox(height: 20),
+              ]))
+          .toList(),
+    ));
   }
 }
