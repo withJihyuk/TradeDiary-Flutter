@@ -31,6 +31,7 @@ class FirstPage extends StatelessWidget {
             width: 400,
             height: 400,
           ),
+          const SizedBox(height: 40),
           TextButton(
             onPressed: () => context.push('/login'),
             child: Container(

@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/diary/read_page.dart';
+import 'package:trade_diary/view/diary/write_page.dart';
 import 'package:trade_diary/view/home/home_page.dart';
 import 'package:trade_diary/view/test_page.dart';
 import 'package:trade_diary/view/home/setting_page.dart';
@@ -15,6 +16,7 @@ class PageRouter {
   static const _termsPage = "terms";
   static const _mainPage = "home";
   static const _readPage = "read";
+  static const _writePage = "write";
 
   static final GoRouter router = GoRouter(
     initialLocation: "/",
@@ -45,6 +47,8 @@ class PageRouter {
           ),
           GoRoute(
               path: _readPage, builder: (context, state) => const ReadPage()),
+          GoRoute(
+              path: _writePage, builder: (context, state) => const WritePage()),
         ],
       )
     ],
