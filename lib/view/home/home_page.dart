@@ -67,8 +67,36 @@ class HomePage extends StatelessWidget {
                                       "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
                                 )),
                             const SizedBox(width: 20),
+                            InkWell(
+                                onTap: () => context.push("/read"),
+                                child: SizedBox(
+                                  width: 50,
+                                  height: 50,
+                                  child: Image.network(
+                                      "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
+                                )),
+                            const SizedBox(width: 20),
+                            InkWell(
+                                onTap: () => context.push("/read"),
+                                child: SizedBox(
+                                  width: 50,
+                                  height: 50,
+                                  child: Image.network(
+                                      "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
+                                )),
+                            const SizedBox(width: 20),
+                            InkWell(
+                                onTap: () => context.push("/read"),
+                                child: SizedBox(
+                                  width: 50,
+                                  height: 50,
+                                  child: Image.network(
+                                      "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
+                                )),
+                            const SizedBox(
+                                width: 20), // future builder 사용해야함 수정 필요
                             Icon(Icons.plus_one_rounded,
-                                size: 24, color: Colors.grey[400]),
+                                size: 20, color: Colors.grey[600]),
                           ],
                         )
                       ]),
