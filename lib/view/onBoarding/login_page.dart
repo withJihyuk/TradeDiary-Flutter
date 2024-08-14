@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trade_diary/view/components/global_appbar.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -7,14 +8,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          forceMaterialTransparency: true,
-          title: const Text(
-            '로그인',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-        ),
+        appBar: const GlobalAppbar(title: "로그인"),
         body: SafeArea(
             child: SingleChildScrollView(
                 child: Padding(
