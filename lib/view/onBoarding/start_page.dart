@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
+import 'package:trade_diary/util/screen_size.dart';
 import 'package:trade_diary/view/components/button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -30,11 +33,20 @@ class FirstPage extends StatelessWidget {
             width: 400,
             height: 400,
           ),
-          const Button(
-            buttonName: '시작하기',
-            route: '/login',
-            isRoute: true,
-          ),
+          TextButton(
+            onPressed: () => context.push('/login'),
+            child: Container(
+                alignment: Alignment.center,
+                width: GetMediaQuery.getScreenWidth(context) * 0.8,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(10)),
+                child: const Text(
+                  '시작하기',
+                  style: TextStyle(color: Colors.white),
+                )),
+          ), // 라우트 방식 변경
         ])))));
   }
 }
