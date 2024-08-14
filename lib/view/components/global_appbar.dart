@@ -12,6 +12,7 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      scrolledUnderElevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios),
         color: Colors.black,
@@ -21,7 +22,8 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Text(
         title,
-        style: const TextStyle(color: Colors.black),
+        style:
+            const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
       ),
     );
   }
