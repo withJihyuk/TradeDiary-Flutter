@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
                         Row(
                           children: [
                             InkWell(
-                                onTap: () => context.go("/read"),
+                                onTap: () => context.push("/read"),
                                 child: SizedBox(
                                   width: 50,
                                   height: 50,

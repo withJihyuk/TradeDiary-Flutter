@@ -15,11 +15,11 @@ class TestPage extends StatelessWidget {
             style: TextStyle(fontFamily: "EF_Diary"),
           ),
           ElevatedButton(
-            onPressed: () => context.go('/onBoarding'),
+            onPressed: () => context.push('/onBoarding'),
             child: const Text('온보딩', style: TextStyle(color: Colors.black)),
           ),
           ElevatedButton(
-            onPressed: () => context.go('/home'),
+            onPressed: () => context.push('/home'),
             child: const Text('온보딩', style: TextStyle(color: Colors.black)),
           ),
         ],

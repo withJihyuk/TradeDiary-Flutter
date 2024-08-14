@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -17,7 +18,7 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.arrow_back_ios),
         color: Colors.black,
         onPressed: () {
-          Navigator.pop(context);
+          context.pop();
         },
       ),
       title: Text(
