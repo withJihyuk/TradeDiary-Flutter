@@ -60,12 +60,11 @@ class HomePage extends StatelessWidget {
                           children: [
                             InkWell(
                                 onTap: () => context.go("/read"),
-                                child: Container(
+                                child: SizedBox(
                                   width: 50,
                                   height: 50,
-                                  decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.grey),
+                                  child: Image.network(
+                                      "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
                                 )),
                             const SizedBox(width: 20),
                             Icon(Icons.plus_one_rounded,
