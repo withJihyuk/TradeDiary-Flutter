@@ -4,15 +4,16 @@ import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
 class BackgroundEdit extends StatelessWidget {
-  const BackgroundEdit({super.key});
+  final String imageUrl;
+  const BackgroundEdit({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GlobalAppbar(title: "일기 쓰기"),
+      appBar: const GlobalAppbar(title: "수정하기"),
       body: Center(
         child: ProImageEditor.network(
-          "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg",
+          imageUrl,
           configs: ProImageEditorConfigs(
             i18n: ImageEditorKorean.i18n,
             cropRotateEditorConfigs:
