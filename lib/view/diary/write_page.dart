@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trade_diary/i18n/image_editor.dart';
-import 'package:pro_image_editor/pro_image_editor.dart';
+import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
 class WritePage extends StatelessWidget {
@@ -9,23 +8,82 @@ class WritePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GlobalAppbar(title: "일기 쓰기"),
-      body: Center(
-        child: ProImageEditor.network(
-          "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg",
-          configs: ProImageEditorConfigs(
-            i18n: ImageEditorKorean.i18n,
-            cropRotateEditorConfigs:
-                const CropRotateEditorConfigs(enabled: false),
-            filterEditorConfigs: const FilterEditorConfigs(enabled: false),
-            stickerEditorConfigs: StickerEditorConfigs(
-              enabled: true,
-              buildStickers: (setLayer, scrollController) {
-                return const SizedBox();
-              },
-            ),
+      backgroundColor: Colors.white,
+      appBar: const GlobalAppbar(
+        title: "일기쓰기",
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+            child: Padding(
+          padding: const EdgeInsets.all(30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: DiaryColorBlue.lightHover,
+                    ),
+                    child: const Text(
+                      "일상",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                "8월 15일",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 30,
+                    fontFamily: "EF_Diary"),
+              ),
+              const SizedBox(
+                height: 18,
+              ),
+              const TextField(
+                decoration: InputDecoration(
+                  hintText: "오늘은 어떤 일이 있으셨나요?\n자유롭게 일기를 작성해봐요!",
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(fontSize: 18),
+                maxLines: 20,
+              ),
+              const SizedBox(
+                height: 14,
+              ),
+            ],
           ),
-          callbacks: const ProImageEditorCallbacks(),
+        )),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: DiaryColorBlue.lightActive,
+        height: 48,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.photo),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.camera_alt),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.brush),
+              onPressed: () {},
+            ),
+          ],
         ),
       ),
     );
