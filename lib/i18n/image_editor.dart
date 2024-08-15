@@ -8,6 +8,14 @@ class ImageEditorKorean {
       back: "뒤로",
     ),
     stickerEditor: I18nStickerEditor(bottomNavigationBarText: "스티커"),
+    cancel: "취소",
+    done: "완료",
+    various: I18nVarious(
+        loadingDialogMsg: "잠시만 기다려 주세요...",
+        closeEditorWarningTitle: "이미지 편집기를 닫으시겠습니까?",
+        closeEditorWarningMessage: "이미지 편집기를 닫으시겠습니까? 변경 사항이 저장되지 않습니다.",
+        closeEditorWarningConfirmBtn: "확인",
+        closeEditorWarningCancelBtn: "취소"),
     emojiEditor: I18nEmojiEditor(
         bottomNavigationBarText: "이모지",
         search: "검색",
