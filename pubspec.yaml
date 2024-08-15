@@ -16,6 +16,7 @@ dependencies:
   go_router: ^14.2.0
   flutter_svg: ^2.0.10+1
   flutter_web_frame: ^1.0.0
+  pro_image_editor: ^5.1.0
 
 dev_dependencies:
   flutter_test:
