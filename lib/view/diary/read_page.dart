@@ -9,6 +9,7 @@ class ReadPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: const GlobalAppbar(
           title: "안녕",
         ),
@@ -33,15 +34,21 @@ class ReadPage extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const Text(
-                "8월 19일",
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 30,
-                    fontFamily: "EF_Diary"),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "8월 19일",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 30,
+                        fontFamily: "EF_Diary"),
+                  ),
+                ],
               ),
               const SizedBox(
-                height: 30,
+                height: 12,
               ),
               const Text(
                 "오늘 야채곱창을 먹었는데 기분이 넘 좋았다. 베라도 조졌는데 진짜 최고였음 ㅇㅇ 싱글벙글~ 아 글고 일기도 이렇게 쓰니깐 완전 갓생같잖아~",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/components/box_widget.dart';
 import 'package:trade_diary/view/components/box_widget_value.dart';
@@ -34,16 +35,31 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.all(26),
-                      width: 390,
-                      height: 200,
-                      decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(18))),
-                      child: const Column(children: [Text("캐릭터")]),
-                    ),
+                    Boxwidget(title: "캐릭터", children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: SvgPicture.asset(
+                          "assets/images/hamster.svg",
+                          height: 200,
+                        ),
+                      ),
+                      const Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("감자와 함께 해줘서 고마워",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w300)),
+                                Text(
+                                  "벌써 함께한지 200일째 🥔",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500),
+                                )
+                              ]))
+                    ]),
                     const SizedBox(
                       height: 20,
                     ),
@@ -54,7 +70,7 @@ class HomePage extends StatelessWidget {
                             Boxwidgetvalue(
                                 title: "작성하기",
                                 subtitle: "오늘의 일기를 작성해보세요",
-                                icon: Icons.book),
+                                icon: Icons.book)
                           ])),
                       const SizedBox(height: 20),
                       Boxwidget(title: "일기 교환", children: [
