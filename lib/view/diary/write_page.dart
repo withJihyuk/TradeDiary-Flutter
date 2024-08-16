@@ -54,9 +54,9 @@ class WritePage extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: "오늘은 어떤 일이 있으셨나요?\n자유롭게 일기를 작성해봐요!",
                   hintStyle: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      color: DiaryColorBlue.normalActive),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
                   border: InputBorder.none,
                 ),
                 style: TextStyle(fontSize: 18),
