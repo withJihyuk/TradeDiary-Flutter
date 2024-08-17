@@ -37,28 +37,12 @@ class HomePage extends StatelessWidget {
                     const SizedBox(height: 20),
                     Boxwidget(title: "캐릭터", children: [
                       Align(
-                        alignment: Alignment.center,
-                        child: SvgPicture.asset(
-                          "assets/images/hamster.svg",
-                          height: 200,
-                        ),
-                      ),
-                      const Align(
                           alignment: Alignment.bottomLeft,
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("감자와 함께 해줘서 고마워",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w300)),
-                                Text(
-                                  "벌써 함께한지 200일째 🥔",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500),
-                                )
-                              ]))
+                          child: InkWell(
+                              onTap: () => context.push("/character"),
+                              child: const Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [Text("임시")])))
                     ]),
                     const SizedBox(
                       height: 20,
