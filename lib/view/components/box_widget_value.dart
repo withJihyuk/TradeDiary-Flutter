@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 
 class Boxwidgetvalue extends StatelessWidget {
   final String title;
   final String subtitle;
-  final IconData icon;
+  final bool isicon;
+  final String? assetname;
+  final IconData? icon;
 
   const Boxwidgetvalue(
       {super.key,
       required this.title,
       required this.subtitle,
-      required this.icon});
+      required this.isicon,
+      this.assetname,
+      this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,13 @@ class Boxwidgetvalue extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 16),
         child: Row(
           children: [
-            Icon(icon, size: 40, color: DiaryColorBlue.normal),
+            isicon
+                ? Icon(icon, size: 40, color: DiaryColorBlue.normal)
+                : SvgPicture.asset(
+                    width: 48,
+                    height: 48,
+                    assetname!,
+                  ),
             const SizedBox(width: 14),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

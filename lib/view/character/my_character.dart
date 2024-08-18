@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/util/screen_size.dart';
-import 'package:trade_diary/view/components/box_widget_value.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
 class MyCharacter extends StatelessWidget {
@@ -122,16 +121,46 @@ class MyCharacter extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 18),
-                        const Text("지혁 💕감자"),
+                        const Text("생후 200일 감자"),
                         const Text(
-                          "벌써 태어난지 200일",
+                          "귀염둥이우리애",
                           style: TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
                         const SizedBox(
                           height: 20,
                         ),
-                        const Text("어쩌구저쩌구")
+                        Container(
+                          height: 80,
+                          width: GetMediaQuery.getScreenHeight(context),
+                          decoration: BoxDecoration(
+                              color: DiaryColorBlue.lightActive,
+                              borderRadius: BorderRadius.circular(14)),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("감자를 더 꾸며주고 싶다면?",
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500)),
+                                  Text("감자를 클릭해 보세요",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600))
+                                ],
+                              ),
+                              SizedBox(width: 16),
+                              Icon(
+                                Icons.ads_click,
+                                size: 30,
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     )))
           ],

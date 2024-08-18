@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/components/box_widget.dart';
 import 'package:trade_diary/view/components/box_widget_value.dart';
@@ -40,9 +39,11 @@ class HomePage extends StatelessWidget {
                           alignment: Alignment.bottomLeft,
                           child: InkWell(
                               onTap: () => context.push("/character"),
-                              child: const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [Text("임시")])))
+                              child: const Boxwidgetvalue(
+                                  title: "보러가기",
+                                  subtitle: "캐릭터",
+                                  isicon: false,
+                                  assetname: "assets/images/hamster.svg")))
                     ]),
                     const SizedBox(
                       height: 20,
@@ -52,9 +53,11 @@ class HomePage extends StatelessWidget {
                           onTap: () => context.push("/write"),
                           child: const Boxwidget(title: "오늘의 일기", children: [
                             Boxwidgetvalue(
-                                title: "작성하기",
-                                subtitle: "오늘의 일기를 작성해보세요",
-                                icon: Icons.book)
+                              title: "작성하기",
+                              subtitle: "오늘의 일기를 작성해보세요",
+                              isicon: true,
+                              icon: Icons.book,
+                            )
                           ])),
                       const SizedBox(height: 20),
                       Boxwidget(title: "일기 교환", children: [
