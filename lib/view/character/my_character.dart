@@ -70,29 +70,7 @@ class MyCharacter extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                                height: 30,
-                                width: 60,
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(14)),
-                                child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.water_drop,
-                                        size: 16,
-                                      ),
-                                      SizedBox(width: 4),
-                                      Text("50",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500))
-                                    ])),
-                            const SizedBox(width: 10),
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
                                     height: 30,
@@ -107,7 +85,7 @@ class MyCharacter extends StatelessWidget {
                                             MainAxisAlignment.center,
                                         children: [
                                           Icon(
-                                            Icons.sunny,
+                                            Icons.water_drop,
                                             size: 16,
                                           ),
                                           SizedBox(width: 4),
@@ -115,24 +93,74 @@ class MyCharacter extends StatelessWidget {
                                               style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500))
-                                        ]))
+                                        ])),
+                                const SizedBox(width: 10),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                        height: 30,
+                                        width: 60,
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius:
+                                                BorderRadius.circular(14)),
+                                        child: const Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.sunny,
+                                                size: 16,
+                                              ),
+                                              SizedBox(width: 4),
+                                              Text("50",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500))
+                                            ]))
+                                  ],
+                                )
                               ],
                             ),
                           ],
                         ),
                         const SizedBox(height: 18),
                         const Text("생후 200일 감자"),
-                        const Text(
-                          "귀염둥이우리애",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 20),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "귀염둥이우리애",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 20),
+                            ),
+                            Container(
+                              height: 30,
+                              width: 48,
+                              decoration: BoxDecoration(
+                                  color: Colors.yellow[600],
+                                  borderRadius: BorderRadius.circular(14)),
+                              child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("레어",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600))
+                                  ]),
+                            )
+                          ],
                         ),
                         const SizedBox(
                           height: 20,
                         ),
                         Container(
                           height: 80,
-                          width: GetMediaQuery.getScreenHeight(context),
+                          width: GetMediaQuery.getScreenWidth(context),
                           decoration: BoxDecoration(
                               color: DiaryColorBlue.lightActive,
                               borderRadius: BorderRadius.circular(14)),
@@ -146,11 +174,11 @@ class MyCharacter extends StatelessWidget {
                                   Text("감자를 더 꾸며주고 싶다면?",
                                       style: TextStyle(
                                           fontSize: 13,
-                                          fontWeight: FontWeight.w500)),
+                                          fontWeight: FontWeight.w400)),
                                   Text("감자를 클릭해 보세요",
                                       style: TextStyle(
                                           fontSize: 18,
-                                          fontWeight: FontWeight.w600))
+                                          fontWeight: FontWeight.w500))
                                 ],
                               ),
                               SizedBox(width: 16),

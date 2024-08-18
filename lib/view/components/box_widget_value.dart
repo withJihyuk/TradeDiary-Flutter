@@ -25,10 +25,15 @@ class Boxwidgetvalue extends StatelessWidget {
           children: [
             isicon
                 ? Icon(icon, size: 40, color: DiaryColorBlue.normal)
-                : SvgPicture.asset(
+                : Container(
                     width: 48,
                     height: 48,
-                    assetname!,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey[300]!, width: 2),
+                        shape: BoxShape.circle),
+                    child: SvgPicture.asset(
+                      assetname!,
+                    ),
                   ),
             const SizedBox(width: 14),
             Column(
