@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:trade_diary/router.dart';
 
 void main() async {
@@ -14,6 +15,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: '교환일기',
       theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+        ),
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFFF2F4F6),
         fontFamily: 'PretendardJP',

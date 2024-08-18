@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/view/components/box_widget.dart';
 import 'package:trade_diary/view/components/box_widget_value.dart';
 import 'package:trade_diary/view/components/post_list.dart';
@@ -41,7 +42,7 @@ class HomePage extends StatelessWidget {
                               onTap: () => context.push("/character"),
                               child: const Boxwidgetvalue(
                                   title: "보러가기",
-                                  subtitle: "캐릭터",
+                                  subtitle: "캐릭터가 기다리고 있어요",
                                   isicon: false,
                                   assetname: "assets/images/hamster.svg")))
                     ]),
@@ -65,37 +66,68 @@ class HomePage extends StatelessWidget {
                           children: [
                             InkWell(
                                 onTap: () => context.push("/read"),
-                                child: SizedBox(
+                                child: Container(
                                   width: 50,
                                   height: 50,
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        width: 2, color: DiaryColorBlue.normal),
+                                  ),
                                   child: Image.network(
+                                      fit: BoxFit.fill,
                                       "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
                                 )),
                             const SizedBox(width: 20),
                             InkWell(
                                 onTap: () => context.push("/read"),
-                                child: SizedBox(
+                                child: Container(
                                   width: 50,
                                   height: 50,
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        width: 2,
+                                        color: DiaryColorBlue.lightHover),
+                                  ),
                                   child: Image.network(
+                                      fit: BoxFit.fill,
                                       "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
                                 )),
                             const SizedBox(width: 20),
                             InkWell(
                                 onTap: () => context.push("/read"),
-                                child: SizedBox(
+                                child: Container(
                                   width: 50,
                                   height: 50,
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        width: 2,
+                                        color: DiaryColorBlue.lightHover),
+                                  ),
                                   child: Image.network(
+                                      fit: BoxFit.fill,
                                       "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
                                 )),
                             const SizedBox(width: 20),
                             InkWell(
                                 onTap: () => context.push("/read"),
-                                child: SizedBox(
+                                child: Container(
                                   width: 50,
                                   height: 50,
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        width: 2,
+                                        color: DiaryColorBlue.lightHover),
+                                  ),
                                   child: Image.network(
+                                      fit: BoxFit.fill,
                                       "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
                                 )),
                             const SizedBox(

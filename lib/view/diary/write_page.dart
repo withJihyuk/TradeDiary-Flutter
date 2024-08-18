@@ -71,7 +71,7 @@ class WritePage extends StatelessWidget {
       ),
       bottomNavigationBar: BottomAppBar(
         color: DiaryColorBlue.lightActive,
-        height: 48,
+        height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -85,6 +85,13 @@ class WritePage extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.brush),
+              onPressed: () {},
+            ),
+            const SizedBox(
+              width: 40,
+            ),
+            IconButton(
+              icon: const Icon(Icons.check),
               onPressed: () {},
             ),
           ],
