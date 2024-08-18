@@ -56,16 +56,16 @@ class HomePage extends StatelessWidget {
                       height: 20,
                     ),
                     Column(children: [
-                      InkWell(
-                          onTap: () => context.push("/write"),
-                          child: const Boxwidget(title: "오늘의 일기", children: [
-                            Boxwidgetvalue(
+                      Boxwidget(title: "일기 작성", children: [
+                        InkWell(
+                            onTap: () => context.push("/write"),
+                            child: const Boxwidgetvalue(
                               title: "작성하기",
                               subtitle: "오늘의 일기를 작성해보세요",
                               isicon: true,
                               icon: Icons.book,
-                            )
-                          ])),
+                            )),
+                      ]),
                       const SizedBox(height: 20),
                       Boxwidget(title: "일기 교환", children: [
                         Row(
