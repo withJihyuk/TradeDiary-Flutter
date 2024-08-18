@@ -19,18 +19,24 @@ class HomePage extends StatelessWidget {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("교환일기",
+                        const Text("교환일기",
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.w600)),
                         Row(children: [
-                          Icon(Icons.settings, size: 24, color: Colors.grey),
-                          SizedBox(width: 20),
-                          Icon(Icons.notifications,
-                              size: 24, color: Colors.grey)
+                          InkWell(
+                            onTap: () => context.push("/setting"),
+                            child: const Icon(Icons.settings,
+                                size: 24, color: Colors.grey),
+                          ),
+                          const SizedBox(width: 20),
+                          InkWell(
+                              onTap: () => context.push("/alert"),
+                              child: const Icon(Icons.notifications,
+                                  size: 24, color: Colors.grey))
                         ])
                       ],
                     ),

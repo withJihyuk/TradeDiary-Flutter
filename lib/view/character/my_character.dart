@@ -23,9 +23,15 @@ class MyCharacter extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300], shape: BoxShape.circle),
+                          child: const Icon(Icons.fullscreen),
+                        )),
                     const Align(
                       alignment: Alignment.center,
                       child: Text(

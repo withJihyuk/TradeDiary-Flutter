@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/character/my_character.dart';
 import 'package:trade_diary/view/diary/read_page.dart';
 import 'package:trade_diary/view/diary/write_page.dart';
+import 'package:trade_diary/view/home/alert_page.dart';
 import 'package:trade_diary/view/home/home_page.dart';
 import 'package:trade_diary/view/test_page.dart';
 import 'package:trade_diary/view/home/setting_page.dart';
@@ -11,9 +12,10 @@ import 'package:trade_diary/view/onBoarding/terms_page.dart';
 
 class PageRouter {
   static const _homePage = "/";
-  static const _settingPage = "sub";
+  static const _settingPage = "setting";
   static const _onBoardingPage = "onBoarding";
   static const _loginPage = "login";
+  static const _alertPage = "alert";
   static const _termsPage = "terms";
   static const _mainPage = "home";
   static const _readPage = "read";
@@ -31,6 +33,8 @@ class PageRouter {
             path: _settingPage,
             builder: (context, state) => const SettingPage(),
           ),
+          GoRoute(
+              path: _alertPage, builder: (context, state) => const AlertPage()),
           GoRoute(
             path: _onBoardingPage,
             builder: (context, state) => const FirstPage(),
