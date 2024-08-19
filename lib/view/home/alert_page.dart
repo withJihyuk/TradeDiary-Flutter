@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trade_diary/view/components/global_appbar.dart';
 
 class AlertPage extends StatefulWidget {
   const AlertPage({super.key});
@@ -11,9 +12,13 @@ class _AlertPageState extends State<AlertPage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: Text("Alert Page"),
-      ),
+      appBar: GlobalAppbar(title: "알림"),
+      body: SafeArea(
+          child: SingleChildScrollView(
+        child: Column(
+          children: [],
+        ),
+      )),
     );
   }
 }
