@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
 class LoginPage extends StatelessWidget {
@@ -8,6 +8,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: DiaryColor.globalColor,
         appBar: const GlobalAppbar(title: "로그인"),
         body: SafeArea(
             child: SingleChildScrollView(
@@ -29,7 +30,7 @@ class LoginPage extends StatelessWidget {
                             child: Column(
                               children: [
                                 InkWell(
-                                    onTap: () => context.go("/home"),
+                                    onTap: () => "Google로 계속하기",
                                     child: Container(
                                         padding: const EdgeInsets.all(20),
                                         height: 70,
@@ -51,7 +52,7 @@ class LoginPage extends StatelessWidget {
                                         ]))),
                                 const SizedBox(height: 8),
                                 InkWell(
-                                    onTap: () => context.go("/home"),
+                                    onTap: () => "Apple로 계속하기",
                                     child: Container(
                                         padding: const EdgeInsets.all(20),
                                         height: 70,
