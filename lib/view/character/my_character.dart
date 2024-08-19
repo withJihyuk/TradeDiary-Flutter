@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trade_diary/util/screen_size.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
@@ -25,13 +26,16 @@ class MyCharacter extends StatelessWidget {
                   children: [
                     Align(
                         alignment: Alignment.topRight,
-                        child: Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                              color: Colors.grey[300], shape: BoxShape.circle),
-                          child: const Icon(Icons.fullscreen),
-                        )),
+                        child: InkWell(
+                            onTap: () => context.push("/fullScreen/1"),
+                            child: Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  shape: BoxShape.circle),
+                              child: const Icon(Icons.fullscreen),
+                            ))),
                     const Align(
                       alignment: Alignment.center,
                       child: Text(

@@ -4,7 +4,9 @@ import 'package:trade_diary/util/screen_size.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
 class ReadPage extends StatelessWidget {
-  const ReadPage({super.key});
+  final String? id;
+
+  const ReadPage({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {

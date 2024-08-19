@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CloseUp extends StatelessWidget {
- const CloseUp({super.key});
+  final String? id;
+  const CloseUp({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text("CloseUp Page"),
+        child: Text("CloseUp Page, $id"),
       ),
     );
-  } 
+  }
 }
