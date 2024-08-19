@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
           systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFF2F4F6),
+        scaffoldBackgroundColor: Colors.white,
         fontFamily: 'PretendardJP',
       ),
       routeInformationParser: PageRouter.router.routeInformationParser,
