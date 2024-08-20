@@ -2,8 +2,9 @@ import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:trade_diary/main.dart';
 
-class OauthProvider {
+class OauthViewModel {
   final supabase = Supabase.instance.client;
 
   Future<AuthResponse?> nativeGoogleLogin() async {
@@ -16,25 +17,32 @@ class OauthProvider {
         clientId: iosClientId,
         serverClientId: webClientId,
       );
+      try {
+        final googleUser = await googleSignIn.signIn();
+        final googleAuth = await googleUser!.authentication;
+        final accessToken = googleAuth.accessToken;
+        final idToken = googleAuth.idToken;
 
-      final googleUser = await googleSignIn.signIn();
-      final googleAuth = await googleUser!.authentication;
-      final accessToken = googleAuth.accessToken;
-      final idToken = googleAuth.idToken;
-      // 로직 취소시 무효화 로직 추가 필요
+        if (accessToken == null) {
+          throw 'No Access Token found.';
+        }
+        if (idToken == null) {
+          throw 'No ID Token found.';
+        }
 
-      if (accessToken == null) {
-        throw 'No Access Token found.';
+        prefs.setBool('onboardingCompleteKey', true);
+
+        return supabase.auth.signInWithIdToken(
+          provider: OAuthProvider.google,
+          idToken: idToken,
+          accessToken: accessToken,
+
+          // 페이지 이동 필요
+        );
+      } catch (e) {
+        print(e);
+        // 에러 리포트 발송 필요
       }
-      if (idToken == null) {
-        throw 'No ID Token found.';
-      }
-
-      return supabase.auth.signInWithIdToken(
-        provider: OAuthProvider.google,
-        idToken: idToken,
-        accessToken: accessToken,
-      );
     }
     return null;
   }

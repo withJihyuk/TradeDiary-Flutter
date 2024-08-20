@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trade_diary/router.dart';
 import 'package:trade_diary/util/screen_size.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
@@ -95,7 +94,7 @@ class SettingPage extends StatelessWidget {
                       InkWell(
                         child:
                             const Text("로그아웃", style: TextStyle(fontSize: 20)),
-                        onTap: () => oauth.logout(context),
+                        onTap: () => context.push("/"),
                       ),
                     ],
                   )),

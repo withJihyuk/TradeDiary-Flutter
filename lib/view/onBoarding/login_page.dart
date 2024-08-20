@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
-import 'package:trade_diary/util/oauth_provider.dart';
+import 'package:trade_diary/viewmodel/oauth_model.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
-  final oauth = OauthProvider();
+  final oauth = OauthViewModel();
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:trade_diary/util/oauth_provider.dart';
+import 'package:trade_diary/main.dart';
 import 'package:trade_diary/view/character/close_up.dart';
 import 'package:trade_diary/view/character/my_character.dart';
 import 'package:trade_diary/view/diary/read_page.dart';
@@ -12,8 +12,6 @@ import 'package:trade_diary/view/onBoarding/start_page.dart';
 import 'package:trade_diary/view/onBoarding/login_page.dart';
 import 'package:trade_diary/view/onBoarding/terms_page.dart';
 
-final oauth = OauthProvider();
-
 class PageRouter {
   static const _homePage = "/";
   static const _settingPage = "setting";
@@ -25,8 +23,12 @@ class PageRouter {
   static const _writePage = "write";
   static const _characterPage = "character";
 
+  static String status = (prefs.getBool('onboardingCompleteKey') ?? false)
+      ? "/home"
+      : "/onBoarding";
+
   static final GoRouter router = GoRouter(
-    initialLocation: oauth.checkUserLogin() ? "/home" : "/onBoarding",
+    initialLocation: status, // sharedPrefs에 저장된 값에 따라 변경하도록 수정 필요
     routes: [
       GoRoute(
         path: _homePage,
