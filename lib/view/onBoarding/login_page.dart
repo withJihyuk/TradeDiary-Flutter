@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
+import 'package:trade_diary/util/oauth_provider.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +36,7 @@ class LoginPage extends StatelessWidget {
                             child: Column(
                               children: [
                                 InkWell(
-                                    onTap: () => "Google로 계속하기",
+                                    onTap: () => OauthProvider.googleLogin(),
                                     child: Container(
                                         padding: const EdgeInsets.all(20),
                                         height: 70,
@@ -52,7 +58,7 @@ class LoginPage extends StatelessWidget {
                                         ]))),
                                 const SizedBox(height: 8),
                                 InkWell(
-                                    onTap: () => "Apple로 계속하기",
+                                    onTap: () => print("a"),
                                     child: Container(
                                         padding: const EdgeInsets.all(20),
                                         height: 70,
