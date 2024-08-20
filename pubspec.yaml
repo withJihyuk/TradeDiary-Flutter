@@ -30,6 +30,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+    - .env
   fonts:
     - family: EF_Diary
       fonts:
