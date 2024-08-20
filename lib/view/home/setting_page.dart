@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trade_diary/router.dart';
 import 'package:trade_diary/util/screen_size.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
@@ -89,6 +90,12 @@ class SettingPage extends StatelessWidget {
                         child: const Text("버전 정보 0.0.1",
                             style: TextStyle(fontSize: 20)),
                         onTap: () => context.push("/"),
+                      ),
+                      const SizedBox(height: 20),
+                      InkWell(
+                        child:
+                            const Text("로그아웃", style: TextStyle(fontSize: 20)),
+                        onTap: () => oauth.logout(context),
                       ),
                     ],
                   )),

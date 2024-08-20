@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:trade_diary/util/oauth_provider.dart';
 import 'package:trade_diary/view/character/close_up.dart';
 import 'package:trade_diary/view/character/my_character.dart';
 import 'package:trade_diary/view/diary/read_page.dart';
@@ -10,6 +11,8 @@ import 'package:trade_diary/view/home/setting_page.dart';
 import 'package:trade_diary/view/onBoarding/start_page.dart';
 import 'package:trade_diary/view/onBoarding/login_page.dart';
 import 'package:trade_diary/view/onBoarding/terms_page.dart';
+
+final oauth = OauthProvider();
 
 class PageRouter {
   static const _homePage = "/";
@@ -23,7 +26,7 @@ class PageRouter {
   static const _characterPage = "character";
 
   static final GoRouter router = GoRouter(
-    initialLocation: "/",
+    initialLocation: oauth.checkUserLogin() ? "/home" : "/onBoarding",
     routes: [
       GoRoute(
         path: _homePage,
@@ -41,7 +44,7 @@ class PageRouter {
           ),
           GoRoute(
             path: _loginPage,
-            builder: (context, state) => const LoginPage(),
+            builder: (context, state) => LoginPage(),
           ),
           GoRoute(
             path: _termsPage,

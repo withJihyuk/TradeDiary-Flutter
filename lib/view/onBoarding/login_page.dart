@@ -1,16 +1,15 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/util/oauth_provider.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginPage extends StatelessWidget {
+  LoginPage({super.key});
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
+  final oauth = OauthProvider();
 
-class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +35,9 @@ class _LoginPageState extends State<LoginPage> {
                             child: Column(
                               children: [
                                 InkWell(
-                                    onTap: () => OauthProvider.googleLogin(),
+                                    onTap: () => kIsWeb
+                                        ? oauth.webGoogleLogin()
+                                        : oauth.nativeGoogleLogin(),
                                     child: Container(
                                         padding: const EdgeInsets.all(20),
                                         height: 70,
@@ -58,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ]))),
                                 const SizedBox(height: 8),
                                 InkWell(
-                                    onTap: () => print("a"),
+                                    onTap: () => print("애플 로그인"),
                                     child: Container(
                                         padding: const EdgeInsets.all(20),
                                         height: 70,
