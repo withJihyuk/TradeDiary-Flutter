@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/util/screen_size.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
+import 'package:trade_diary/view/components/user_box.dart';
 import 'package:trade_diary/viewModel/oauth_model.dart';
 
 class SettingPage extends StatelessWidget {
@@ -17,30 +18,12 @@ class SettingPage extends StatelessWidget {
           child: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                children: [
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                        color: Colors.grey[300], shape: BoxShape.circle),
-                  ),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("이지혁",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w600)),
-                      Text("s23066@gsm.hs.kr",
-                          style:
-                              TextStyle(fontSize: 16, color: Colors.grey[700])),
-                    ],
-                  ),
-                ],
-              ),
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: UserBox(
+                  name: "이름",
+                  description: "이메일",
+                  imageUrl: "https://picsum.photos/200"),
             ),
             Container(
               width: GetMediaQuery.getScreenWidth(context),
@@ -52,6 +35,7 @@ class SettingPage extends StatelessWidget {
               child: Align(
                   alignment: Alignment.topLeft,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text("일반"),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/util/screen_size.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
+import 'package:trade_diary/view/components/user_box.dart';
 
 class ReadPage extends StatelessWidget {
   final String? id;
@@ -22,19 +23,23 @@ class ReadPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: DiaryColorBlue.lightHover,
-                ),
-                child: const Text(
-                  "일상",
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-              ),
+              const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    UserBox(
+                        name: "이지혁",
+                        description: "소통해요~",
+                        imageUrl: "https://picsum.photos/200"),
+                    Text(
+                      "팔로우",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: DiaryColorBlue.normal,
+                          fontWeight: FontWeight.w500),
+                    )
+                  ]),
               const SizedBox(
-                height: 10,
+                height: 24,
               ),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

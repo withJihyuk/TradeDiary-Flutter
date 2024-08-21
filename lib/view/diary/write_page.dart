@@ -19,27 +19,6 @@ class WritePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: DiaryColorBlue.lightHover,
-                    ),
-                    child: const Text(
-                      "일상",
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
               const Text(
                 "8월 15일",
                 style: TextStyle(
@@ -48,7 +27,7 @@ class WritePage extends StatelessWidget {
                     fontFamily: "EF_Diary"),
               ),
               const SizedBox(
-                height: 12,
+                height: 10,
               ),
               TextField(
                 decoration: InputDecoration(
@@ -62,9 +41,6 @@ class WritePage extends StatelessWidget {
                 ),
                 style: const TextStyle(fontSize: 18),
                 maxLines: 20,
-              ),
-              const SizedBox(
-                height: 14,
               ),
             ],
           ),
