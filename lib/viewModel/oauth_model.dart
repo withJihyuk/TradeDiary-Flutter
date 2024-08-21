@@ -30,8 +30,6 @@ class OauthViewModel {
           throw 'No ID Token found.';
         }
 
-        prefs.setBool('onboardingCompleteKey', true);
-
         return supabase.auth.signInWithIdToken(
           provider: OAuthProvider.google,
           idToken: idToken,
