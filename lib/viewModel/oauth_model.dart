@@ -1,10 +1,8 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:trade_diary/main.dart';
-import 'package:go_router/go_router.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -52,7 +50,6 @@ class OauthViewModel {
   webGoogleLogin() {
     supabase.auth.signInWithOAuth(
       OAuthProvider.google,
-      redirectTo: dotenv.env['REDIRECT_URI']!,
     );
   }
 
@@ -76,25 +73,5 @@ class OauthViewModel {
   logout() {
     supabase.auth.signOut();
     prefs.setBool('onboardingCompleteKey', false);
-  }
-
-  static void navigationByState(BuildContext context) {
-    supabase.auth.onAuthStateChange.listen((data) {
-      final AuthChangeEvent event = data.event;
-
-      switch (event) {
-        case AuthChangeEvent.signedIn:
-          print("로그인 성공");
-          context.push("/home");
-        case AuthChangeEvent.signedOut:
-          context.push("/onBoarding");
-        case AuthChangeEvent.tokenRefreshed:
-          print("토큰 리프리싱 성공");
-        case AuthChangeEvent.userDeleted:
-          print("유저 삭제 성공");
-        case _:
-          print("기타 이벤트");
-      }
-    });
   }
 }

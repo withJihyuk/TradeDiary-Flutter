@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    OauthViewModel.navigationByState(context);
+    // OauthViewModel.navigationByState(context);
   }
 
   @override

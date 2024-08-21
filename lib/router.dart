@@ -1,38 +1,31 @@
 import 'package:go_router/go_router.dart';
-import 'package:trade_diary/main.dart';
 import 'package:trade_diary/view/character/close_up.dart';
 import 'package:trade_diary/view/character/my_character.dart';
 import 'package:trade_diary/view/diary/read_page.dart';
 import 'package:trade_diary/view/diary/write_page.dart';
 import 'package:trade_diary/view/home/alert_page.dart';
 import 'package:trade_diary/view/home/home_page.dart';
-import 'package:trade_diary/view/test_page.dart';
 import 'package:trade_diary/view/home/setting_page.dart';
 import 'package:trade_diary/view/onBoarding/start_page.dart';
 import 'package:trade_diary/view/onBoarding/login_page.dart';
 import 'package:trade_diary/view/onBoarding/terms_page.dart';
 
 class PageRouter {
-  static const _homePage = "/";
   static const _settingPage = "setting";
   static const _onBoardingPage = "onBoarding";
   static const _loginPage = "login";
   static const _alertPage = "alert";
   static const _termsPage = "terms";
-  static const _mainPage = "home";
+  static const _mainPage = "/";
   static const _writePage = "write";
   static const _characterPage = "character";
 
-  static String status = (prefs.getBool('onboardingCompleteKey') ?? false)
-      ? "/home"
-      : "/onBoarding";
-
   static final GoRouter router = GoRouter(
-    initialLocation: status, // sharedPrefs에 저장된 값에 따라 변경하도록 수정 필요
+    initialLocation: "/onBoarding",
     routes: [
       GoRoute(
-        path: _homePage,
-        builder: (context, state) => const TestPage(),
+        path: _mainPage,
+        builder: (context, state) => const HomePage(),
         routes: [
           GoRoute(
             path: _settingPage,
@@ -46,15 +39,11 @@ class PageRouter {
           ),
           GoRoute(
             path: _loginPage,
-            builder: (context, state) => LoginPage(),
+            builder: (context, state) => const LoginPage(),
           ),
           GoRoute(
             path: _termsPage,
             builder: (context, state) => const TermsPage(),
-          ),
-          GoRoute(
-            path: _mainPage,
-            builder: (context, state) => const HomePage(),
           ),
           GoRoute(
               path: 'read/:id',

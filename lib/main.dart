@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    navigationByState(context);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: '교환일기',
@@ -41,4 +42,31 @@ class MyApp extends StatelessWidget {
       routerDelegate: PageRouter.router.routerDelegate,
     );
   }
+}
+
+void navigationByState(BuildContext context) {
+  final supabase = Supabase.instance.client;
+  supabase.auth.onAuthStateChange.listen((data) {
+    final AuthChangeEvent event = data.event;
+
+    switch (event) {
+      case AuthChangeEvent.initialSession:
+        if (context.mounted && data.session != null) {
+          PageRouter.router.go("/");
+        }
+
+      case AuthChangeEvent.signedIn:
+        if (context.mounted) {
+          PageRouter.router.go("/");
+        }
+
+      case AuthChangeEvent.signedOut:
+        if (context.mounted) {
+          PageRouter.router.go("/onBoarding");
+        }
+
+      case _:
+        print("다른거");
+    }
+  });
 }
