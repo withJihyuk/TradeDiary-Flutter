@@ -55,7 +55,7 @@ void navigationByState(BuildContext context) {
           if (context.mounted &&
               (data.session == null || data.session?.isExpired == true)) {
             PageRouter.router.go("/onBoarding");
-          }
+          } // 이 조건 대신 유틸화 한 SDK 함수 기반 체커로 변경
           break;
 
         case AuthChangeEvent.signedIn:
@@ -74,12 +74,8 @@ void navigationByState(BuildContext context) {
           break;
       }
     } catch (e) {
-      if (e is AuthException) {
-        if (context.mounted) {
-          PageRouter.router.go("/onBoarding");
-        }
-      } else {
-        rethrow; // 예외가 AuthException이 아니면 다시 던짐
+      if (context.mounted) {
+        PageRouter.router.go("/onBoarding");
       }
     }
   });
