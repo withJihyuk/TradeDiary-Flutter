@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/util/screen_size.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
+import 'package:trade_diary/viewModel/oauth_model.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final oauth = OauthViewModel();
+
     return Scaffold(
       appBar: const GlobalAppbar(title: "설정"),
       body: SafeArea(
@@ -94,7 +97,7 @@ class SettingPage extends StatelessWidget {
                       InkWell(
                         child:
                             const Text("로그아웃", style: TextStyle(fontSize: 20)),
-                        onTap: () => context.push("/"),
+                        onTap: () => oauth.logout(),
                       ),
                     ],
                   )),

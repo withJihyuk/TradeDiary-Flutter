@@ -35,6 +35,7 @@
 		<string>Editor</string>
 		<key>CFBundleURLSchemes</key>
 		<array>
+		<string>tradediary</string>
 		<string>com.googleusercontent.apps.758208968172-s02f95mh5sv31cb23tqa36uh1n2uj4rb</string>
 		</array>
 	</dict>

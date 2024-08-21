@@ -17,7 +17,6 @@ void main() async {
     url: dotenv.env['DB_URL']!,
     anonKey: dotenv.env['DB_KEY']!,
   );
-
   runApp(const ProviderScope(child: MyApp()));
 }
 
