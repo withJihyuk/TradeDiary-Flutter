@@ -21,7 +21,6 @@ class PageRouter {
   static const _characterPage = "character";
 
   static final GoRouter router = GoRouter(
-    initialLocation: "/onBoarding",
     routes: [
       GoRoute(
         path: _mainPage,
@@ -34,16 +33,16 @@ class PageRouter {
           GoRoute(
               path: _alertPage, builder: (context, state) => const AlertPage()),
           GoRoute(
-            path: _onBoardingPage,
-            builder: (context, state) => const FirstPage(),
+            path: _termsPage,
+            builder: (context, state) => const TermsPage(),
           ),
           GoRoute(
             path: _loginPage,
             builder: (context, state) => const LoginPage(),
           ),
           GoRoute(
-            path: _termsPage,
-            builder: (context, state) => const TermsPage(),
+            path: _onBoardingPage,
+            builder: (context, state) => const FirstPage(),
           ),
           GoRoute(
               path: 'read/:id',

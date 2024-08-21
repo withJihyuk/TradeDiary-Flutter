@@ -4,24 +4,12 @@ import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/viewmodel/oauth_model.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final oauth = OauthViewModel();
-
-  @override
-  void initState() {
-    super.initState();
-    // OauthViewModel.navigationByState(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final oauth = OauthViewModel();
     return Scaffold(
         backgroundColor: DiaryColor.globalColor,
         appBar: const GlobalAppbar(title: "로그인"),

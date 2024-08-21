@@ -49,24 +49,38 @@ void navigationByState(BuildContext context) {
   supabase.auth.onAuthStateChange.listen((data) {
     final AuthChangeEvent event = data.event;
 
-    switch (event) {
-      case AuthChangeEvent.initialSession:
-        if (context.mounted && data.session != null) {
-          PageRouter.router.go("/");
-        }
+    try {
+      switch (event) {
+        case AuthChangeEvent.initialSession:
+          if (context.mounted &&
+              (data.session == null || data.session?.isExpired == true)) {
+            PageRouter.router.go("/onBoarding");
+          }
+          break;
 
-      case AuthChangeEvent.signedIn:
-        if (context.mounted) {
-          PageRouter.router.go("/");
-        }
+        case AuthChangeEvent.signedIn:
+          if (context.mounted) {
+            PageRouter.router.go("/");
+          }
+          break;
 
-      case AuthChangeEvent.signedOut:
+        case AuthChangeEvent.signedOut:
+          if (context.mounted) {
+            PageRouter.router.go("/onBoarding");
+          }
+          break;
+
+        default:
+          break;
+      }
+    } catch (e) {
+      if (e is AuthException) {
         if (context.mounted) {
           PageRouter.router.go("/onBoarding");
         }
-
-      case _:
-        print("다른거");
+      } else {
+        rethrow; // 예외가 AuthException이 아니면 다시 던짐
+      }
     }
   });
 }

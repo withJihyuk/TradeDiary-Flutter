@@ -62,7 +62,7 @@ class OauthViewModel {
     }
   }
 
-  checkUserLogin() {
+  static checkUserLogin() {
     if (supabase.auth.currentUser == null) {
       return false;
     } else {
