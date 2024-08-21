@@ -69,80 +69,84 @@ class HomePage extends StatelessWidget {
                       ]),
                       const SizedBox(height: 20),
                       Boxwidget(title: "일기 교환", children: [
-                        Row(
-                          children: [
-                            InkWell(
-                                onTap: () => context.push("/read/1"),
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        width: 2, color: DiaryColorBlue.normal),
-                                  ),
-                                  child: Image.network(
-                                      fit: BoxFit.fill,
-                                      "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
-                                )),
-                            const SizedBox(width: 20),
-                            InkWell(
-                                onTap: () => context.push("/read"),
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        width: 2,
-                                        color: DiaryColorBlue.lightHover),
-                                  ),
-                                  child: Image.network(
-                                      fit: BoxFit.fill,
-                                      "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
-                                )),
-                            const SizedBox(width: 20),
-                            InkWell(
-                                onTap: () => context.push("/read"),
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        width: 2,
-                                        color: DiaryColorBlue.lightHover),
-                                  ),
-                                  child: Image.network(
-                                      fit: BoxFit.fill,
-                                      "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
-                                )),
-                            const SizedBox(width: 20),
-                            InkWell(
-                                onTap: () => context.push("/read"),
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        width: 2,
-                                        color: DiaryColorBlue.lightHover),
-                                  ),
-                                  child: Image.network(
-                                      fit: BoxFit.fill,
-                                      "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
-                                )),
-                            const SizedBox(
-                                width: 20), // future builder 사용해야함 수정 필요
-                            Icon(Icons.plus_one_rounded,
-                                size: 20, color: Colors.grey[600]),
-                          ],
-                        )
+                        // 실제 기기로 보니 Overflow 발생, 수정 필요
+                        SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                InkWell(
+                                    onTap: () => context.push("/read/1"),
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            width: 2,
+                                            color: DiaryColorBlue.normal),
+                                      ),
+                                      child: Image.network(
+                                          fit: BoxFit.fill,
+                                          "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
+                                    )),
+                                const SizedBox(width: 20),
+                                InkWell(
+                                    onTap: () => context.push("/read"),
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            width: 2,
+                                            color: DiaryColorBlue.lightHover),
+                                      ),
+                                      child: Image.network(
+                                          fit: BoxFit.fill,
+                                          "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
+                                    )),
+                                const SizedBox(width: 20),
+                                InkWell(
+                                    onTap: () => context.push("/read"),
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            width: 2,
+                                            color: DiaryColorBlue.lightHover),
+                                      ),
+                                      child: Image.network(
+                                          fit: BoxFit.fill,
+                                          "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
+                                    )),
+                                const SizedBox(width: 20),
+                                InkWell(
+                                    onTap: () => context.push("/read"),
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            width: 2,
+                                            color: DiaryColorBlue.lightHover),
+                                      ),
+                                      child: Image.network(
+                                          fit: BoxFit.fill,
+                                          "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
+                                    )),
+                                const SizedBox(
+                                    width: 20), // future builder 사용해야함 수정 필요
+                                Icon(Icons.plus_one_rounded,
+                                    size: 20, color: Colors.grey[600]),
+                              ],
+                            ))
                       ]),
                       const SizedBox(height: 20),
                       // const Boxwidget(title: "커뮤니티", children: [
