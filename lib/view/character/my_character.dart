@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
-import 'package:go_router/go_router.dart';
 import 'package:trade_diary/util/screen_size.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
+
+const snackBar = SnackBar(
+  content: Text('아직 준비중인 기능입니다.\n준비되면 알려 드릴게요!'),
+);
 
 class MyCharacter extends StatelessWidget {
   const MyCharacter({super.key});
@@ -27,7 +30,8 @@ class MyCharacter extends StatelessWidget {
                     Align(
                         alignment: Alignment.topRight,
                         child: InkWell(
-                            onTap: () => context.push("/fullScreen/1"),
+                            onTap: () => ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar),
                             child: Container(
                               width: 48,
                               height: 48,
@@ -46,27 +50,33 @@ class MyCharacter extends StatelessWidget {
                     Align(
                         alignment: Alignment.bottomLeft,
                         child: Row(children: [
-                          Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(Icons.shopping_bag),
-                          ),
+                          InkWell(
+                              onTap: () => ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar),
+                              child: Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.shopping_bag),
+                              )),
                           const SizedBox(
                             width: 18,
                           ),
-                          Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(Icons.backpack_rounded),
-                          ),
+                          InkWell(
+                              onTap: () => ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar),
+                              child: Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.backpack_rounded),
+                              )),
                         ]))
                   ],
                 )),

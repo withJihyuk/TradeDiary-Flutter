@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
-import 'package:trade_diary/view/character/close_up.dart';
 import 'package:trade_diary/view/character/my_character.dart';
+
 import 'package:trade_diary/view/diary/read_page.dart';
 import 'package:trade_diary/view/diary/write_page.dart';
 import 'package:trade_diary/view/home/alert_page.dart';
@@ -14,7 +14,6 @@ class PageRouter {
   static const _onBoardingPage = "onBoarding";
   static const _loginPage = "login";
   static const _alertPage = "alert";
-
   static const _mainPage = "/";
   static const _writePage = "write";
   static const _characterPage = "character";
@@ -48,10 +47,6 @@ class PageRouter {
           GoRoute(
               path: _characterPage,
               builder: (context, state) => const MyCharacter()),
-          GoRoute(
-              path: 'fullScreen/:id',
-              builder: (context, state) =>
-                  CloseUp(id: state.pathParameters['id']))
         ],
       )
     ],
