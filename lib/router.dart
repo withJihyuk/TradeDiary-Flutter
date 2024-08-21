@@ -8,14 +8,13 @@ import 'package:trade_diary/view/home/home_page.dart';
 import 'package:trade_diary/view/home/setting_page.dart';
 import 'package:trade_diary/view/onBoarding/start_page.dart';
 import 'package:trade_diary/view/onBoarding/login_page.dart';
-import 'package:trade_diary/view/onBoarding/terms_page.dart';
 
 class PageRouter {
   static const _settingPage = "setting";
   static const _onBoardingPage = "onBoarding";
   static const _loginPage = "login";
   static const _alertPage = "alert";
-  static const _termsPage = "terms";
+
   static const _mainPage = "/";
   static const _writePage = "write";
   static const _characterPage = "character";
@@ -32,10 +31,6 @@ class PageRouter {
           ),
           GoRoute(
               path: _alertPage, builder: (context, state) => const AlertPage()),
-          GoRoute(
-            path: _termsPage,
-            builder: (context, state) => const TermsPage(),
-          ),
           GoRoute(
             path: _loginPage,
             builder: (context, state) => const LoginPage(),

@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.w600))
                                         ]))),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: 10),
                                 InkWell(
                                     onTap: () => print("애플 로그인"),
                                     child: Container(

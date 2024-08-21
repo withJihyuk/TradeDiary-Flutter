@@ -37,7 +37,6 @@ class OauthViewModel {
           // 페이지 이동 필요
         );
       } catch (e) {
-        print(e);
         // 에러 리포트 발송 필요
       }
     }
@@ -56,14 +55,6 @@ class OauthViewModel {
         OAuthProvider.apple,
         redirectTo: dotenv.env['REDIRECT_URI']!,
       );
-    }
-  }
-
-  static checkUserLogin() {
-    if (supabase.auth.currentUser == null) {
-      return false;
-    } else {
-      return true;
     }
   }
 
