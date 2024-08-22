@@ -11,6 +11,7 @@ class DiaryPostModel with _$DiaryPostModel {
     required DateTime createdAt,
     required DateTime deleteAt,
     required int userId,
+    required bool isPrivate,
   }) = _DiaryPostModel;
 
   factory DiaryPostModel.fromJson(Map<String, dynamic> json) =>
