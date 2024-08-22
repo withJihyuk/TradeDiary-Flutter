@@ -8,14 +8,13 @@ class DiaryPost {
     supabase.from("diary").insert(DiaryPostModel.fromJson(json));
   }
 
-  Future getDiaryPost() async {
-    final id = supabase.auth.currentUser!.id;
-    return supabase.from("diary").select().eq('id', id);
+  Future getDiaryPost(String userId) async {
+    return supabase.from("diary").select().eq('id', userId);
   }
 
-  Future getFriendDiaryPost() async {
-    final id = supabase.auth.currentUser!.id;
-    final friendId = supabase.from("follow").select().neq('follower_id', id);
+  Future getFriendDiaryPost(String userId) async {
+    final friendId =
+        supabase.from("follow").select().neq('follower_id', userId);
     return supabase
         .from("diary")
         .select()

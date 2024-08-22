@@ -7,10 +7,10 @@ part 'diary_post.g.dart';
 class DiaryPostModel with _$DiaryPostModel {
   factory DiaryPostModel({
     required int id,
+    required int userId,
     required String content,
     required DateTime createdAt,
     required DateTime deleteAt,
-    required int userId,
     required bool isPrivate,
   }) = _DiaryPostModel;
 
