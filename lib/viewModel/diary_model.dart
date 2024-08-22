@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DiaryNotifier extends StateNotifier<bool> {
   DiaryNotifier(this.ref) : super(false);
@@ -6,7 +7,9 @@ class DiaryNotifier extends StateNotifier<bool> {
   final Ref ref;
 
   Future<void> increment() async {
-    // insert rule
+    final result = Supabase.instance.client.from("diary").insert({
+      // repository 와 연결 필요
+    });
     state = true;
   }
 

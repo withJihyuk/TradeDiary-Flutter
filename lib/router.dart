@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/character/my_character.dart';
-
 import 'package:trade_diary/view/diary/read_page.dart';
 import 'package:trade_diary/view/diary/write_page.dart';
 import 'package:trade_diary/view/home/alert_page.dart';
