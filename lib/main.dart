@@ -36,6 +36,16 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
         fontFamily: 'PretendardJP',
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.blue,
+          accentColor: Colors.blue,
+          cardColor: Colors.white,
+          backgroundColor: Colors.white,
+          errorColor: Colors.red,
+        ).copyWith(
+          primary: Colors.blue,
+          secondary: Colors.blue,
+        ),
       ),
       routeInformationParser: PageRouter.router.routeInformationParser,
       routeInformationProvider: PageRouter.router.routeInformationProvider,
