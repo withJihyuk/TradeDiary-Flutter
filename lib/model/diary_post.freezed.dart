@@ -20,7 +20,6 @@ DiaryPostModel _$DiaryPostModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$DiaryPostModel {
-  int get id => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   bool get isPrivate => throw _privateConstructorUsedError;
@@ -41,7 +40,7 @@ abstract class $DiaryPostModelCopyWith<$Res> {
           DiaryPostModel value, $Res Function(DiaryPostModel) then) =
       _$DiaryPostModelCopyWithImpl<$Res, DiaryPostModel>;
   @useResult
-  $Res call({int id, String userId, String content, bool isPrivate});
+  $Res call({String userId, String content, bool isPrivate});
 }
 
 /// @nodoc
@@ -59,16 +58,11 @@ class _$DiaryPostModelCopyWithImpl<$Res, $Val extends DiaryPostModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
     Object? userId = null,
     Object? content = null,
     Object? isPrivate = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -93,7 +87,7 @@ abstract class _$$DiaryPostModelImplCopyWith<$Res>
       __$$DiaryPostModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String userId, String content, bool isPrivate});
+  $Res call({String userId, String content, bool isPrivate});
 }
 
 /// @nodoc
@@ -109,16 +103,11 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
     Object? userId = null,
     Object? content = null,
     Object? isPrivate = null,
   }) {
     return _then(_$DiaryPostModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -139,16 +128,11 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DiaryPostModelImpl implements _DiaryPostModel {
   _$DiaryPostModelImpl(
-      {required this.id,
-      required this.userId,
-      required this.content,
-      required this.isPrivate});
+      {required this.userId, required this.content, required this.isPrivate});
 
   factory _$DiaryPostModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$DiaryPostModelImplFromJson(json);
 
-  @override
-  final int id;
   @override
   final String userId;
   @override
@@ -158,7 +142,7 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
 
   @override
   String toString() {
-    return 'DiaryPostModel(id: $id, userId: $userId, content: $content, isPrivate: $isPrivate)';
+    return 'DiaryPostModel(userId: $userId, content: $content, isPrivate: $isPrivate)';
   }
 
   @override
@@ -166,7 +150,6 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DiaryPostModelImpl &&
-            (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.isPrivate, isPrivate) ||
@@ -175,7 +158,7 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, userId, content, isPrivate);
+  int get hashCode => Object.hash(runtimeType, userId, content, isPrivate);
 
   /// Create a copy of DiaryPostModel
   /// with the given fields replaced by the non-null parameter values.
@@ -196,16 +179,13 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
 
 abstract class _DiaryPostModel implements DiaryPostModel {
   factory _DiaryPostModel(
-      {required final int id,
-      required final String userId,
+      {required final String userId,
       required final String content,
       required final bool isPrivate}) = _$DiaryPostModelImpl;
 
   factory _DiaryPostModel.fromJson(Map<String, dynamic> json) =
       _$DiaryPostModelImpl.fromJson;
 
-  @override
-  int get id;
   @override
   String get userId;
   @override

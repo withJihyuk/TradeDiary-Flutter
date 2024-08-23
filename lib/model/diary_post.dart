@@ -6,7 +6,6 @@ part 'diary_post.g.dart';
 @freezed
 class DiaryPostModel with _$DiaryPostModel {
   factory DiaryPostModel({
-    required int id,
     required String userId,
     required String content,
     required bool isPrivate,

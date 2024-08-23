@@ -20,7 +20,6 @@ class DiaryPostViewModel {
 
   Future<void> addDiaryPost(String content, bool isPrivate) async {
     final DiaryPostModel model = DiaryPostModel(
-      id: 0,
       userId: userId,
       content: content,
       isPrivate: isPrivate,
