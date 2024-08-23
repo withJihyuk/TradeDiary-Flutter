@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:markdown_editor_plus/markdown_editor_plus.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
+import 'package:trade_diary/viewModel/diary_model.dart';
 
 class WritePage extends StatefulWidget {
   const WritePage({super.key});
@@ -13,6 +15,8 @@ class WritePage extends StatefulWidget {
 
 class _WritePageState extends State<WritePage> {
   final TextEditingController controller = TextEditingController();
+  final DiaryPostViewModel diaryPostViewModel = DiaryPostViewModel();
+  final userId = Supabase.instance.client.auth.currentUser!.id;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +108,10 @@ class _WritePageState extends State<WritePage> {
             IconButton(
               icon: const Icon(Icons.check),
               onPressed: () {
-                print(controller.value.toJSON());
+                diaryPostViewModel.addDiaryPost(
+                  controller.text,
+                  false,
+                );
               },
             ),
           ],

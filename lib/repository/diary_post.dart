@@ -8,7 +8,15 @@ class DiaryPostRepo {
     return datasource.getDiaryPost(clientId);
   }
 
-  Future<void> addDiaryPost(DiaryPostModel model) async {
-    return datasource.createDiaryPost(model.toJson());
+  Future<void> addDiaryPost(DiaryPostModel data) async {
+    return datasource.createDiaryPost(data);
+  }
+
+  Future isUserWriteDiaryToday(String userId) async {
+    return datasource.isWriteDiaryToday(userId);
+  }
+
+  Future getFriendDiaryPost(String userId) async {
+    return datasource.getFriendDiaryPost(userId);
   }
 }

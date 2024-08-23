@@ -4,18 +4,18 @@ import 'package:trade_diary/model/diary_post.dart';
 class DiaryPostDataSource {
   final supabase = Supabase.instance.client;
 
-  Future createDiaryPost(json) async {
-    supabase.from("diary").insert(DiaryPostModel.fromJson(json));
+  Future createDiaryPost(DiaryPostModel data) async {
+    await supabase.from("diary").insert(data);
   }
 
   Future getDiaryPost(String userId) async {
-    return supabase.from("diary").select().eq('userId', userId);
+    return await supabase.from("diary").select().eq('userId', userId);
   }
 
   Future getFriendDiaryPost(String userId) async {
     final friendId =
-        supabase.from("follow").select().neq('follower_id', userId);
-    return supabase
+        await supabase.from("follow").select().neq('follower_id', userId);
+    return await supabase
         .from("diary")
         .select()
         .neq('userId', friendId)
@@ -24,7 +24,7 @@ class DiaryPostDataSource {
 
   Future isWriteDiaryToday(String userId) async {
     final today = DateTime.now();
-    return supabase
+    return await supabase
         .from("diary")
         .select()
         .eq('userId', userId)

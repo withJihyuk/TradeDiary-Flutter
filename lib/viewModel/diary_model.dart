@@ -1,24 +1,30 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:trade_diary/model/diary_post.dart';
+import 'package:trade_diary/repository/diary_post.dart';
 
-class DiaryNotifier extends StateNotifier<bool> {
-  DiaryNotifier(this.ref) : super(false);
+class DiaryPostViewModel {
+  final repo = DiaryPostRepo();
+  final userId = Supabase.instance.client.auth.currentUser!.id;
 
-  final Ref ref;
-
-  Future<void> increment() async {
-    final result = Supabase.instance.client.from("diary").insert({
-      // repository 와 연결 필요
-    });
-    state = true;
+  Future getDiaryPost() async {
+    return repo.getDiaryPost(userId);
   }
 
-  Future<void> checkUserDiary() async {
-    // if user has diary -> true
-    // else -> false
+  Future getFriendDiaryPost() async {
+    return repo.getFriendDiaryPost(userId);
+  }
+
+  Future isUserWriteDiaryToday() async {
+    return repo.isUserWriteDiaryToday(userId);
+  }
+
+  Future<void> addDiaryPost(String content, bool isPrivate) async {
+    final DiaryPostModel model = DiaryPostModel(
+      id: 0,
+      userId: userId,
+      content: content,
+      isPrivate: isPrivate,
+    );
+    return repo.addDiaryPost(model);
   }
 }
-
-final counterStateProvider = StateNotifierProvider<DiaryNotifier, bool>((ref) {
-  return DiaryNotifier(ref);
-});

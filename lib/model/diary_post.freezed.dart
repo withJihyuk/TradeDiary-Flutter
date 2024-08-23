@@ -21,10 +21,8 @@ DiaryPostModel _$DiaryPostModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$DiaryPostModel {
   int get id => throw _privateConstructorUsedError;
-  int get userId => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get deleteAt => throw _privateConstructorUsedError;
   bool get isPrivate => throw _privateConstructorUsedError;
 
   /// Serializes this DiaryPostModel to a JSON map.
@@ -43,13 +41,7 @@ abstract class $DiaryPostModelCopyWith<$Res> {
           DiaryPostModel value, $Res Function(DiaryPostModel) then) =
       _$DiaryPostModelCopyWithImpl<$Res, DiaryPostModel>;
   @useResult
-  $Res call(
-      {int id,
-      int userId,
-      String content,
-      DateTime createdAt,
-      DateTime deleteAt,
-      bool isPrivate});
+  $Res call({int id, String userId, String content, bool isPrivate});
 }
 
 /// @nodoc
@@ -70,8 +62,6 @@ class _$DiaryPostModelCopyWithImpl<$Res, $Val extends DiaryPostModel>
     Object? id = null,
     Object? userId = null,
     Object? content = null,
-    Object? createdAt = null,
-    Object? deleteAt = null,
     Object? isPrivate = null,
   }) {
     return _then(_value.copyWith(
@@ -82,19 +72,11 @@ class _$DiaryPostModelCopyWithImpl<$Res, $Val extends DiaryPostModel>
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      deleteAt: null == deleteAt
-          ? _value.deleteAt
-          : deleteAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
       isPrivate: null == isPrivate
           ? _value.isPrivate
           : isPrivate // ignore: cast_nullable_to_non_nullable
@@ -111,13 +93,7 @@ abstract class _$$DiaryPostModelImplCopyWith<$Res>
       __$$DiaryPostModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      int userId,
-      String content,
-      DateTime createdAt,
-      DateTime deleteAt,
-      bool isPrivate});
+  $Res call({int id, String userId, String content, bool isPrivate});
 }
 
 /// @nodoc
@@ -136,8 +112,6 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? userId = null,
     Object? content = null,
-    Object? createdAt = null,
-    Object? deleteAt = null,
     Object? isPrivate = null,
   }) {
     return _then(_$DiaryPostModelImpl(
@@ -148,19 +122,11 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      deleteAt: null == deleteAt
-          ? _value.deleteAt
-          : deleteAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
       isPrivate: null == isPrivate
           ? _value.isPrivate
           : isPrivate // ignore: cast_nullable_to_non_nullable
@@ -176,8 +142,6 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
       {required this.id,
       required this.userId,
       required this.content,
-      required this.createdAt,
-      required this.deleteAt,
       required this.isPrivate});
 
   factory _$DiaryPostModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -186,19 +150,15 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
   @override
   final int id;
   @override
-  final int userId;
+  final String userId;
   @override
   final String content;
-  @override
-  final DateTime createdAt;
-  @override
-  final DateTime deleteAt;
   @override
   final bool isPrivate;
 
   @override
   String toString() {
-    return 'DiaryPostModel(id: $id, userId: $userId, content: $content, createdAt: $createdAt, deleteAt: $deleteAt, isPrivate: $isPrivate)';
+    return 'DiaryPostModel(id: $id, userId: $userId, content: $content, isPrivate: $isPrivate)';
   }
 
   @override
@@ -209,18 +169,13 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.content, content) || other.content == content) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.deleteAt, deleteAt) ||
-                other.deleteAt == deleteAt) &&
             (identical(other.isPrivate, isPrivate) ||
                 other.isPrivate == isPrivate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, userId, content, createdAt, deleteAt, isPrivate);
+  int get hashCode => Object.hash(runtimeType, id, userId, content, isPrivate);
 
   /// Create a copy of DiaryPostModel
   /// with the given fields replaced by the non-null parameter values.
@@ -242,10 +197,8 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
 abstract class _DiaryPostModel implements DiaryPostModel {
   factory _DiaryPostModel(
       {required final int id,
-      required final int userId,
+      required final String userId,
       required final String content,
-      required final DateTime createdAt,
-      required final DateTime deleteAt,
       required final bool isPrivate}) = _$DiaryPostModelImpl;
 
   factory _DiaryPostModel.fromJson(Map<String, dynamic> json) =
@@ -254,13 +207,9 @@ abstract class _DiaryPostModel implements DiaryPostModel {
   @override
   int get id;
   @override
-  int get userId;
+  String get userId;
   @override
   String get content;
-  @override
-  DateTime get createdAt;
-  @override
-  DateTime get deleteAt;
   @override
   bool get isPrivate;
 

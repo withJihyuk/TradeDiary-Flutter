@@ -7,13 +7,11 @@ part 'diary_post.g.dart';
 class DiaryPostModel with _$DiaryPostModel {
   factory DiaryPostModel({
     required int id,
-    required int userId,
+    required String userId,
     required String content,
-    required DateTime createdAt,
-    required DateTime deleteAt,
     required bool isPrivate,
   }) = _DiaryPostModel;
 
   factory DiaryPostModel.fromJson(Map<String, dynamic> json) =>
-      _$DiaryPostModelJson(json);
+      _$DiaryPostModelFromJson(json);
 }
