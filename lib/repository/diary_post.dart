@@ -1,1 +1,14 @@
-// datasource 에 접근하여 데이터를 가져오는 클래스
+import 'package:trade_diary/dataSource/diary_post.dart';
+import 'package:trade_diary/model/diary_post.dart';
+
+class DiaryPostRepo {
+  final datasource = DiaryPostDataSource();
+
+  Future getDiaryPost(String clientId) async {
+    return datasource.getDiaryPost(clientId);
+  }
+
+  Future<void> addDiaryPost(DiaryPostModel model) async {
+    return datasource.createDiaryPost(model.toJson());
+  }
+}

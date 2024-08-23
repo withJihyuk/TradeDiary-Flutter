@@ -1,7 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/model/diary_post.dart';
 
-class DiaryPost {
+class DiaryPostDataSource {
   final supabase = Supabase.instance.client;
 
   Future createDiaryPost(json) async {
@@ -9,7 +9,7 @@ class DiaryPost {
   }
 
   Future getDiaryPost(String userId) async {
-    return supabase.from("diary").select().eq('id', userId);
+    return supabase.from("diary").select().eq('userId', userId);
   }
 
   Future getFriendDiaryPost(String userId) async {
@@ -18,7 +18,16 @@ class DiaryPost {
     return supabase
         .from("diary")
         .select()
-        .neq('id', friendId)
+        .neq('userId', friendId)
         .eq('isPrivate', false);
+  }
+
+  Future isWriteDiaryToday(String userId) async {
+    final today = DateTime.now();
+    return supabase
+        .from("diary")
+        .select()
+        .eq('userId', userId)
+        .eq('createdAt', today);
   }
 }
