@@ -34,9 +34,9 @@ class _WritePageState extends State<WritePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "8월 22일",
-                style: TextStyle(
+              Text(
+                diaryPostViewModel.getTodayDate(),
+                style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 30,
                     fontFamily: "EF_Diary"),

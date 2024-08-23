@@ -26,4 +26,9 @@ class DiaryPostViewModel {
     );
     return repo.addDiaryPost(model);
   }
+
+  String getTodayDate() {
+    final now = DateTime.now();
+    return "${now.month}월 ${now.day}일";
+  }
 }

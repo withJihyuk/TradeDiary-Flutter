@@ -62,10 +62,9 @@ void navigationByState(BuildContext context) {
     try {
       switch (event) {
         case AuthChangeEvent.initialSession:
-          if (context.mounted &&
-              (data.session == null || data.session?.isExpired == true)) {
-            PageRouter.router.go("/onBoarding");
-          } // 이 조건 대신 유틸화 한 SDK 함수 기반 체커로 변경
+          if (context.mounted && data.session != null) {
+            PageRouter.router.go("/");
+          }
           break;
 
         case AuthChangeEvent.signedIn:
@@ -81,7 +80,7 @@ void navigationByState(BuildContext context) {
           break;
 
         default:
-          break;
+          PageRouter.router.go("/onBoarding");
       }
     } catch (e) {
       if (context.mounted) {
