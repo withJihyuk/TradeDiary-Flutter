@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:markdown_editor_plus/markdown_editor_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/desginSystem/color.dart';
@@ -17,6 +16,9 @@ class _WritePageState extends State<WritePage> {
   final TextEditingController controller = TextEditingController();
   final DiaryPostViewModel diaryPostViewModel = DiaryPostViewModel();
   final userId = Supabase.instance.client.auth.currentUser!.id;
+
+  var isPrivate = true;
+  var isPreview = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,42 +44,25 @@ class _WritePageState extends State<WritePage> {
               const SizedBox(
                 height: 10,
               ),
-              // SplittedMarkdownFormField
-              MarkdownAutoPreview(
-                cursorColor: DiaryColorBlue.lightActive,
-                toolbarBackground: DiaryColorBlue.light,
-                expandableBackground: DiaryColorBlue.lightActive,
-                hintText: "오늘은 어떤 일이 있으셨나요?\n자유롭게 일기를 작성해봐요!",
+              MarkdownField(
+                padding: const EdgeInsets.all(0),
                 style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
-                decoration: InputDecoration(
-                  hintText: "입력하기",
-                  hintStyle: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[500],
-                  ),
+                  fontSize: 20,
+                  color: Colors.black,
                 ),
                 controller: controller,
-                emojiConvert: true,
-                showEmojiSelection: true,
-              ),
-
-              // TextField(
-              //   decoration: InputDecoration(
-              //     hintText: "오늘은 어떤 일이 있으셨나요?\n자유롭게 일기를 작성해봐요!",
-              //     hintStyle: TextStyle(
-              //       fontSize: 18,
-              //       fontWeight: FontWeight.w400,
-              //       color: Colors.grey[500],
-              //     ),
-              //     border: InputBorder.none,
-              //   ),
-              //   style: const TextStyle(fontSize: 18),
-              //   maxLines: 20,
-              // ),
+                maxLines: 100,
+                readOnly: isPreview ? true : false,
+                decoration: InputDecoration(
+                  hintText:
+                      isPreview ? "아직 내용이 작성되지 않았어요" : "여기를 눌러 오늘의 일기를 작성해주세요",
+                  hintStyle: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.grey,
+                  ),
+                  border: InputBorder.none,
+                ),
+              )
             ],
           ),
         )),
@@ -88,29 +73,41 @@ class _WritePageState extends State<WritePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            // IconButton(
+            //   icon: const Icon(Icons.photo),
+            //   onPressed: () {
+            //     controller.text += "![image](https://picsum.photos/200/300)";
+            //   },
+            // ),
+            // IconButton(
+            //   icon: const Icon(Icons.brush),
+            //   onPressed: () {},
+            // ),
             IconButton(
-              icon: const Icon(Icons.photo),
-              onPressed: () {},
-            ),
+                icon: isPrivate
+                    ? const Icon(Icons.lock)
+                    : const Icon(Icons.lock_open),
+                onPressed: () {
+                  setState(() {
+                    isPrivate = !isPrivate;
+                  });
+                }),
             IconButton(
-              icon: const Icon(Icons.camera_alt),
-              onPressed: () {
-                controller.text += "![image](https://picsum.photos/200/300)";
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.brush),
-              onPressed: () {},
-            ),
-            const SizedBox(
-              width: 40,
-            ),
+                icon: isPreview
+                    ? const Icon(Icons.remove_red_eye)
+                    : const Icon(Icons.remove_red_eye_outlined),
+                onPressed: () {
+                  setState(() {
+                    isPreview = !isPreview;
+                    print(isPreview);
+                  });
+                }),
             IconButton(
               icon: const Icon(Icons.check),
               onPressed: () {
                 diaryPostViewModel.addDiaryPost(
                   controller.text,
-                  false,
+                  isPrivate,
                 );
               },
             ),
