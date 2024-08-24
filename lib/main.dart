@@ -64,6 +64,8 @@ void navigationByState(BuildContext context) {
         case AuthChangeEvent.initialSession:
           if (context.mounted && data.session != null) {
             PageRouter.router.go("/");
+          } else {
+            PageRouter.router.go("/onBoarding");
           }
           break;
 
@@ -80,7 +82,7 @@ void navigationByState(BuildContext context) {
           break;
 
         default:
-          PageRouter.router.go("/onBoarding");
+          break;
       }
     } catch (e) {
       if (context.mounted) {
