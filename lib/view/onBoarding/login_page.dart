@@ -4,6 +4,8 @@ import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/viewmodel/oauth_model.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
+// 소셜 로그인 애플 => 카카오로 고민중
+
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
@@ -56,27 +58,27 @@ class LoginPage extends StatelessWidget {
                                                   fontWeight: FontWeight.w600))
                                         ]))),
                                 const SizedBox(height: 10),
-                                InkWell(
-                                    onTap: () => print("애플 로그인"),
-                                    child: Container(
-                                        padding: const EdgeInsets.all(20),
-                                        height: 70,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            color: Colors.white),
-                                        child: Row(children: [
-                                          Image.asset(
-                                            'assets/images/apple.png',
-                                            width: 40,
-                                            height: 40,
-                                          ),
-                                          const SizedBox(width: 20),
-                                          const Text("Apple로 계속하기",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w600))
-                                        ])))
+                                // InkWell(
+                                //     onTap: () => print("애플 로그인"),
+                                //     child: Container(
+                                //         padding: const EdgeInsets.all(20),
+                                //         height: 70,
+                                //         decoration: BoxDecoration(
+                                //             borderRadius:
+                                //                 BorderRadius.circular(8),
+                                //             color: Colors.white),
+                                //         child: Row(children: [
+                                //           Image.asset(
+                                //             'assets/images/apple.png',
+                                //             width: 40,
+                                //             height: 40,
+                                //           ),
+                                //           const SizedBox(width: 20),
+                                //           const Text("Apple로 계속하기",
+                                //               style: TextStyle(
+                                //                   fontSize: 20,
+                                //                   fontWeight: FontWeight.w600))
+                                //         ])))
                               ],
                             ),
                           ),

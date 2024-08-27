@@ -24,7 +24,5 @@ class DiaryPostViewModel {
     return repo.getDiaryPost(postId);
   }
 
-  getUserInfo() {
-    Supabase.instance.client.auth.getUserIdentities();
-  }
+  // 일기 isPrivate => 소유자 확인 로직 필요
 }

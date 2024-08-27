@@ -78,11 +78,11 @@ class _WritePageState extends State<WritePage> {
             //   onPressed: () {
             //     controller.text += "![image](https://picsum.photos/200/300)";
             //   },
-            // ),
+            // ), // 이미지 추가용
             // IconButton(
             //   icon: const Icon(Icons.brush),
             //   onPressed: () {},
-            // ),
+            // ), // 배경용
             IconButton(
                 icon: isPrivate
                     ? const Icon(Icons.lock)
@@ -99,7 +99,6 @@ class _WritePageState extends State<WritePage> {
                 onPressed: () {
                   setState(() {
                     isPreview = !isPreview;
-                    print(isPreview);
                   });
                 }),
             IconButton(
