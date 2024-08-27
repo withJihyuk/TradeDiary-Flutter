@@ -18,6 +18,7 @@ class ReadPage extends StatelessWidget {
     });
 
     // 프로필 기능 제작 시, 프로필 가져오기와 팔로우 기능 제작 필요
+    // 잘못된 페이지 id 파라미터가 들어오면, 에러 페이지로 라우팅 제작 필요
 
     return Scaffold(
         backgroundColor: Colors.white,
