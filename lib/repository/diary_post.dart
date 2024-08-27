@@ -4,15 +4,15 @@ import 'package:trade_diary/model/diary_post.dart';
 class DiaryPostRepo {
   final datasource = DiaryPostDataSource();
 
-  Future getDiaryPost(String clientId) async {
-    return datasource.getDiaryPost(clientId);
+  Future<List> getDiaryPost(String postId) async {
+    return datasource.getDiaryPost(postId);
   }
 
   Future<void> addDiaryPost(DiaryPostModel data) async {
     return datasource.createDiaryPost(data);
   }
 
-  Future isUserWriteDiaryToday(String userId) async {
+  Future<List> isUserWriteDiaryToday(String userId) {
     return datasource.isWriteDiaryToday(userId);
   }
 

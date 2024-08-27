@@ -40,12 +40,10 @@ class MyCharacter extends StatelessWidget {
                                   shape: BoxShape.circle),
                               child: const Icon(Icons.fullscreen),
                             ))),
-                    const Align(
+                    Align(
                       alignment: Alignment.center,
-                      child: Text(
-                        "캐릭터 이미지",
-                        style: TextStyle(),
-                      ),
+                      child: Image.asset(
+                          width: 150, height: 150, "assets/images/dw.png"),
                     ),
                     Align(
                         alignment: Alignment.bottomLeft,

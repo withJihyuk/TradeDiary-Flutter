@@ -40,7 +40,7 @@ class PageRouter {
           GoRoute(
               path: 'read/:id',
               builder: (context, state) =>
-                  ReadPage(id: state.pathParameters['id'])),
+                  ReadPage(id: state.pathParameters['id']!)),
           GoRoute(
               path: _writePage, builder: (context, state) => const WritePage()),
           GoRoute(

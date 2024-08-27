@@ -6,18 +6,6 @@ class DiaryPostViewModel {
   final repo = DiaryPostRepo();
   final userId = Supabase.instance.client.auth.currentUser!.id;
 
-  Future getDiaryPost() async {
-    return repo.getDiaryPost(userId);
-  }
-
-  Future getFriendDiaryPost() async {
-    return repo.getFriendDiaryPost(userId);
-  }
-
-  Future isUserWriteDiaryToday() async {
-    return repo.isUserWriteDiaryToday(userId);
-  }
-
   Future<void> addDiaryPost(String content, bool isPrivate) async {
     final DiaryPostModel model = DiaryPostModel(
       userId: userId,
@@ -30,5 +18,13 @@ class DiaryPostViewModel {
   String getTodayDate() {
     final now = DateTime.now();
     return "${now.month}월 ${now.day}일";
+  }
+
+  Future<List> getDiaryPost(String postId) async {
+    return repo.getDiaryPost(postId);
+  }
+
+  getUserInfo() {
+    Supabase.instance.client.auth.getUserIdentities();
   }
 }

@@ -8,8 +8,8 @@ class DiaryPostDataSource {
     await supabase.from("diary").insert(data);
   }
 
-  Future getDiaryPost(String userId) async {
-    return await supabase.from("diary").select().eq('userId', userId);
+  Future<List> getDiaryPost(String postId) async {
+    return await supabase.from("diary").select().eq('id', postId);
   }
 
   Future getFriendDiaryPost(String userId) async {
@@ -22,12 +22,20 @@ class DiaryPostDataSource {
         .eq('isPrivate', false);
   }
 
-  Future isWriteDiaryToday(String userId) async {
-    final today = DateTime.now();
-    return await supabase
+  Future<List> isWriteDiaryToday(String userId) {
+    final todayStart = DateTime.now().toLocal().toIso8601String().split('T')[0];
+    final todayEnd = DateTime.now()
+        .add(const Duration(days: 1))
+        .toLocal()
+        .toIso8601String()
+        .split('T')[0];
+    print(todayEnd);
+    print(todayStart);
+    return supabase
         .from("diary")
         .select()
         .eq('userId', userId)
-        .eq('createdAt', today);
+        .gte('created_at', '$todayStart 00:00:00Z')
+        .lt('created_at', '$todayEnd 00:00:00Z');
   }
 }

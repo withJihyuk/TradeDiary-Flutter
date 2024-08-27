@@ -3,10 +3,38 @@ import 'package:go_router/go_router.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/view/components/box_widget.dart';
 import 'package:trade_diary/view/components/box_widget_value.dart';
+import 'package:trade_diary/viewModel/home_model.dart';
 //import 'package:trade_diary/view/components/post_list.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool isWriteDiary = false;
+  String? diaryId;
+  Future? _future;
+
+  HomeViewModel viewModel = HomeViewModel();
+  Future checkDiary() async {
+    await viewModel.isUserWriteDiaryToday().then((value) {
+      setState(() {
+        if (value != false) {
+          isWriteDiary = !isWriteDiary;
+          diaryId = value['id'];
+        }
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    _future = checkDiary();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,18 +86,33 @@ class HomePage extends StatelessWidget {
                     ),
                     Column(children: [
                       Boxwidget(title: "일기 작성", children: [
-                        InkWell(
-                            onTap: () => context.push("/write"),
-                            child: const Boxwidgetvalue(
-                              title: "작성하기",
-                              subtitle: "오늘의 일기를 작성해보세요",
-                              isicon: true,
-                              icon: Icons.book,
-                            )),
+                        FutureBuilder(
+                            future: _future,
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              return isWriteDiary
+                                  ? InkWell(
+                                      onTap: () =>
+                                          context.push("/read/$diaryId"),
+                                      onDoubleTap: () => print(diaryId),
+                                      child: const Boxwidgetvalue(
+                                        title: "작성완료",
+                                        subtitle: "오늘은 일기를 작성 했어요",
+                                        isicon: true,
+                                        icon: Icons.check,
+                                      ))
+                                  : InkWell(
+                                      onTap: () => context.push("/write"),
+                                      child: const Boxwidgetvalue(
+                                        title: "작성하기",
+                                        subtitle: "오늘의 일기를 작성해보세요",
+                                        isicon: true,
+                                        icon: Icons.book,
+                                      ));
+                            })
                       ]),
                       const SizedBox(height: 20),
                       Boxwidget(title: "일기 교환", children: [
-                        // 실제 기기로 보니 Overflow 발생, 수정 필요
                         SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
