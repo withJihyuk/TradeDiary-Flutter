@@ -17,10 +17,12 @@ class ReadPage extends StatelessWidget {
       controller.text += value[0]['content'];
     });
 
+    // 프로필 기능 제작 시, 프로필 가져오기와 팔로우 기능 제작 필요
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: const GlobalAppbar(
-          title: "안녕",
+          title: "일기",
         ),
         body: SafeArea(
             child: SingleChildScrollView(
