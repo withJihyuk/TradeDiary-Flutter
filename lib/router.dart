@@ -19,6 +19,7 @@ class PageRouter {
 
   static final GoRouter router = GoRouter(
     routes: [
+      // 첫 라우팅 위치 스플래시 화면 제작 필요
       GoRoute(
         path: _mainPage,
         builder: (context, state) => const HomePage(),
