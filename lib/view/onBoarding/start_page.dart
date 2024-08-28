@@ -33,7 +33,7 @@ class FirstPage extends StatelessWidget {
             width: 400,
             height: 400,
           ),
-          const SizedBox(height: 40),
+          SizedBox(height: GetMediaQuery.getScreenHeight(context) / 9),
           TextButton(
             onPressed: () => context.push('/login'),
             child: Container(
