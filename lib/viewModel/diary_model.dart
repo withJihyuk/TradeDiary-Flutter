@@ -12,6 +12,7 @@ class DiaryPostViewModel {
       content: content,
       isPrivate: isPrivate,
     );
+    
     return repo.addDiaryPost(model);
   }
 

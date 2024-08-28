@@ -94,7 +94,6 @@ class _HomePageState extends State<HomePage> {
                                   ? InkWell(
                                       onTap: () =>
                                           context.push("/read/$diaryId"),
-                                      onDoubleTap: () => print(diaryId),
                                       child: const Boxwidgetvalue(
                                         title: "작성완료",
                                         subtitle: "오늘은 일기를 작성 했어요",
@@ -102,7 +101,10 @@ class _HomePageState extends State<HomePage> {
                                         icon: Icons.check,
                                       ))
                                   : InkWell(
-                                      onTap: () => context.push("/write"),
+                                      onTap: () {
+                                        super.dispose();
+                                        context.push("/write");
+                                      },
                                       child: const Boxwidgetvalue(
                                         title: "작성하기",
                                         subtitle: "오늘의 일기를 작성해보세요",
@@ -133,57 +135,6 @@ class _HomePageState extends State<HomePage> {
                                           fit: BoxFit.fill,
                                           "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
                                     )),
-                                const SizedBox(width: 20),
-                                InkWell(
-                                    onTap: () => context.push("/read"),
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            width: 2,
-                                            color: DiaryColorBlue.lightHover),
-                                      ),
-                                      child: Image.network(
-                                          fit: BoxFit.fill,
-                                          "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
-                                    )),
-                                const SizedBox(width: 20),
-                                InkWell(
-                                    onTap: () => context.push("/read"),
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            width: 2,
-                                            color: DiaryColorBlue.lightHover),
-                                      ),
-                                      child: Image.network(
-                                          fit: BoxFit.fill,
-                                          "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
-                                    )),
-                                const SizedBox(width: 20),
-                                InkWell(
-                                    onTap: () => context.push("/read"),
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            width: 2,
-                                            color: DiaryColorBlue.lightHover),
-                                      ),
-                                      child: Image.network(
-                                          fit: BoxFit.fill,
-                                          "https://jjal.today/data/file/gallery/654777533_LXcuaI8Q_bc6f86a21271009c43de1783cb6780dc9e657a4d.jpeg"),
-                                    )),
                                 const SizedBox(
                                     width: 20), // future builder 사용해야함 수정 필요
                                 Icon(Icons.plus_one_rounded,
@@ -191,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ))
                       ]),
-                      const SizedBox(height: 20),
+                      // const SizedBox(height: 20),
                       // const Boxwidget(title: "커뮤니티", children: [
                       //   PostListWidget(postList: [
                       //     {'title': '나랑 일기 교환할래?', 'category': '구해요'},

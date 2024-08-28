@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:markdown_editor_plus/markdown_editor_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/desginSystem/color.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
 
@@ -108,6 +109,7 @@ class _WritePageState extends State<WritePage> {
                   controller.text,
                   isPrivate,
                 );
+                context.push('/home');
               },
             ),
           ],
