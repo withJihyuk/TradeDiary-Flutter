@@ -25,5 +25,4 @@ class DiaryPostViewModel {
     return repo.getDiaryPost(postId);
   }
 
-  // 일기 isPrivate => 소유자 확인 로직 필요
 }

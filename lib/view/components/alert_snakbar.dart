@@ -10,10 +10,15 @@ class AlertSnakbar extends SnackBar {
     super.key,
   }) : super(
             content: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(setIconByState(status).keys.first,
-                    color: setIconByState(status).values.first),
-                Text(content),
+                Row(
+                  children: [
+                    Icon(setIconByState(status).keys.first,
+                        color: setIconByState(status).values.first),
+                    Text(content),
+                  ],
+                ),
               ],
             ),
             backgroundColor: const Color(0xFF475364),

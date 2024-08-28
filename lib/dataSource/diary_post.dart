@@ -12,16 +12,6 @@ class DiaryPostDataSource {
     return await supabase.from("diary").select().eq('id', postId);
   }
 
-  Future getFriendDiaryPost(String userId) async {
-    final friendId =
-        await supabase.from("follow").select().neq('follower_id', userId);
-    return await supabase
-        .from("diary")
-        .select()
-        .neq('userId', friendId)
-        .eq('isPrivate', false);
-  }
-
   Future<List> isWriteDiaryToday(String userId) {
     final nowTime = DateTime.now();
     final todayStart = nowTime.toLocal().toIso8601String().split('T')[0];

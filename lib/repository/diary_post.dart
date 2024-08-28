@@ -15,8 +15,4 @@ class DiaryPostRepo {
   Future<List> isUserWriteDiaryToday(String userId) {
     return datasource.isWriteDiaryToday(userId);
   }
-
-  Future getFriendDiaryPost(String userId) async {
-    return datasource.getFriendDiaryPost(userId);
-  }
 }
