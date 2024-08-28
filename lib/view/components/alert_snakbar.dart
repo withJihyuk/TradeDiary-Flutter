@@ -7,6 +7,7 @@ class AlertSnakbar extends SnackBar {
   AlertSnakbar({
     required AlertSnakbarStatus status,
     required String content,
+    // required String? route,
     super.key,
   }) : super(
           content: Row(
@@ -17,9 +18,7 @@ class AlertSnakbar extends SnackBar {
               Text(content),
             ],
           ),
-          backgroundColor:
-              const Color(0xFF475364), // Dark gray background color
-          behavior: SnackBarBehavior.floating,
+          backgroundColor: const Color(0xFF475364),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
