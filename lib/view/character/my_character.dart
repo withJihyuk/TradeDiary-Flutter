@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/util/screen_size.dart';
+import 'package:trade_diary/view/components/alert_snakbar.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
-const snackBar = SnackBar(
-  content: Text('아직 준비중인 기능입니다.\n준비되면 알려 드릴게요!'),
-);
+final snackBar =
+    AlertSnakbar(content: "아직 준비중이에요", status: AlertSnakbarStatus.error);
 
 class MyCharacter extends StatelessWidget {
   const MyCharacter({super.key});

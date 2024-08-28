@@ -4,6 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:trade_diary/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+// 웹 정보 관련 수정 필요 => 파비콘, 소개 등등
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -59,7 +61,7 @@ void navigationByState(BuildContext context) {
       switch (event) {
         case AuthChangeEvent.initialSession:
           if (context.mounted && data.session != null) {
-            PageRouter.router.go("/");
+            PageRouter.router.go("/home");
           } else {
             PageRouter.router.go("/onBoarding");
           }
@@ -67,7 +69,7 @@ void navigationByState(BuildContext context) {
 
         case AuthChangeEvent.signedIn:
           if (context.mounted) {
-            PageRouter.router.go("/");
+            PageRouter.router.go("/home");
           }
           break;
 

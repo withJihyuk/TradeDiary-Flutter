@@ -7,22 +7,23 @@ import 'package:trade_diary/view/home/home_page.dart';
 import 'package:trade_diary/view/home/setting_page.dart';
 import 'package:trade_diary/view/onBoarding/start_page.dart';
 import 'package:trade_diary/view/onBoarding/login_page.dart';
+import 'package:trade_diary/view/splash/splash_page.dart';
 
 class PageRouter {
+  static const _splashPage = "/";
   static const _settingPage = "setting";
   static const _onBoardingPage = "onBoarding";
   static const _loginPage = "login";
   static const _alertPage = "alert";
-  static const _mainPage = "/";
+  static const _mainPage = "home";
   static const _writePage = "write";
   static const _characterPage = "character";
 
   static final GoRouter router = GoRouter(
     routes: [
-      // 첫 라우팅 위치 스플래시 화면 제작 필요
       GoRoute(
-        path: _mainPage,
-        builder: (context, state) => const HomePage(),
+        path: _splashPage,
+        builder: (context, state) => const SplashPage(),
         routes: [
           GoRoute(
             path: _settingPage,
@@ -47,6 +48,8 @@ class PageRouter {
           GoRoute(
               path: _characterPage,
               builder: (context, state) => const MyCharacter()),
+          GoRoute(
+              path: _mainPage, builder: (context, state) => const HomePage()),
         ],
       )
     ],
