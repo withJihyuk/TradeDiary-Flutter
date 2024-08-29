@@ -16,6 +16,9 @@ class AlertSnakbar extends SnackBar {
                   children: [
                     Icon(setIconByState(status).keys.first,
                         color: setIconByState(status).values.first),
+                    const SizedBox(
+                      width: 8,
+                    ),
                     Text(content),
                   ],
                 ),

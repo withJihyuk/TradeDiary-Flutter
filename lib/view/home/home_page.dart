@@ -4,7 +4,6 @@ import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/view/components/box_widget.dart';
 import 'package:trade_diary/view/components/box_widget_value.dart';
 import 'package:trade_diary/viewModel/home_model.dart';
-//import 'package:trade_diary/view/components/post_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,6 +33,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _future = checkDiary();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -102,7 +106,6 @@ class _HomePageState extends State<HomePage> {
                                       ))
                                   : InkWell(
                                       onTap: () {
-                                        super.dispose();
                                         context.push("/write");
                                       },
                                       child: const Boxwidgetvalue(
@@ -142,15 +145,6 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ))
                       ]),
-                      // const SizedBox(height: 20),
-                      // const Boxwidget(title: "커뮤니티", children: [
-                      //   PostListWidget(postList: [
-                      //     {'title': '나랑 일기 교환할래?', 'category': '구해요'},
-                      //     {'title': '나 곱창 먹었는데 맛있겠징', 'category': '일상'},
-                      //     {'title': '어떻게 하루종일 아프냐', 'category': '일상'},
-                      //     {'title': '집가고싶다', 'category': '일상'},
-                      //   ])
-                      // ])
                     ])
                   ]),
             ))));

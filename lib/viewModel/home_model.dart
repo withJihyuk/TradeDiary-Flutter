@@ -9,10 +9,6 @@ class HomeViewModel {
     return repo.getDiaryPost(userId);
   }
 
-  Future getFriendDiaryPost() async {
-    return repo.getFriendDiaryPost(userId);
-  }
-
   Future isUserWriteDiaryToday() async {
     final result = await repo.isUserWriteDiaryToday(userId);
     final diaryId = result.isEmpty ? false : result[0];
