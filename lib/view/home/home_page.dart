@@ -83,7 +83,8 @@ class _HomePageState extends State<HomePage> {
                                   title: "보러가기",
                                   subtitle: "캐릭터가 기다리고 있어요",
                                   isicon: false,
-                                  assetname: "assets/images/hamster.svg")))
+                                  assetname:
+                                      "assets/images/character/img-potato-7lv.png")))
                     ]),
                     const SizedBox(
                       height: 20,

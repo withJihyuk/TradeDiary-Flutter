@@ -8,7 +8,7 @@ class SplashPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Image.asset(
-          "assets/images/dw.png",
+          "assets/images/character/img-potato-7lv.png",
           width: 100,
           height: 100,
         ),

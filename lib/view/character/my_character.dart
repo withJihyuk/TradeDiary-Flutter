@@ -43,7 +43,7 @@ class MyCharacter extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: Image.asset(
-                          width: 150, height: 150, "assets/images/dw.png"),
+                          width: 150, height: 150, "assets/images/character/img-potato-7lv.png"),
                     ),
                     Align(
                         alignment: Alignment.bottomLeft,

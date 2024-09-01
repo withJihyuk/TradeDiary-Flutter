@@ -12,7 +12,7 @@ class NotFoundPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Image.asset(width: 60, height: 60, 'assets/images/dw.png'),
+            Image.asset(width: 60, height: 60, 'assets/images/character/img-potato-7lv.png'),
             const SizedBox(height: 10),
             const Text("정보를 불러올 수 없어요",
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),

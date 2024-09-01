@@ -31,7 +31,7 @@ class Boxwidgetvalue extends StatelessWidget {
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey[300]!, width: 2),
                         shape: BoxShape.circle),
-                    child: SvgPicture.asset(
+                    child: Image.asset(
                       assetname!,
                     ),
                   ),
