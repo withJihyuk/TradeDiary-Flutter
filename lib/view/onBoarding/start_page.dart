@@ -28,11 +28,11 @@ class FirstPage extends StatelessWidget {
             "친구와 교환하며 일기를 작성해봐요",
             style: TextStyle(fontSize: 18),
           ),
-          SvgPicture.asset(
-            'assets/images/hamster.svg',
-            width: 400,
-            height: 400,
-          ),
+          // SvgPicture.asset(
+          //   'assets/images/hamster.svg',
+          //   width: 400,
+          //   height: 400,
+          // ),
           SizedBox(height: GetMediaQuery.getScreenHeight(context) / 9),
           TextButton(
             onPressed: () => context.push('/login'),

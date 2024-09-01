@@ -1,26 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_editor_plus/markdown_editor_plus.dart';
 import 'package:trade_diary/desginSystem/color.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 import 'package:trade_diary/view/components/user_box.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
 
-class ReadPage extends StatelessWidget {
+class ReadPage extends StatefulWidget {
   final String id;
   const ReadPage({super.key, required this.id});
 
   @override
+  State<ReadPage> createState() => _ReadPageState();
+}
+
+class _ReadPageState extends State<ReadPage> {
+  final TextEditingController controller = TextEditingController();
+  final DiaryPostViewModel viewModel = DiaryPostViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    loadDiaryPost();
+  }
+
+  Future<void> loadDiaryPost() async {
+    try {
+      final value = await viewModel.getDiaryPost(widget.id);
+      if (value.isNotEmpty) {
+        setState(() {
+          controller.text = value[0]['content'];
+        });
+      } else if (mounted) {
+        context.push('/error');
+      }
+    } catch (error) {
+      if (mounted) {
+        context.push('/error');
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
-    DiaryPostViewModel viewModel = DiaryPostViewModel();
-    viewModel.getDiaryPost(id).then((value) {
-      controller.text += value[0]['content'];
-    });
-
-    // 프로필 기능 제작 시, 프로필 가져오기와 팔로우 기능 제작 필요
-    // 잘못된 페이지 id 파라미터가 들어오면, 에러 페이지로 라우팅 제작 필요
-    // 무조건적으로 오늘 날짜 가져오는 문제 함수 형태로 데이터 넘기고 parse 하여 해결하기
-
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: const GlobalAppbar(

@@ -12,14 +12,23 @@ class NotFoundPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            const Text("페이지를 찾을 수 없어요"),
-            const Text("사용자가 비공개 했거나 올바르지 않은 경로에요."),
+            Image.asset(width: 60, height: 60, 'assets/images/dw.png'),
+            const SizedBox(height: 10),
+            const Text("정보를 불러올 수 없어요",
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),
+            const SizedBox(
+              height: 20,
+            ),
             Container(
-              padding: const EdgeInsets.all(20),
+              alignment: Alignment.center,
+              width: 120,
+              height: 48,
               decoration: BoxDecoration(
-                  color: DiaryColorBlue.lightActive,
-                  borderRadius: BorderRadius.circular(20)),
-              child: const Text("메인으로 이동하기"),
+                  color: DiaryColorBlue.normal,
+                  borderRadius: BorderRadius.circular(8)),
+              child: const Text("홈으로 이동하기",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w600)),
             )
           ],
         ),

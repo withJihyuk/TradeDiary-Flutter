@@ -3,6 +3,7 @@ import 'package:trade_diary/view/character/my_character.dart';
 import 'package:trade_diary/view/diary/read_page.dart';
 import 'package:trade_diary/view/diary/write_page.dart';
 import 'package:trade_diary/view/alert/alert_page.dart';
+import 'package:trade_diary/view/error/not_found.dart';
 import 'package:trade_diary/view/home/home_page.dart';
 import 'package:trade_diary/view/setting/setting_page.dart';
 import 'package:trade_diary/view/onBoarding/start_page.dart';
@@ -18,6 +19,7 @@ class PageRouter {
   static const _mainPage = "home";
   static const _writePage = "write";
   static const _characterPage = "character";
+  static const _notFoundPage = "error";
 
   static final GoRouter router = GoRouter(
     routes: [
@@ -50,6 +52,8 @@ class PageRouter {
               builder: (context, state) => const MyCharacter()),
           GoRoute(
               path: _mainPage, builder: (context, state) => const HomePage()),
+          GoRoute(
+              path: _notFoundPage, builder: (context, state) => const NotFoundPage()),
         ],
       )
     ],
