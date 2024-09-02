@@ -26,6 +26,8 @@ dependencies:
   build_runner: ^2.4.12
   json_annotation: ^4.9.0
   markdown_editor_plus: ^0.2.15
+  flutter_native_splash: ^2.4.1
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
@@ -33,6 +35,17 @@ dev_dependencies:
 
   flutter_lints: ^3.0.0
   json_serializable: ^6.8.0
+
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/character/img-potato-7lv.png
+  android: true
+  ios: true
+
+  android_12:
+    image: assets/images/character/img-potato-7lv.png
+    icon_background_color: "#ffffff"
 
 flutter:
   assets:
@@ -64,5 +77,4 @@ flutter:
           weight: 800
         - asset: assets/fonts/PretendardJP/PretendardJP-Black.otf
           weight: 900
-
   uses-material-design: true
