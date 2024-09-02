@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 
 class NotFoundPage extends StatelessWidget {
@@ -11,6 +12,8 @@ class NotFoundPage extends StatelessWidget {
       appBar: const GlobalAppbar(title: "오류"),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(width: 60, height: 60, 'assets/images/character/img-potato-7lv.png'),
             const SizedBox(height: 10),
@@ -19,9 +22,12 @@ class NotFoundPage extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
+            InkWell(
+                onTap: () => context.push("/home"),
+                child:
             Container(
               alignment: Alignment.center,
-              width: 120,
+              width: 140,
               height: 48,
               decoration: BoxDecoration(
                   color: DiaryColorBlue.normal,
@@ -29,7 +35,7 @@ class NotFoundPage extends StatelessWidget {
               child: const Text("홈으로 이동하기",
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.w600)),
-            )
+            ))
           ],
         ),
       ),
