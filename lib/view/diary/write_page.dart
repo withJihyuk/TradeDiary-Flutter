@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:markdown_editor_plus/markdown_editor_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/desginSystem/color.dart';
@@ -45,25 +46,40 @@ class _WritePageState extends State<WritePage> {
               const SizedBox(
                 height: 10,
               ),
-              MarkdownField(
-                padding: const EdgeInsets.all(0),
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
-                ),
-                controller: controller,
-                maxLines: 100,
-                readOnly: isPreview ? true : false,
-                decoration: InputDecoration(
-                  hintText:
-                      isPreview ? "아직 내용이 작성되지 않았어요" : "여기를 눌러 오늘의 일기를 작성해주세요",
-                  hintStyle: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.grey,
-                  ),
-                  border: InputBorder.none,
-                ),
-              )
+              isPreview
+                  ? MarkdownAutoPreview(
+                      controller: controller,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                      decoration: const InputDecoration(
+                        hintText: "내용을 작성 해주세요.",
+                        hintStyle: TextStyle(
+                          fontSize: 20,
+                          color: Colors.grey,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                    ) // 스타일 수정 필요
+                  : MarkdownField(
+                      padding: const EdgeInsets.all(0),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                      controller: controller,
+                      maxLines: 100,
+                      readOnly: isPreview ? true : false,
+                      decoration: const InputDecoration(
+                        hintText: "여기를 눌러 오늘의 일기를 작성해주세요",
+                        hintStyle: TextStyle(
+                          fontSize: 20,
+                          color: Colors.grey,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                    )
             ],
           ),
         )),
@@ -74,16 +90,20 @@ class _WritePageState extends State<WritePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // IconButton(
-            //   icon: const Icon(Icons.photo),
-            //   onPressed: () {
-            //     controller.text += "![image](https://picsum.photos/200/300)";
-            //   },
-            // ), // 이미지 추가용
-            // IconButton(
-            //   icon: const Icon(Icons.brush),
-            //   onPressed: () {},
-            // ), // 배경용
+            IconButton(
+              icon: const Icon(Icons.photo),
+              onPressed: () async {
+                var picker = ImagePicker();
+                var image = await picker.pickImage(source: ImageSource.gallery);
+                final imageID = await diaryPostViewModel.uploadImage(image!);
+                controller.text +=
+                    "![Github_Logo](https://152.70.37.62:9000/profile-images/${imageID.fileName}.webp";
+              },
+            ), // 이미지 추가용
+            IconButton(
+              icon: const Icon(Icons.brush),
+              onPressed: () {},
+            ), // 배경용
             IconButton(
                 icon: isPrivate
                     ? const Icon(Icons.lock)

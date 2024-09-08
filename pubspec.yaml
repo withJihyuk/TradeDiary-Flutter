@@ -28,6 +28,7 @@ dependencies:
   markdown_editor_plus: ^0.2.15
   flutter_native_splash: ^2.4.1
   http: ^1.2.2
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
