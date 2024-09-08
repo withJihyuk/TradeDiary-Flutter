@@ -15,7 +15,10 @@ class NotFoundPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(width: 60, height: 60, 'assets/images/character/img-potato-7lv.png'),
+            Image.asset(
+                width: 60,
+                height: 60,
+                'assets/images/character/img-potato-7lv.png'),
             const SizedBox(height: 10),
             const Text("정보를 불러올 수 없어요",
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),
@@ -24,18 +27,17 @@ class NotFoundPage extends StatelessWidget {
             ),
             InkWell(
                 onTap: () => context.push("/home"),
-                child:
-            Container(
-              alignment: Alignment.center,
-              width: 140,
-              height: 48,
-              decoration: BoxDecoration(
-                  color: DiaryColorBlue.normal,
-                  borderRadius: BorderRadius.circular(8)),
-              child: const Text("홈으로 이동하기",
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w600)),
-            ))
+                child: Container(
+                  alignment: Alignment.center,
+                  width: 140,
+                  height: 48,
+                  decoration: BoxDecoration(
+                      color: DiaryColorBlue.normal,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: const Text("홈으로 이동하기",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w600)),
+                ))
           ],
         ),
       ),

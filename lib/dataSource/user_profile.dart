@@ -24,5 +24,4 @@ class Profile {
   Future followAnotherUser(UserFollowModel data) async {
     await supabase.from("follow").insert(data);
   }
-
 }

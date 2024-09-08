@@ -20,14 +20,13 @@ class _HomePageState extends State<HomePage> {
   HomeViewModel viewModel = HomeViewModel();
   Future checkDiary() async {
     final value = await viewModel.isUserWriteDiaryToday();
-      setState(() {
-        if (value != false) {
-          isWriteDiary = !isWriteDiary;
-          diaryId = value['id'];
-        }
-      });
-    }
-
+    setState(() {
+      if (value != false) {
+        isWriteDiary = !isWriteDiary;
+        diaryId = value['id'];
+      }
+    });
+  }
 
   @override
   void initState() {

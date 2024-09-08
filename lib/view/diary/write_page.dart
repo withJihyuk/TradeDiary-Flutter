@@ -100,10 +100,10 @@ class _WritePageState extends State<WritePage> {
                     "![Github_Logo](https://152.70.37.62:9000/profile-images/${imageID.fileName}.webp";
               },
             ), // 이미지 추가용
-            IconButton(
-              icon: const Icon(Icons.brush),
-              onPressed: () {},
-            ), // 배경용
+            // IconButton(
+            //   icon: const Icon(Icons.brush),
+            //   onPressed: () {},
+            // ), // 배경용
             IconButton(
                 icon: isPrivate
                     ? const Icon(Icons.lock)

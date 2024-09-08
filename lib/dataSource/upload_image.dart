@@ -8,8 +8,7 @@ class UploadImage {
   Future<ImageModel> imageUpload(XFile data) async {
     final image = XFile(data.path);
 
-    final parseUrl = Uri.parse(
-        'http://0.0.0.0:8000/files/images');
+    final parseUrl = Uri.parse('http://0.0.0.0:8000/files/images');
     final request = http.MultipartRequest(
       'POST',
       parseUrl,
