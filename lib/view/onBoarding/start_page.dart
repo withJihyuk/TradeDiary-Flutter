@@ -19,20 +19,20 @@ class FirstPage extends StatelessWidget {
                         children: [
           const SizedBox(height: 80),
           const Text(
-            "럭키비키",
+            "감자일기",
             textAlign: TextAlign.center,
             style: TextStyle(fontFamily: 'EF_Diary', fontSize: 38, height: 1.2),
           ),
           const SizedBox(height: 4),
           const Text(
-            "친구와 교환하며 일기를 작성해봐요",
+            "감자와 함께 일기를 써봐요!",
             style: TextStyle(fontSize: 18),
           ),
-          // SvgPicture.asset(
-          //   'assets/images/hamster.svg',
-          //   width: 400,
-          //   height: 400,
-          // ),
+          SizedBox(height: GetMediaQuery.getScreenHeight(context) / 6),
+          Image.asset(
+              width: 150,
+              height: 150,
+              "assets/images/character/img-potato-7lv.png"),
           SizedBox(height: GetMediaQuery.getScreenHeight(context) / 9),
           TextButton(
             onPressed: () => context.push('/login'),
