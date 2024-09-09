@@ -1,11 +1,11 @@
 {
-    "name": "trade_diary",
-    "short_name": "trade_diary",
+    "name": "감자일기",
+    "short_name": "감자일기",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFFFFF",
+    "theme_color": "#FFFFFF",
+    "description": "감자와 함께 일기를 써봐요!",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
