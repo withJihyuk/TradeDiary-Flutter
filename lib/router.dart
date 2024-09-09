@@ -22,6 +22,7 @@ class PageRouter {
   static const _notFoundPage = "error";
 
   static final GoRouter router = GoRouter(
+    debugLogDiagnostics: true,
     routes: [
       GoRoute(
         path: _splashPage,

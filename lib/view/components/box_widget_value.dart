@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 
 class Boxwidgetvalue extends StatelessWidget {

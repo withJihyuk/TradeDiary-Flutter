@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trade_diary/view/components/global_appbar.dart';
 
 class NotFoundPage extends StatelessWidget {
   const NotFoundPage({super.key});
@@ -9,7 +8,6 @@ class NotFoundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GlobalAppbar(title: "오류"),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -18,7 +16,7 @@ class NotFoundPage extends StatelessWidget {
             Image.asset(
                 width: 60,
                 height: 60,
-                'assets/images/character/img-potato-7lv.png'),
+                'assets/images/character/img-potato-sad.png'),
             const SizedBox(height: 10),
             const Text("정보를 불러올 수 없어요",
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),

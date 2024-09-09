@@ -32,11 +32,11 @@ class _ReadPageState extends State<ReadPage> {
           controller.text = value[0]['content'];
         });
       } else if (mounted) {
-        context.push('/error');
+        context.go('/error');
       }
     } catch (error) {
       if (mounted) {
-        context.push('/error');
+        context.go('/error');
       }
     }
   }

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/util/screen_size.dart';
-import 'package:trade_diary/view/components/alert_snakbar.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
-
-final snackBar =
-    AlertSnakbar(content: "아직 준비중이에요", status: AlertSnakbarStatus.error);
 
 class MyCharacter extends StatelessWidget {
   const MyCharacter({super.key});
@@ -30,8 +26,7 @@ class MyCharacter extends StatelessWidget {
                     Align(
                         alignment: Alignment.topRight,
                         child: InkWell(
-                            onTap: () => ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar),
+                            onTap: () => print("임시"),
                             child: Container(
                               width: 48,
                               height: 48,
@@ -51,8 +46,7 @@ class MyCharacter extends StatelessWidget {
                         alignment: Alignment.bottomLeft,
                         child: Row(children: [
                           InkWell(
-                              onTap: () => ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar),
+                              onTap: () => print("임시"),
                               child: Container(
                                 width: 48,
                                 height: 48,
@@ -66,8 +60,7 @@ class MyCharacter extends StatelessWidget {
                             width: 18,
                           ),
                           InkWell(
-                              onTap: () => ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar),
+                              onTap: () => print("임시"),
                               child: Container(
                                 width: 48,
                                 height: 48,
