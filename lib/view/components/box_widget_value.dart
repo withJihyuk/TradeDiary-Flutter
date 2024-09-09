@@ -27,6 +27,7 @@ class Boxwidgetvalue extends StatelessWidget {
                 : Container(
                     width: 48,
                     height: 48,
+                    padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey[300]!, width: 2),
                         shape: BoxShape.circle),
