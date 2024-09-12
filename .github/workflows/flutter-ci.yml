@@ -10,6 +10,14 @@ jobs:
         with:
           architecture: x64
       - run: flutter pub get
+      - run: |
+          echo "DB_URL=$DB_URL" >> .env
+          echo "DB_KEY"=$DB_KEY >> .env
+          echo "REDIRECT_URI"=$REDIRECT_URI >> .env
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_KEY: ${{ secrets.DB_KEY }}
+          REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
       - run: flutter analyze
 
   build:
