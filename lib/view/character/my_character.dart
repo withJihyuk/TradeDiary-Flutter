@@ -26,7 +26,7 @@ class MyCharacter extends StatelessWidget {
                     Align(
                         alignment: Alignment.topRight,
                         child: InkWell(
-                            onTap: () => print("임시"),
+                            onTap: () => {},
                             child: Container(
                               width: 48,
                               height: 48,
@@ -46,7 +46,7 @@ class MyCharacter extends StatelessWidget {
                         alignment: Alignment.bottomLeft,
                         child: Row(children: [
                           InkWell(
-                              onTap: () => print("임시"),
+                              onTap: () => {},
                               child: Container(
                                 width: 48,
                                 height: 48,
@@ -60,7 +60,7 @@ class MyCharacter extends StatelessWidget {
                             width: 18,
                           ),
                           InkWell(
-                              onTap: () => print("임시"),
+                              onTap: () => {},
                               child: Container(
                                 width: 48,
                                 height: 48,

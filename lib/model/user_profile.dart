@@ -8,11 +8,11 @@ class UserProfileModel with _$UserProfileModel {
   factory UserProfileModel({
     required String id,
     required String nickname,
-    required String profile_url,
+    required String profileUrl,
     required String gender,
     required String email,
-    required bool terms_flag,
-    required bool privacy_flag,
+    required bool termsFlag,
+    required bool privacyFlag,
     required DateTime birth,
   }) = _UserProfileModel;
 

@@ -1,6 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/model/user_follow.dart';
-import 'package:trade_diary/model/user_profile.dart';
 
 class Profile {
   final supabase = Supabase.instance.client;

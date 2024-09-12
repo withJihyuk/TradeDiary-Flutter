@@ -22,11 +22,11 @@ UserProfileModel _$UserProfileModelFromJson(Map<String, dynamic> json) {
 mixin _$UserProfileModel {
   String get id => throw _privateConstructorUsedError;
   String get nickname => throw _privateConstructorUsedError;
-  String get profile_url => throw _privateConstructorUsedError;
+  String get profileUrl => throw _privateConstructorUsedError;
   String get gender => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  bool get terms_flag => throw _privateConstructorUsedError;
-  bool get privacy_flag => throw _privateConstructorUsedError;
+  bool get termsFlag => throw _privateConstructorUsedError;
+  bool get privacyFlag => throw _privateConstructorUsedError;
   DateTime get birth => throw _privateConstructorUsedError;
 
   /// Serializes this UserProfileModel to a JSON map.
@@ -48,11 +48,11 @@ abstract class $UserProfileModelCopyWith<$Res> {
   $Res call(
       {String id,
       String nickname,
-      String profile_url,
+      String profileUrl,
       String gender,
       String email,
-      bool terms_flag,
-      bool privacy_flag,
+      bool termsFlag,
+      bool privacyFlag,
       DateTime birth});
 }
 
@@ -73,11 +73,11 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
   $Res call({
     Object? id = null,
     Object? nickname = null,
-    Object? profile_url = null,
+    Object? profileUrl = null,
     Object? gender = null,
     Object? email = null,
-    Object? terms_flag = null,
-    Object? privacy_flag = null,
+    Object? termsFlag = null,
+    Object? privacyFlag = null,
     Object? birth = null,
   }) {
     return _then(_value.copyWith(
@@ -89,9 +89,9 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as String,
-      profile_url: null == profile_url
-          ? _value.profile_url
-          : profile_url // ignore: cast_nullable_to_non_nullable
+      profileUrl: null == profileUrl
+          ? _value.profileUrl
+          : profileUrl // ignore: cast_nullable_to_non_nullable
               as String,
       gender: null == gender
           ? _value.gender
@@ -101,13 +101,13 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      terms_flag: null == terms_flag
-          ? _value.terms_flag
-          : terms_flag // ignore: cast_nullable_to_non_nullable
+      termsFlag: null == termsFlag
+          ? _value.termsFlag
+          : termsFlag // ignore: cast_nullable_to_non_nullable
               as bool,
-      privacy_flag: null == privacy_flag
-          ? _value.privacy_flag
-          : privacy_flag // ignore: cast_nullable_to_non_nullable
+      privacyFlag: null == privacyFlag
+          ? _value.privacyFlag
+          : privacyFlag // ignore: cast_nullable_to_non_nullable
               as bool,
       birth: null == birth
           ? _value.birth
@@ -128,11 +128,11 @@ abstract class _$$UserProfileModelImplCopyWith<$Res>
   $Res call(
       {String id,
       String nickname,
-      String profile_url,
+      String profileUrl,
       String gender,
       String email,
-      bool terms_flag,
-      bool privacy_flag,
+      bool termsFlag,
+      bool privacyFlag,
       DateTime birth});
 }
 
@@ -151,11 +151,11 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? nickname = null,
-    Object? profile_url = null,
+    Object? profileUrl = null,
     Object? gender = null,
     Object? email = null,
-    Object? terms_flag = null,
-    Object? privacy_flag = null,
+    Object? termsFlag = null,
+    Object? privacyFlag = null,
     Object? birth = null,
   }) {
     return _then(_$UserProfileModelImpl(
@@ -167,9 +167,9 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as String,
-      profile_url: null == profile_url
-          ? _value.profile_url
-          : profile_url // ignore: cast_nullable_to_non_nullable
+      profileUrl: null == profileUrl
+          ? _value.profileUrl
+          : profileUrl // ignore: cast_nullable_to_non_nullable
               as String,
       gender: null == gender
           ? _value.gender
@@ -179,13 +179,13 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      terms_flag: null == terms_flag
-          ? _value.terms_flag
-          : terms_flag // ignore: cast_nullable_to_non_nullable
+      termsFlag: null == termsFlag
+          ? _value.termsFlag
+          : termsFlag // ignore: cast_nullable_to_non_nullable
               as bool,
-      privacy_flag: null == privacy_flag
-          ? _value.privacy_flag
-          : privacy_flag // ignore: cast_nullable_to_non_nullable
+      privacyFlag: null == privacyFlag
+          ? _value.privacyFlag
+          : privacyFlag // ignore: cast_nullable_to_non_nullable
               as bool,
       birth: null == birth
           ? _value.birth
@@ -201,11 +201,11 @@ class _$UserProfileModelImpl implements _UserProfileModel {
   _$UserProfileModelImpl(
       {required this.id,
       required this.nickname,
-      required this.profile_url,
+      required this.profileUrl,
       required this.gender,
       required this.email,
-      required this.terms_flag,
-      required this.privacy_flag,
+      required this.termsFlag,
+      required this.privacyFlag,
       required this.birth});
 
   factory _$UserProfileModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -216,21 +216,21 @@ class _$UserProfileModelImpl implements _UserProfileModel {
   @override
   final String nickname;
   @override
-  final String profile_url;
+  final String profileUrl;
   @override
   final String gender;
   @override
   final String email;
   @override
-  final bool terms_flag;
+  final bool termsFlag;
   @override
-  final bool privacy_flag;
+  final bool privacyFlag;
   @override
   final DateTime birth;
 
   @override
   String toString() {
-    return 'UserProfileModel(id: $id, nickname: $nickname, profile_url: $profile_url, gender: $gender, email: $email, terms_flag: $terms_flag, privacy_flag: $privacy_flag, birth: $birth)';
+    return 'UserProfileModel(id: $id, nickname: $nickname, profileUrl: $profileUrl, gender: $gender, email: $email, termsFlag: $termsFlag, privacyFlag: $privacyFlag, birth: $birth)';
   }
 
   @override
@@ -241,21 +241,21 @@ class _$UserProfileModelImpl implements _UserProfileModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
-            (identical(other.profile_url, profile_url) ||
-                other.profile_url == profile_url) &&
+            (identical(other.profileUrl, profileUrl) ||
+                other.profileUrl == profileUrl) &&
             (identical(other.gender, gender) || other.gender == gender) &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.terms_flag, terms_flag) ||
-                other.terms_flag == terms_flag) &&
-            (identical(other.privacy_flag, privacy_flag) ||
-                other.privacy_flag == privacy_flag) &&
+            (identical(other.termsFlag, termsFlag) ||
+                other.termsFlag == termsFlag) &&
+            (identical(other.privacyFlag, privacyFlag) ||
+                other.privacyFlag == privacyFlag) &&
             (identical(other.birth, birth) || other.birth == birth));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, nickname, profile_url,
-      gender, email, terms_flag, privacy_flag, birth);
+  int get hashCode => Object.hash(runtimeType, id, nickname, profileUrl, gender,
+      email, termsFlag, privacyFlag, birth);
 
   /// Create a copy of UserProfileModel
   /// with the given fields replaced by the non-null parameter values.
@@ -278,11 +278,11 @@ abstract class _UserProfileModel implements UserProfileModel {
   factory _UserProfileModel(
       {required final String id,
       required final String nickname,
-      required final String profile_url,
+      required final String profileUrl,
       required final String gender,
       required final String email,
-      required final bool terms_flag,
-      required final bool privacy_flag,
+      required final bool termsFlag,
+      required final bool privacyFlag,
       required final DateTime birth}) = _$UserProfileModelImpl;
 
   factory _UserProfileModel.fromJson(Map<String, dynamic> json) =
@@ -293,15 +293,15 @@ abstract class _UserProfileModel implements UserProfileModel {
   @override
   String get nickname;
   @override
-  String get profile_url;
+  String get profileUrl;
   @override
   String get gender;
   @override
   String get email;
   @override
-  bool get terms_flag;
+  bool get termsFlag;
   @override
-  bool get privacy_flag;
+  bool get privacyFlag;
   @override
   DateTime get birth;
 

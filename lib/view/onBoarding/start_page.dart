@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/util/screen_size.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 // 여기도 마진 변경 필요. 각 디바이스마다 버튼의 위치 차이가 너무 심함.
 
