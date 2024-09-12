@@ -39,7 +39,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '17'
       - run: flutter build apk
       - uses: actions/upload-artifact@v3
         with:
