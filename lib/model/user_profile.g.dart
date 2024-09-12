@@ -11,11 +11,11 @@ _$UserProfileModelImpl _$$UserProfileModelImplFromJson(
     _$UserProfileModelImpl(
       id: json['id'] as String,
       nickname: json['nickname'] as String,
-      profile_url: json['profile_url'] as String,
+      profileUrl: json['profileUrl'] as String,
       gender: json['gender'] as String,
       email: json['email'] as String,
-      terms_flag: json['terms_flag'] as bool,
-      privacy_flag: json['privacy_flag'] as bool,
+      termsFlag: json['termsFlag'] as bool,
+      privacyFlag: json['privacyFlag'] as bool,
       birth: DateTime.parse(json['birth'] as String),
     );
 
@@ -24,10 +24,10 @@ Map<String, dynamic> _$$UserProfileModelImplToJson(
     <String, dynamic>{
       'id': instance.id,
       'nickname': instance.nickname,
-      'profile_url': instance.profile_url,
+      'profileUrl': instance.profileUrl,
       'gender': instance.gender,
       'email': instance.email,
-      'terms_flag': instance.terms_flag,
-      'privacy_flag': instance.privacy_flag,
+      'termsFlag': instance.termsFlag,
+      'privacyFlag': instance.privacyFlag,
       'birth': instance.birth.toIso8601String(),
     };
