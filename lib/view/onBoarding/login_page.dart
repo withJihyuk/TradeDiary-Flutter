@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
-import 'package:trade_diary/viewmodel/oauth_model.dart';
+import 'package:trade_diary/viewModel/oauth_model.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
-
-// 소셜 로그인 애플 => 카카오로 고민중
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
