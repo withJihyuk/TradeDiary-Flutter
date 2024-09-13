@@ -18,8 +18,7 @@ class ReadPage extends StatefulWidget {
 class _ReadPageState extends State<ReadPage> {
   final TextEditingController controller = TextEditingController();
   final DiaryPostViewModel viewModel = DiaryPostViewModel();
-  final String userId = OauthViewModel().getUserId();
-
+  String userId = "";
 
   @override
   void initState() {
@@ -33,6 +32,7 @@ class _ReadPageState extends State<ReadPage> {
       if (value.isNotEmpty) {
         setState(() {
           controller.text = value[0]['content'];
+          userId = value[0]['userId'];
         });
       } else if (mounted) {
         context.go('/error');
