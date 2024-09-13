@@ -4,6 +4,7 @@ import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/view/components/box_widget.dart';
 import 'package:trade_diary/view/components/box_widget_value.dart';
 import 'package:trade_diary/viewModel/home_model.dart';
+import 'package:trade_diary/viewModel/oauth_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,7 +17,8 @@ class _HomePageState extends State<HomePage> {
   bool isWriteDiary = false;
   String? diaryId;
   Future? _future;
-
+  
+  OauthViewModel authModel = OauthViewModel();
   HomeViewModel viewModel = HomeViewModel();
   Future checkDiary() async {
     final value = await viewModel.isUserWriteDiaryToday();
@@ -139,8 +141,6 @@ class _HomePageState extends State<HomePage> {
                                     const SizedBox(
                                         width:
                                             20), // future builder 사용해야함 수정 필요
-                                    Icon(Icons.plus_one_rounded,
-                                        size: 20, color: Colors.grey[600]),
                                   ],
                                 ))
                           ]),

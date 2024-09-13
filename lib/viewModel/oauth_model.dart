@@ -61,4 +61,8 @@ class OauthViewModel {
   logout() {
     supabase.auth.signOut();
   }
+
+  getUserId() {
+    return supabase.auth.currentUser!.id;
+  }
 }

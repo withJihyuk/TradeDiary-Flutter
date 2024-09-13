@@ -17,7 +17,7 @@ class ReadPage extends StatefulWidget {
 class _ReadPageState extends State<ReadPage> {
   final TextEditingController controller = TextEditingController();
   final DiaryPostViewModel viewModel = DiaryPostViewModel();
-
+  late final String userId;
   @override
   void initState() {
     super.initState();
@@ -30,6 +30,7 @@ class _ReadPageState extends State<ReadPage> {
       if (value.isNotEmpty) {
         setState(() {
           controller.text = value[0]['content'];
+          userId = value[0]['userId'];
         });
       } else if (mounted) {
         context.go('/error');
@@ -55,14 +56,11 @@ class _ReadPageState extends State<ReadPage> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          UserBox(
-                              name: "이지혁",
-                              description: "소통해요~",
-                              imageUrl: "https://picsum.photos/200"),
-                          Text(
+                          UserBox(id: userId),
+                          const Text(
                             "팔로우",
                             style: TextStyle(
                                 fontSize: 18,

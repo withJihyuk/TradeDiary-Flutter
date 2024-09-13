@@ -23,11 +23,8 @@ mixin _$UserProfileModel {
   String get id => throw _privateConstructorUsedError;
   String get nickname => throw _privateConstructorUsedError;
   String get profileUrl => throw _privateConstructorUsedError;
-  String get gender => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
-  bool get termsFlag => throw _privateConstructorUsedError;
-  bool get privacyFlag => throw _privateConstructorUsedError;
-  DateTime get birth => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
+  bool get isPrivate => throw _privateConstructorUsedError;
 
   /// Serializes this UserProfileModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,11 +46,8 @@ abstract class $UserProfileModelCopyWith<$Res> {
       {String id,
       String nickname,
       String profileUrl,
-      String gender,
-      String email,
-      bool termsFlag,
-      bool privacyFlag,
-      DateTime birth});
+      String description,
+      bool isPrivate});
 }
 
 /// @nodoc
@@ -74,11 +68,8 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
     Object? id = null,
     Object? nickname = null,
     Object? profileUrl = null,
-    Object? gender = null,
-    Object? email = null,
-    Object? termsFlag = null,
-    Object? privacyFlag = null,
-    Object? birth = null,
+    Object? description = null,
+    Object? isPrivate = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -93,26 +84,14 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
           ? _value.profileUrl
           : profileUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      gender: null == gender
-          ? _value.gender
-          : gender // ignore: cast_nullable_to_non_nullable
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      termsFlag: null == termsFlag
-          ? _value.termsFlag
-          : termsFlag // ignore: cast_nullable_to_non_nullable
+      isPrivate: null == isPrivate
+          ? _value.isPrivate
+          : isPrivate // ignore: cast_nullable_to_non_nullable
               as bool,
-      privacyFlag: null == privacyFlag
-          ? _value.privacyFlag
-          : privacyFlag // ignore: cast_nullable_to_non_nullable
-              as bool,
-      birth: null == birth
-          ? _value.birth
-          : birth // ignore: cast_nullable_to_non_nullable
-              as DateTime,
     ) as $Val);
   }
 }
@@ -129,11 +108,8 @@ abstract class _$$UserProfileModelImplCopyWith<$Res>
       {String id,
       String nickname,
       String profileUrl,
-      String gender,
-      String email,
-      bool termsFlag,
-      bool privacyFlag,
-      DateTime birth});
+      String description,
+      bool isPrivate});
 }
 
 /// @nodoc
@@ -152,11 +128,8 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? nickname = null,
     Object? profileUrl = null,
-    Object? gender = null,
-    Object? email = null,
-    Object? termsFlag = null,
-    Object? privacyFlag = null,
-    Object? birth = null,
+    Object? description = null,
+    Object? isPrivate = null,
   }) {
     return _then(_$UserProfileModelImpl(
       id: null == id
@@ -171,26 +144,14 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
           ? _value.profileUrl
           : profileUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      gender: null == gender
-          ? _value.gender
-          : gender // ignore: cast_nullable_to_non_nullable
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      termsFlag: null == termsFlag
-          ? _value.termsFlag
-          : termsFlag // ignore: cast_nullable_to_non_nullable
+      isPrivate: null == isPrivate
+          ? _value.isPrivate
+          : isPrivate // ignore: cast_nullable_to_non_nullable
               as bool,
-      privacyFlag: null == privacyFlag
-          ? _value.privacyFlag
-          : privacyFlag // ignore: cast_nullable_to_non_nullable
-              as bool,
-      birth: null == birth
-          ? _value.birth
-          : birth // ignore: cast_nullable_to_non_nullable
-              as DateTime,
     ));
   }
 }
@@ -202,11 +163,8 @@ class _$UserProfileModelImpl implements _UserProfileModel {
       {required this.id,
       required this.nickname,
       required this.profileUrl,
-      required this.gender,
-      required this.email,
-      required this.termsFlag,
-      required this.privacyFlag,
-      required this.birth});
+      required this.description,
+      required this.isPrivate});
 
   factory _$UserProfileModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserProfileModelImplFromJson(json);
@@ -218,19 +176,13 @@ class _$UserProfileModelImpl implements _UserProfileModel {
   @override
   final String profileUrl;
   @override
-  final String gender;
+  final String description;
   @override
-  final String email;
-  @override
-  final bool termsFlag;
-  @override
-  final bool privacyFlag;
-  @override
-  final DateTime birth;
+  final bool isPrivate;
 
   @override
   String toString() {
-    return 'UserProfileModel(id: $id, nickname: $nickname, profileUrl: $profileUrl, gender: $gender, email: $email, termsFlag: $termsFlag, privacyFlag: $privacyFlag, birth: $birth)';
+    return 'UserProfileModel(id: $id, nickname: $nickname, profileUrl: $profileUrl, description: $description, isPrivate: $isPrivate)';
   }
 
   @override
@@ -243,19 +195,16 @@ class _$UserProfileModelImpl implements _UserProfileModel {
                 other.nickname == nickname) &&
             (identical(other.profileUrl, profileUrl) ||
                 other.profileUrl == profileUrl) &&
-            (identical(other.gender, gender) || other.gender == gender) &&
-            (identical(other.email, email) || other.email == email) &&
-            (identical(other.termsFlag, termsFlag) ||
-                other.termsFlag == termsFlag) &&
-            (identical(other.privacyFlag, privacyFlag) ||
-                other.privacyFlag == privacyFlag) &&
-            (identical(other.birth, birth) || other.birth == birth));
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.isPrivate, isPrivate) ||
+                other.isPrivate == isPrivate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, nickname, profileUrl, gender,
-      email, termsFlag, privacyFlag, birth);
+  int get hashCode => Object.hash(
+      runtimeType, id, nickname, profileUrl, description, isPrivate);
 
   /// Create a copy of UserProfileModel
   /// with the given fields replaced by the non-null parameter values.
@@ -279,11 +228,8 @@ abstract class _UserProfileModel implements UserProfileModel {
       {required final String id,
       required final String nickname,
       required final String profileUrl,
-      required final String gender,
-      required final String email,
-      required final bool termsFlag,
-      required final bool privacyFlag,
-      required final DateTime birth}) = _$UserProfileModelImpl;
+      required final String description,
+      required final bool isPrivate}) = _$UserProfileModelImpl;
 
   factory _UserProfileModel.fromJson(Map<String, dynamic> json) =
       _$UserProfileModelImpl.fromJson;
@@ -295,15 +241,9 @@ abstract class _UserProfileModel implements UserProfileModel {
   @override
   String get profileUrl;
   @override
-  String get gender;
+  String get description;
   @override
-  String get email;
-  @override
-  bool get termsFlag;
-  @override
-  bool get privacyFlag;
-  @override
-  DateTime get birth;
+  bool get isPrivate;
 
   /// Create a copy of UserProfileModel
   /// with the given fields replaced by the non-null parameter values.
