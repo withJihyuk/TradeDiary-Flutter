@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 import 'package:trade_diary/view/components/user_box.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
+import 'package:trade_diary/viewModel/oauth_model.dart';
 
 class ReadPage extends StatefulWidget {
   final String id;
@@ -17,6 +18,7 @@ class ReadPage extends StatefulWidget {
 class _ReadPageState extends State<ReadPage> {
   final TextEditingController controller = TextEditingController();
   final DiaryPostViewModel viewModel = DiaryPostViewModel();
+  String userId = "";
 
   @override
   void initState() {
@@ -30,6 +32,7 @@ class _ReadPageState extends State<ReadPage> {
       if (value.isNotEmpty) {
         setState(() {
           controller.text = value[0]['content'];
+          userId = value[0]['userId'];
         });
       } else if (mounted) {
         context.go('/error');
@@ -55,14 +58,11 @@ class _ReadPageState extends State<ReadPage> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          UserBox(
-                              name: "이지혁",
-                              description: "소통해요~",
-                              imageUrl: "https://picsum.photos/200"),
-                          Text(
+                          UserBox(id: userId),
+                          const Text(
                             "팔로우",
                             style: TextStyle(
                                 fontSize: 18,

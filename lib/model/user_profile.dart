@@ -9,11 +9,8 @@ class UserProfileModel with _$UserProfileModel {
     required String id,
     required String nickname,
     required String profileUrl,
-    required String gender,
-    required String email,
-    required bool termsFlag,
-    required bool privacyFlag,
-    required DateTime birth,
+    required String description,
+    required bool isPrivate,
   }) = _UserProfileModel;
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>

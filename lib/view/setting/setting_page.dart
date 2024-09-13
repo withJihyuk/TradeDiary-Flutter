@@ -18,12 +18,9 @@ class SettingPage extends StatelessWidget {
           child: SingleChildScrollView(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(20),
-              child: UserBox(
-                  name: "이름",
-                  description: "이메일",
-                  imageUrl: "https://picsum.photos/200"),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: UserBox(id: oauth.getUserId()),
             ),
             Container(
               width: GetMediaQuery.getScreenWidth(context),

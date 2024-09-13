@@ -12,11 +12,8 @@ _$UserProfileModelImpl _$$UserProfileModelImplFromJson(
       id: json['id'] as String,
       nickname: json['nickname'] as String,
       profileUrl: json['profileUrl'] as String,
-      gender: json['gender'] as String,
-      email: json['email'] as String,
-      termsFlag: json['termsFlag'] as bool,
-      privacyFlag: json['privacyFlag'] as bool,
-      birth: DateTime.parse(json['birth'] as String),
+      description: json['description'] as String,
+      isPrivate: json['isPrivate'] as bool,
     );
 
 Map<String, dynamic> _$$UserProfileModelImplToJson(
@@ -25,9 +22,6 @@ Map<String, dynamic> _$$UserProfileModelImplToJson(
       'id': instance.id,
       'nickname': instance.nickname,
       'profileUrl': instance.profileUrl,
-      'gender': instance.gender,
-      'email': instance.email,
-      'termsFlag': instance.termsFlag,
-      'privacyFlag': instance.privacyFlag,
-      'birth': instance.birth.toIso8601String(),
+      'description': instance.description,
+      'isPrivate': instance.isPrivate,
     };
