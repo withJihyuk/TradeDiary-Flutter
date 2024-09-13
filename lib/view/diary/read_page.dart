@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 import 'package:trade_diary/view/components/user_box.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
+import 'package:trade_diary/viewModel/oauth_model.dart';
 
 class ReadPage extends StatefulWidget {
   final String id;
@@ -17,7 +18,9 @@ class ReadPage extends StatefulWidget {
 class _ReadPageState extends State<ReadPage> {
   final TextEditingController controller = TextEditingController();
   final DiaryPostViewModel viewModel = DiaryPostViewModel();
-  late final String userId;
+  final String userId = OauthViewModel().getUserId();
+
+
   @override
   void initState() {
     super.initState();
@@ -30,7 +33,6 @@ class _ReadPageState extends State<ReadPage> {
       if (value.isNotEmpty) {
         setState(() {
           controller.text = value[0]['content'];
-          userId = value[0]['userId'];
         });
       } else if (mounted) {
         context.go('/error');
