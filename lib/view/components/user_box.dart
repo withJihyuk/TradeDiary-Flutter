@@ -21,7 +21,8 @@ class UserBox extends StatelessWidget {
           return const Scaffold();
         } else if (snapshot.hasData) {
           var user = (snapshot.data as List)
-              .map((user) => UserProfileModel.fromJson(user as Map<String, dynamic>))
+              .map((user) =>
+                  UserProfileModel.fromJson(user as Map<String, dynamic>))
               .toList();
           return Row(
             children: [

@@ -5,7 +5,9 @@ class UserProfileDataSource {
   final supabase = Supabase.instance.client;
 
   Future changeUserProfileImage(String clientId, String imageUrl) async {
-    await supabase.from("profile").update({'profile_url' : imageUrl}).eq("id", clientId);
+    await supabase
+        .from("profile")
+        .update({'profile_url': imageUrl}).eq("id", clientId);
   }
 
   Future<List> getUserProfile(String clientId) async {

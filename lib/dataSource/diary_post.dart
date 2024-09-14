@@ -9,7 +9,11 @@ class DiaryPostDataSource {
   }
 
   Future<List<DiaryPostModel>> getDiaryPost(String postId) async {
-    final response = await supabase.from("diary").select().eq('id', postId).catchError((onError) {
+    final response = await supabase
+        .from("diary")
+        .select()
+        .eq('id', postId)
+        .catchError((onError) {
       throw Exception('글을 가져오는데 실패했어요');
     });
     return response.map((item) => DiaryPostModel.fromJson(item)).toList();
