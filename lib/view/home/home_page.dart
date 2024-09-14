@@ -17,11 +17,12 @@ class _HomePageState extends State<HomePage> {
   bool isWriteDiary = false;
   String? diaryId;
   Future? _future;
-  
+
   OauthViewModel authModel = OauthViewModel();
   HomeViewModel viewModel = HomeViewModel();
   Future checkDiary() async {
     final value = await viewModel.isUserWriteDiaryToday();
+
     setState(() {
       if (value != false) {
         isWriteDiary = !isWriteDiary;
@@ -35,7 +36,6 @@ class _HomePageState extends State<HomePage> {
     _future = checkDiary();
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {

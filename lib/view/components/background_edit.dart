@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trade_diary/i18n/image_editor.dart';
+import 'package:trade_diary/common/i18n/image_editor.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 

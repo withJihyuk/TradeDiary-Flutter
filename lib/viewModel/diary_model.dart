@@ -25,9 +25,9 @@ class DiaryPostViewModel {
     return "${now.month}월 ${now.day}일";
   }
 
-  Future<List> getDiaryPost(String postId) async {
-    return repo.getDiaryPost(postId);
-  }
+  // Future<List> getDiaryPost(String postId) async {
+  //   return repo.getDiaryPost(postId);
+  // }
 
   Future<ImageModel> uploadImage(XFile data) async {
     return await imgRepo.imageUpload(data);

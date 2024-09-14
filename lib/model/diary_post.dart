@@ -8,8 +8,10 @@ class DiaryPostModel with _$DiaryPostModel {
   factory DiaryPostModel({
     required String userId,
     required String content,
-    required bool isPrivate,
-  }) = _DiaryPostModel;
+    required bool isPrivate
+  }
+
+  ) = _DiaryPostModel;
 
   factory DiaryPostModel.fromJson(Map<String, dynamic> json) =>
       _$DiaryPostModelFromJson(json);
