@@ -15,7 +15,6 @@ class ReadPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     AsyncValue<List<DiaryPostModel>> data = ref.watch(getDiaryPost(id));
-    final TextEditingController controller = TextEditingController();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -23,10 +22,70 @@ class ReadPage extends ConsumerWidget {
         title: "일기",
       ),
       body: data.when(
-        data: (data) => Text(data.toString()),
+        data: (data) => ReadingComponent(
+            userId: data.first.userId, content: data.first.content),
         error: (error, stackTrace) => const NotFoundPage(),
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );
+  }
+}
+
+class ReadingComponent extends StatelessWidget {
+  final String userId;
+  final String content;
+  const ReadingComponent(
+      {super.key, required this.userId, required this.content});
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController controller = TextEditingController();
+    controller.text += content;
+
+    return SingleChildScrollView(
+        child: Padding(
+            padding: EdgeInsets.all(20),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                UserBox(id: userId),
+                const Text(
+                  "팔로우",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: DiaryColorBlue.normal,
+                      fontWeight: FontWeight.w500),
+                )
+              ]),
+              const SizedBox(
+                height: 24,
+              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   crossAxisAlignment: CrossAxisAlignment.center,
+              //   children: [
+              //     Text(
+              //       viewModel.getTodayDate(),
+              //       style: const TextStyle(
+              //           fontWeight: FontWeight.w500,
+              //           fontSize: 30,
+              //           fontFamily: "EF_Diary"),
+              //     ),
+              //   ],
+              // ),
+              const SizedBox(
+                height: 12,
+              ),
+              MarkdownField(
+                padding: const EdgeInsets.all(0),
+                controller: controller,
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+                maxLines: 50,
+                readOnly: true,
+              ),
+            ])));
   }
 }
