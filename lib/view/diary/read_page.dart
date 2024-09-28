@@ -44,7 +44,7 @@ class ReadingComponent extends StatelessWidget {
 
     return SingleChildScrollView(
         child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -58,22 +58,6 @@ class ReadingComponent extends StatelessWidget {
                 )
               ]),
               const SizedBox(
-                height: 24,
-              ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   crossAxisAlignment: CrossAxisAlignment.center,
-              //   children: [
-              //     Text(
-              //       viewModel.getTodayDate(),
-              //       style: const TextStyle(
-              //           fontWeight: FontWeight.w500,
-              //           fontSize: 30,
-              //           fontFamily: "EF_Diary"),
-              //     ),
-              //   ],
-              // ),
-              const SizedBox(
                 height: 12,
               ),
               MarkdownField(
@@ -83,7 +67,7 @@ class ReadingComponent extends StatelessWidget {
                   fontSize: 20,
                   color: Colors.black,
                 ),
-                maxLines: 50,
+                maxLines: 40,
                 readOnly: true,
               ),
             ])));
