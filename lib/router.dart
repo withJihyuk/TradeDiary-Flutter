@@ -54,7 +54,7 @@ class PageRouter {
               path: _characterPage,
               builder: (context, state) => const MyCharacter()),
           GoRoute(
-              path: _mainPage, builder: (context, state) => const HomePageTest()), // HomePage()
+              path: _mainPage, builder: (context, state) => const HomePage()), // HomePage()
           GoRoute(
               path: _notFoundPage,
               builder: (context, state) => const NotFoundPage()),
