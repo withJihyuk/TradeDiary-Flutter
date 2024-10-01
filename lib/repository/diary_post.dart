@@ -19,8 +19,3 @@ class DiaryPostRepo {
     return datasource.isWriteDiaryToday(userId);
   }
 }
-
-final getDiaryPost =
-    FutureProvider.family<List<DiaryPostModel>, String>((ref, postId) async {
-  return DiaryPostDataSource().getDiaryPost(postId);
-});

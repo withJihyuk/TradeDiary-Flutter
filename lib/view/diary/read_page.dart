@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:markdown_editor_plus/markdown_editor_plus.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/model/diary_post.dart';
-import 'package:trade_diary/repository/diary_post.dart';
 import 'package:trade_diary/view/components/global_appbar.dart';
 import 'package:trade_diary/view/components/user_box.dart';
 import 'package:trade_diary/view/error/not_found.dart';
+import '../../viewModel/diary_model.dart';
 
 class ReadPage extends ConsumerWidget {
   final String id;
@@ -14,7 +14,7 @@ class ReadPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<List<DiaryPostModel>> data = ref.watch(getDiaryPost(id));
+    AsyncValue<List<DiaryPostModel>> data = ref.watch(DiaryPostViewModel().getDiaryPost(id));
 
     return Scaffold(
       backgroundColor: Colors.white,
