@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/model/diary_post.dart';
@@ -19,7 +18,6 @@ class DiaryPostViewModel {
       content: content,
       isPrivate: isPrivate,
     );
-
     return repo.addDiaryPost(model);
   }
 
@@ -28,15 +26,11 @@ class DiaryPostViewModel {
     return "${now.month}월 ${now.day}일";
   }
 
-  // Future<List> getDiaryPost(String postId) async {
-  //   return repo.getDiaryPost(postId);
-  // }
-
   Future<ImageModel> uploadImage(XFile data) async {
     return await imgRepo.imageUpload(data);
   }
 
-  final getDiaryPost = FutureProvider.family<List<DiaryPostModel>, String>((ref, postId) async {
-    return DiaryPostDataSource().getDiaryPost(postId);
-  });
+  // final getDiaryPost = FutureProvider.family<List<DiaryPostModel>, String>((ref, postId) async {
+  //   return DiaryPostDataSource().getDiaryPost(postId);
+  // });
 }
