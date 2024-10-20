@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/dataSource/diary_post.dart';
 import 'package:trade_diary/model/diary_post.dart';
 
