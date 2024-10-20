@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:markdown_editor_plus/markdown_editor_plus.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/model/diary_post.dart';
@@ -7,25 +8,26 @@ import 'package:trade_diary/view/components/user_box.dart';
 import 'package:trade_diary/view/error/not_found.dart';
 import '../../viewModel/diary_model.dart';
 
-class ReadPage extends StatelessWidget {
+class ReadPage extends ConsumerWidget {
   final String id;
   const ReadPage({super.key, required this.id});
 
   @override
-  Widget build(BuildContext context) {
-    // AsyncValue<List<DiaryPostModel>> data = ref.watch(DiaryPostViewModel().getDiaryPost(id));
+  Widget build(BuildContext context, WidgetRef ref) {
+    AsyncValue<List<DiaryPostModel>> data =
+        ref.watch(DiaryPostViewModel().getDiaryPost(id));
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const GlobalAppbar(
         title: "일기",
       ),
-       body: Text("임시")// data.when(
-      //   data: (data) => ReadingComponent(
-      //       userId: data.first.userId, content: data.first.content),
-      //   error: (error, stackTrace) => const NotFoundPage(),
-      //   loading: () => const Center(child: CircularProgressIndicator()),
-      // ),
+      body: data.when(
+        data: (data) => ReadingComponent(
+            userId: data.first.userId, content: data.first.content),
+        error: (error, stackTrace) => const NotFoundPage(),
+        loading: () => const Center(child: CircularProgressIndicator()),
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/model/diary_post.dart';
@@ -30,7 +31,7 @@ class DiaryPostViewModel {
     return await imgRepo.imageUpload(data);
   }
 
-  // final getDiaryPost = FutureProvider.family<List<DiaryPostModel>, String>((ref, postId) async {
-  //   return DiaryPostDataSource().getDiaryPost(postId);
-  // });
+  final getDiaryPost = FutureProvider.family<List<DiaryPostModel>, String>((ref, postId) async {
+    return DiaryPostDataSource().getDiaryPost(postId);
+  });
 }
