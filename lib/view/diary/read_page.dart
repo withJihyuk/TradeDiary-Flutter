@@ -54,6 +54,32 @@ class _ReadingComponentState extends State<ReadingComponent> {
 
   @override
   Widget build(BuildContext context) {
+class ReadingComponent extends StatefulWidget {
+   final String userId;
+   final String content;
+   const ReadingComponent({super.key, required this.userId, required this.content});
+
+  @override
+  _ReadingComponentState createState() => _ReadingComponentState();
+}
+
+class _ReadingComponentState extends State<ReadingComponent> {
+  late TextEditingController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController(text: widget.content);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return SingleChildScrollView(
         child: Padding(
