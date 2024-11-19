@@ -30,8 +30,10 @@ class DiaryPostViewModel {
   Future<ImageModel> uploadImage(XFile data) async {
     return await imgRepo.imageUpload(data);
   }
-
-  final getDiaryPost = FutureProvider.family<List<DiaryPostModel>, String>((ref, postId) async {
-    return DiaryPostDataSource().getDiaryPost(postId);
-  });
 }
+
+final diaryPostProvider =
+    FutureProvider.family<List<DiaryPostModel>, String>((ref, postId) async {
+  final dataSource = DiaryPostDataSource();
+  return await dataSource.getDiaryPost(postId);
+});

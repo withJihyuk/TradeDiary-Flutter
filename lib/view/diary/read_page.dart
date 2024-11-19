@@ -14,17 +14,14 @@ class ReadPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<List<DiaryPostModel>> data =
-        ref.watch(DiaryPostViewModel().getDiaryPost(id));
-
+    final data = ref.watch(diaryPostProvider(id));
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const GlobalAppbar(
         title: "일기",
       ),
       body: data.when(
-        data: (data) => ReadingComponent(
-            userId: data.first.userId, content: data.first.content),
+        data: (data) => ReadingComponent(userId: data.first.userId, content: data.first.content),
         error: (error, stackTrace) => const NotFoundPage(),
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
