@@ -13,9 +13,14 @@ class ErrorDialog {
         content: const Text('서버에 장애가 발생 했거나, 유저가 올바르지 않은거 같아요.'),
         actions: [
           ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(), child: const Text('재시도')),
+              onPressed: () {
+                Navigator.of(context).pop();
+                onRetry();
+              },
+              child: const Text('재시도')),
           ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(), child: const Text('취소')),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('취소')),
         ],
       ),
     );
