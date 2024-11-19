@@ -5,10 +5,6 @@ class HomeViewModel {
   final repo = DiaryPostRepo();
   final userId = Supabase.instance.client.auth.currentUser!.id;
 
-  Future getDiaryPost() async {
-    return repo.getDiaryPost(userId);
-  }
-
   Future isUserWriteDiaryToday() async {
     final result = await repo.isUserWriteDiaryToday(userId);
     final diaryId = result.isEmpty ? false : result[0];

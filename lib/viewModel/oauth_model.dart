@@ -6,12 +6,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 final supabase = Supabase.instance.client;
 
 class OauthViewModel {
-  Future<AuthResponse?> nativeGoogleLogin() async {
+  Future nativeGoogleLogin() async {
     if (Platform.isAndroid || Platform.isIOS) {
       const webClientId =
           '758208968172-95ov64v7jpu6vfopo0ho3hnfnn72ktri.apps.googleusercontent.com';
       const iosClientId =
-          '758208968172-s02f95mh5sv31cb23tqa36uh1n2uj4rb.apps.googleusercontent.com';
+          '758208968172-8q68eo2oh2j2v6b7hklu35qb6rgophik.apps.googleusercontent.com';
       final GoogleSignIn googleSignIn = GoogleSignIn(
         clientId: iosClientId,
         serverClientId: webClientId,
@@ -22,25 +22,19 @@ class OauthViewModel {
         final accessToken = googleAuth.accessToken;
         final idToken = googleAuth.idToken;
 
-        if (accessToken == null) {
-          throw 'No Access Token found.';
-        }
-        if (idToken == null) {
-          throw 'No ID Token found.';
+        if (accessToken == null || idToken == null) {
+          throw Exception('로그인에 문제가 발생했어요! 다시 시도해주세요.');
         }
 
         return supabase.auth.signInWithIdToken(
           provider: OAuthProvider.google,
           idToken: idToken,
           accessToken: accessToken,
-
-          // 페이지 이동 필요
         );
       } catch (e) {
-        // 에러 리포트 발송 필요
+        return null;
       }
     }
-    return null;
   }
 
   webGoogleLogin() {
@@ -49,14 +43,14 @@ class OauthViewModel {
     );
   }
 
-  appleLogin() {
-    if (Platform.isIOS) {
-      supabase.auth.signInWithOAuth(
-        OAuthProvider.apple,
-        redirectTo: dotenv.env['REDIRECT_URI']!,
-      );
-    }
-  }
+  // appleLogin() {
+  //   if (Platform.isIOS) {
+  //     supabase.auth.signInWithOAuth(
+  //       OAuthProvider.apple,
+  //       redirectTo: dotenv.env['REDIRECT_URI']!,
+  //     );
+  //   }
+  // }
 
   logout() {
     supabase.auth.signOut();
@@ -66,3 +60,4 @@ class OauthViewModel {
     return supabase.auth.currentUser!.id;
   }
 }
+

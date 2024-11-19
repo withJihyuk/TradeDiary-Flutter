@@ -61,7 +61,7 @@ class _WritePageState extends State<WritePage> {
                         ),
                         border: InputBorder.none,
                       ),
-                maxLines: 100,
+                      maxLines: 100,
                     ) // 스타일 수정 필요
                   : MarkdownField(
                       padding: const EdgeInsets.all(0),

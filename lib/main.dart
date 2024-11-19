@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trade_diary/desginSystem/theme_data.dart';
 import 'package:trade_diary/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await dotenv.load(fileName: '.env');
   await Supabase.initialize(
     debug: true,
     url: dotenv.env['DB_URL']!,
     anonKey: dotenv.env['DB_KEY']!,
   );
-
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -26,24 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: '교환일기',
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-        ),
-        useMaterial3: true,
-        scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'PretendardJP',
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.blue,
-          accentColor: Colors.blue,
-          cardColor: Colors.white,
-          backgroundColor: Colors.white,
-          errorColor: Colors.red,
-        ).copyWith(
-          primary: Colors.blue,
-          secondary: Colors.blue,
-        ),
-      ),
+      theme: customThemeData,
       routeInformationParser: PageRouter.router.routeInformationParser,
       routeInformationProvider: PageRouter.router.routeInformationProvider,
       routerDelegate: PageRouter.router.routerDelegate,

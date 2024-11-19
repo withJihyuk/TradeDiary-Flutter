@@ -15,4 +15,6 @@ class DiaryColorBlue {
   static const Color darkHover = Color(0xFF295399);
   static const Color darkActive = Color(0xFF1F3E73);
   static const Color darker = Color(0xFF183059);
+  
+  static const Color lightGray = Color(0xF0777777);
 }

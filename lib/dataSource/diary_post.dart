@@ -8,8 +8,15 @@ class DiaryPostDataSource {
     await supabase.from("diary").insert(data);
   }
 
-  Future<List> getDiaryPost(String postId) async {
-    return await supabase.from("diary").select().eq('id', postId);
+  Future<List<DiaryPostModel>> getDiaryPost(String postId) async {
+    final response = await supabase
+        .from("diary")
+        .select()
+        .eq('id', postId)
+        .catchError((onError) {
+      throw Exception('글을 가져오는데 실패했어요');
+    });
+    return response.map((item) => DiaryPostModel.fromJson(item)).toList();
   }
 
   Future<List> isWriteDiaryToday(String userId) {
@@ -25,7 +32,7 @@ class DiaryPostDataSource {
         .from("diary")
         .select()
         .eq('userId', userId)
-        .gte('created_at', '$todayStart 00:00:00Z')
-        .lt('created_at', '$todayEnd 00:00:00Z');
+        .gte('createdAt', '$todayStart 00:00:00Z')
+        .lt('createdAt', '$todayEnd 00:00:00Z');
   }
 }
