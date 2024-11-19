@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-var customThemeData = ThemeData(
+final customThemeData = ThemeData(
   appBarTheme: const AppBarTheme(
     systemOverlayStyle: SystemUiOverlayStyle.dark,
   ),
