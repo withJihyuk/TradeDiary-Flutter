@@ -34,7 +34,7 @@ class ReadingComponent extends StatefulWidget {
    const ReadingComponent({super.key, required this.userId, required this.content});
 
   @override
-  _ReadingComponentState createState() => _ReadingComponentState();
+  State<ReadingComponent> createState() => _ReadingComponentState();
 }
 
 class _ReadingComponentState extends State<ReadingComponent> {
