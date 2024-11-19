@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ErrorDialog {
-  static Future<dynamic> errorDialog(BuildContext context) {
+  static Future<dynamic> showProfileLoadErrorDialog(
+    BuildContext context, {
+    required String errorMessage,
+    required VoidCallback onRetry,
+  }) {
     return showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
