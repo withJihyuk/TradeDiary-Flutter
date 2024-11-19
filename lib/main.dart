@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/desginSystem/theme_data.dart';
@@ -8,14 +7,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await dotenv.load(fileName: '.env');
   await Supabase.initialize(
     debug: true,
     url: dotenv.env['DB_URL']!,
     anonKey: dotenv.env['DB_KEY']!,
   );
-
   runApp(const ProviderScope(child: MyApp()));
 }
 
