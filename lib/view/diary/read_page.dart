@@ -28,14 +28,6 @@ class ReadPage extends ConsumerWidget {
   }
 }
 
-class ReadingComponent extends StatelessWidget {
-  final String userId;
-  final String content;
-  const ReadingComponent(
-      {super.key, required this.userId, required this.content});
-
-  @override
-  Widget build(BuildContext context) {
 class ReadingComponent extends StatefulWidget {
    final String userId;
    final String content;
@@ -69,7 +61,7 @@ class _ReadingComponentState extends State<ReadingComponent> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                UserBox(id: userId),
+                UserBox(id: widget.userId),
                 const Text(
                   "팔로우",
                   style: TextStyle(
