@@ -35,5 +35,12 @@ class DiaryPostViewModel {
 final diaryPostProvider =
     FutureProvider.family<List<DiaryPostModel>, String>((ref, postId) async {
   final dataSource = DiaryPostDataSource();
-  return await dataSource.getDiaryPost(postId);
+  try {
+    if (postId.isEmpty) {
+      throw ArgumentError('게시물 ID가 비어있습니다.');
+    }
+    return await dataSource.getDiaryPost(postId);
+  } catch (e, st) {
+    throw AsyncError('게시물을 불러오는 중 오류가 발생했습니다: $e', st);
+  }
 });
