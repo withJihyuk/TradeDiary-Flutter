@@ -39,17 +39,9 @@ class OauthViewModel {
   webGoogleLogin() {
     supabase.auth.signInWithOAuth(
       OAuthProvider.google,
+      redirectTo: 'https://flhaiiwtaqnmczabiojs.supabase.co/auth/v1/callback'
     );
   }
-
-  // appleLogin() {
-  //   if (Platform.isIOS) {
-  //     supabase.auth.signInWithOAuth(
-  //       OAuthProvider.apple,
-  //       redirectTo: dotenv.env['REDIRECT_URI']!,
-  //     );
-  //   }
-  // }
 
   logout() {
     supabase.auth.signOut();
