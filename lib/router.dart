@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/character/my_character.dart';
+import 'package:trade_diary/view/components/bottom_navigation_bar.dart';
 import 'package:trade_diary/view/diary/read_page.dart';
 import 'package:trade_diary/view/diary/write_page.dart';
 import 'package:trade_diary/view/alert/alert_page.dart';
@@ -53,7 +55,8 @@ class PageRouter {
               path: _characterPage,
               builder: (context, state) => const MyCharacter()),
           GoRoute(
-              path: _mainPage, builder: (context, state) => const HomePage()), // HomePage()
+              path: _mainPage,
+              builder: (context, state) => const HomePage()), // HomePage()
           GoRoute(
               path: _notFoundPage,
               builder: (context, state) => const NotFoundPage()),
@@ -62,7 +65,27 @@ class PageRouter {
               builder: (context, state) =>
                   MyProfile(id: state.pathParameters['id']!)),
         ],
-      )
+      ),
+      ShellRoute(
+        navigatorKey: GlobalKey<NavigatorState>(),
+        builder: (context, state, child) => BottomBar(child: child),
+        routes: [
+          GoRoute(
+              path: '/todo',
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: HomePage())),
+          GoRoute(
+              path: 'board',
+              pageBuilder: (context, state) => const NoTransitionPage(
+                    child: SettingPage(),
+                  )),
+          GoRoute(
+              path: 'my',
+              pageBuilder: (context, state) => const NoTransitionPage(
+                    child: SplashPage(),
+                  )),
+        ],
+      ),
     ],
   );
 }

@@ -1,21 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:trade_diary/router.dart';
 
-class BottomBar extends StatelessWidget {
-  BottomBar({super.key, required this.currentIndex});
-  int currentIndex = 0;
+class BottomBar extends StatefulWidget {
+  const BottomBar({super.key, required this.child});
+  final Widget child;
+
+  @override
+  State<BottomBar> createState() => _BottomBarState();
+}
+
+class _BottomBarState extends State<BottomBar> {
+  int selectedIndex = 0;
+
+  void onDestinationSelected(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+    switch (index) {
+      case 0:
+        PageRouter.router.go('/todo');
+        break;
+      case 1:
+        PageRouter.router.go('/board');
+        break;
+      case 2:
+        PageRouter.router.go('/my');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: (index) {
-        index = currentIndex;
-      },
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_rounded), label: 'mypage'),
-        BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'menu'),
-      ],
+    return Scaffold(
+      body: widget.child,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: selectedIndex,
+        destinations: const [
+          NavigationDestination(label: 'Todo', icon: Icon(Icons.check_circle)),
+          NavigationDestination(label: 'Board', icon: Icon(Icons.dashboard)),
+          NavigationDestination(label: 'My', icon: Icon(Icons.person)),
+        ],
+        onDestinationSelected: onDestinationSelected,
+      ),
     );
   }
 }
