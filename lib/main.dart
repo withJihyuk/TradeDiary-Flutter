@@ -42,7 +42,7 @@ void navigationByState(BuildContext context) {
       switch (event) {
         case AuthChangeEvent.initialSession:
           if (context.mounted && data.session != null) {
-            PageRouter.router.go("/todo");
+            PageRouter.router.go("/home");
           } else {
             PageRouter.router.go("/onBoarding");
           }
@@ -50,7 +50,7 @@ void navigationByState(BuildContext context) {
 
         case AuthChangeEvent.signedIn:
           if (context.mounted) {
-            PageRouter.router.go("/todo");
+            PageRouter.router.go("/home");
           }
           break;
 

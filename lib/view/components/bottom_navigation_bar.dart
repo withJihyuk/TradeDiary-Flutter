@@ -18,12 +18,15 @@ class _BottomBarState extends State<BottomBar> {
     });
     switch (index) {
       case 0:
-        PageRouter.router.go('/todo');
+        PageRouter.router.go('/home');
         break;
       case 1:
-        PageRouter.router.go('/board');
+        PageRouter.router.go('/diary');
         break;
       case 2:
+        PageRouter.router.go('/todo');
+        break;
+      case 4:
         PageRouter.router.go('/my');
     }
   }
@@ -35,9 +38,10 @@ class _BottomBarState extends State<BottomBar> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex,
         destinations: const [
-          NavigationDestination(label: 'Todo', icon: Icon(Icons.check_circle)),
-          NavigationDestination(label: 'Board', icon: Icon(Icons.dashboard)),
-          NavigationDestination(label: 'My', icon: Icon(Icons.person)),
+          NavigationDestination(label: 'home', icon: Icon(Icons.home)),
+          NavigationDestination(label: 'diary', icon: Icon(Icons.note)),
+          NavigationDestination(label: 'todo', icon: Icon(Icons.today)),
+          NavigationDestination(label: 'my', icon: Icon(Icons.my_library_add)),
         ],
         onDestinationSelected: onDestinationSelected,
       ),

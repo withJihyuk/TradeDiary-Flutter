@@ -8,14 +8,7 @@ import 'package:trade_diary/view/splash/splash_page.dart';
 
 class PageRouter {
   static const _splashPage = "/";
-  static const _settingPage = "setting";
-  static const _onBoardingPage = "onBoarding";
-  static const _loginPage = "login";
-  static const _alertPage = "alert";
-  static const _mainPage = "home";
   static const _writePage = "write";
-  static const _characterPage = "character";
-  static const _notFoundPage = "error";
 
   static final GoRouter router = GoRouter(
     debugLogDiagnostics: true,
@@ -30,8 +23,6 @@ class PageRouter {
                   ReadPage(id: state.pathParameters['id']!)),
           GoRoute(
               path: _writePage, builder: (context, state) => const WritePage()),
-          GoRoute(
-              path: _mainPage, builder: (context, state) => const HomePage()),
         ],
       ),
       ShellRoute(
