@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trade_diary/view/character/my_character.dart';
 import 'package:trade_diary/view/components/bottom_navigation_bar.dart';
 import 'package:trade_diary/view/diary/read_page.dart';
 import 'package:trade_diary/view/diary/write_page.dart';
-import 'package:trade_diary/view/alert/alert_page.dart';
-import 'package:trade_diary/view/error/not_found.dart';
 import 'package:trade_diary/view/home/home_page.dart';
-import 'package:trade_diary/view/setting/my_profile.dart';
-import 'package:trade_diary/view/setting/setting_page.dart';
-import 'package:trade_diary/view/onBoarding/start_page.dart';
-import 'package:trade_diary/view/onBoarding/login_page.dart';
 import 'package:trade_diary/view/splash/splash_page.dart';
 
 class PageRouter {
@@ -32,38 +25,13 @@ class PageRouter {
         builder: (context, state) => const SplashPage(),
         routes: [
           GoRoute(
-            path: _settingPage,
-            builder: (context, state) => const SettingPage(),
-          ),
-          GoRoute(
-              path: _alertPage, builder: (context, state) => const AlertPage()),
-          GoRoute(
-            path: _loginPage,
-            builder: (context, state) => const LoginPage(),
-          ),
-          GoRoute(
-            path: _onBoardingPage,
-            builder: (context, state) => const FirstPage(),
-          ),
-          GoRoute(
               path: 'read/:id',
               builder: (context, state) =>
                   ReadPage(id: state.pathParameters['id']!)),
           GoRoute(
               path: _writePage, builder: (context, state) => const WritePage()),
           GoRoute(
-              path: _characterPage,
-              builder: (context, state) => const MyCharacter()),
-          GoRoute(
-              path: _mainPage,
-              builder: (context, state) => const HomePage()), // HomePage()
-          GoRoute(
-              path: _notFoundPage,
-              builder: (context, state) => const NotFoundPage()),
-          GoRoute(
-              path: 'profile/:id',
-              builder: (context, state) =>
-                  MyProfile(id: state.pathParameters['id']!)),
+              path: _mainPage, builder: (context, state) => const HomePage()),
         ],
       ),
       ShellRoute(
@@ -71,18 +39,23 @@ class PageRouter {
         builder: (context, state, child) => BottomBar(child: child),
         routes: [
           GoRoute(
-              path: '/todo',
+              path: '/home',
               pageBuilder: (context, state) =>
                   const NoTransitionPage(child: HomePage())),
           GoRoute(
-              path: 'board',
+              path: '/diary',
               pageBuilder: (context, state) => const NoTransitionPage(
-                    child: SettingPage(),
+                    child: HomePage(),
                   )),
           GoRoute(
-              path: 'my',
+              path: '/todo',
               pageBuilder: (context, state) => const NoTransitionPage(
-                    child: SplashPage(),
+                    child: HomePage(),
+                  )),
+          GoRoute(
+              path: '/my',
+              pageBuilder: (context, state) => const NoTransitionPage(
+                    child: HomePage(),
                   )),
         ],
       ),
