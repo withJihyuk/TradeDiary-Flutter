@@ -4,7 +4,6 @@ import 'package:markdown_editor_plus/markdown_editor_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trade_diary/view/components/global_appbar.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
 
 class WritePage extends StatefulWidget {
@@ -26,9 +25,9 @@ class _WritePageState extends State<WritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const GlobalAppbar(
-        title: "일기쓰기",
-      ),
+      // appBar: const GlobalAppbar(
+      //   title: "일기쓰기",
+      // ),
       body: SafeArea(
         child: SingleChildScrollView(
             child: Padding(
@@ -86,7 +85,6 @@ class _WritePageState extends State<WritePage> {
         )),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: DiaryColorBlue.lightActive,
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
