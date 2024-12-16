@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:trade_diary/desginSystem/color.dart';
+part of 'diary_page.dart';
 
-class DiaryFloatingButton extends StatelessWidget {
-  const DiaryFloatingButton({super.key});
+class _DiaryFloatingButton extends StatelessWidget {
+  const _DiaryFloatingButton({super.key});
 
   @override
   Widget build(BuildContext context) {
