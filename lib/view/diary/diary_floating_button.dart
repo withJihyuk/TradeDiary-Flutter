@@ -1,0 +1,22 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:trade_diary/desginSystem/color.dart';
+
+class DiaryFloatingButton extends StatelessWidget {
+  const DiaryFloatingButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+        onPressed: () {},
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+            side: const BorderSide(
+                width: 1, color: DiaryColor.buttonSpecificColor),
+            borderRadius: BorderRadius.circular(100)),
+        backgroundColor: DiaryColor.globalMainColor,
+        child: SvgPicture.asset(
+          "assets/images/icons/edit.svg",
+        ));
+  }
+}

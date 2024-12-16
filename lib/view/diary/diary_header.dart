@@ -1,4 +1,4 @@
-part of '../home/home_page.dart';
+part of 'diary_page.dart';
 
 class _Header extends StatelessWidget {
   const _Header({super.key});

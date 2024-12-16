@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/components/bottom_navigation_bar.dart';
-import 'package:trade_diary/view/home/home_page.dart';
+import 'package:trade_diary/view/diary/diary_page.dart';
 import 'package:trade_diary/view/splash/splash_page.dart';
 
 class PageRouter {

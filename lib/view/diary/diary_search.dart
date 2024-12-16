@@ -1,4 +1,4 @@
-part of '../home/home_page.dart';
+part of 'diary_page.dart';
 
 class _SearchBox extends StatelessWidget {
   const _SearchBox({super.key});
