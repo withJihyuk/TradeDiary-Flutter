@@ -20,8 +20,10 @@ DiaryPostModel _$DiaryPostModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$DiaryPostModel {
-  String get userId => throw _privateConstructorUsedError;
+  String get subject => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  DateTime get date => throw _privateConstructorUsedError;
+  String get image => throw _privateConstructorUsedError;
   bool get isPrivate => throw _privateConstructorUsedError;
 
   /// Serializes this DiaryPostModel to a JSON map.
@@ -40,7 +42,12 @@ abstract class $DiaryPostModelCopyWith<$Res> {
           DiaryPostModel value, $Res Function(DiaryPostModel) then) =
       _$DiaryPostModelCopyWithImpl<$Res, DiaryPostModel>;
   @useResult
-  $Res call({String userId, String content, bool isPrivate});
+  $Res call(
+      {String subject,
+      String content,
+      DateTime date,
+      String image,
+      bool isPrivate});
 }
 
 /// @nodoc
@@ -58,18 +65,28 @@ class _$DiaryPostModelCopyWithImpl<$Res, $Val extends DiaryPostModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
+    Object? subject = null,
     Object? content = null,
+    Object? date = null,
+    Object? image = null,
     Object? isPrivate = null,
   }) {
     return _then(_value.copyWith(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      subject: null == subject
+          ? _value.subject
+          : subject // ignore: cast_nullable_to_non_nullable
               as String,
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      image: null == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
               as String,
       isPrivate: null == isPrivate
           ? _value.isPrivate
@@ -87,7 +104,12 @@ abstract class _$$DiaryPostModelImplCopyWith<$Res>
       __$$DiaryPostModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String userId, String content, bool isPrivate});
+  $Res call(
+      {String subject,
+      String content,
+      DateTime date,
+      String image,
+      bool isPrivate});
 }
 
 /// @nodoc
@@ -103,18 +125,28 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
+    Object? subject = null,
     Object? content = null,
+    Object? date = null,
+    Object? image = null,
     Object? isPrivate = null,
   }) {
     return _then(_$DiaryPostModelImpl(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      subject: null == subject
+          ? _value.subject
+          : subject // ignore: cast_nullable_to_non_nullable
               as String,
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      image: null == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
               as String,
       isPrivate: null == isPrivate
           ? _value.isPrivate
@@ -128,21 +160,29 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DiaryPostModelImpl implements _DiaryPostModel {
   _$DiaryPostModelImpl(
-      {required this.userId, required this.content, required this.isPrivate});
+      {required this.subject,
+      required this.content,
+      required this.date,
+      required this.image,
+      required this.isPrivate});
 
   factory _$DiaryPostModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$DiaryPostModelImplFromJson(json);
 
   @override
-  final String userId;
+  final String subject;
   @override
   final String content;
+  @override
+  final DateTime date;
+  @override
+  final String image;
   @override
   final bool isPrivate;
 
   @override
   String toString() {
-    return 'DiaryPostModel(userId: $userId, content: $content, isPrivate: $isPrivate)';
+    return 'DiaryPostModel(subject: $subject, content: $content, date: $date, image: $image, isPrivate: $isPrivate)';
   }
 
   @override
@@ -150,15 +190,18 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DiaryPostModelImpl &&
-            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.subject, subject) || other.subject == subject) &&
             (identical(other.content, content) || other.content == content) &&
+            (identical(other.date, date) || other.date == date) &&
+            (identical(other.image, image) || other.image == image) &&
             (identical(other.isPrivate, isPrivate) ||
                 other.isPrivate == isPrivate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, userId, content, isPrivate);
+  int get hashCode =>
+      Object.hash(runtimeType, subject, content, date, image, isPrivate);
 
   /// Create a copy of DiaryPostModel
   /// with the given fields replaced by the non-null parameter values.
@@ -179,17 +222,23 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
 
 abstract class _DiaryPostModel implements DiaryPostModel {
   factory _DiaryPostModel(
-      {required final String userId,
+      {required final String subject,
       required final String content,
+      required final DateTime date,
+      required final String image,
       required final bool isPrivate}) = _$DiaryPostModelImpl;
 
   factory _DiaryPostModel.fromJson(Map<String, dynamic> json) =
       _$DiaryPostModelImpl.fromJson;
 
   @override
-  String get userId;
+  String get subject;
   @override
   String get content;
+  @override
+  DateTime get date;
+  @override
+  String get image;
   @override
   bool get isPrivate;
 
