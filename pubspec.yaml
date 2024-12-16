@@ -53,7 +53,7 @@ flutter_native_splash:
 
 flutter:
   assets:
-    - assets/images/
+    - assets/images/icons/
     - assets/images/character/
     - .env
   fonts:
