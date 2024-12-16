@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class DiaryColor {
   static const Color globalMainColor = Color(0xFFD8A980);
+  static const Color buttonSpecificColor = Color(0xFFC49D7B);
 }
 
 class DiaryMainGrey {

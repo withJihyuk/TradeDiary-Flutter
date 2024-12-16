@@ -13,10 +13,13 @@ class DiaryPostViewModel {
   final imgRepo = ImageRepo();
   final userId = Supabase.instance.client.auth.currentUser!.id;
 
-  Future<void> addDiaryPost(String content, bool isPrivate) async {
+  Future<void> addDiaryPost(String content, bool isPrivate, String subject,
+      String image, DateTime date) async {
     final DiaryPostModel model = DiaryPostModel(
-      userId: userId,
+      subject: subject,
       content: content,
+      date: date,
+      image: image,
       isPrivate: isPrivate,
     );
     return repo.addDiaryPost(model);
