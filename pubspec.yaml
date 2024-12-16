@@ -31,7 +31,6 @@ dependencies:
   riverpod_annotation: ^2.5.3
   sign_in_with_apple: ^6.1.4
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -41,7 +40,6 @@ dev_dependencies:
   riverpod_generator: ^2.4.3
   custom_lint: ^0.6.8
   riverpod_lint: ^2.3.13
-
 
 flutter_native_splash:
   color: "#ffffff"
@@ -62,25 +60,11 @@ flutter:
     - family: EF_Diary
       fonts:
         - asset: assets/fonts/EF_Diary/EF_Diary.ttf
-
-    - family: PretendardJP
+    - family: Pretendard
       fonts:
-        - asset: assets/fonts/PretendardJP/PretendardJP-Thin.otf
-          weight: 100
-        - asset: assets/fonts/PretendardJP/PretendardJP-ExtraLight.otf
-          weight: 200
-        - asset: assets/fonts/PretendardJP/PretendardJP-Light.otf
-          weight: 300
-        - asset: assets/fonts/PretendardJP/PretendardJP-Regular.otf
+        - asset: assets/fonts/Pretendard/Pretendard-Regular.ttf
           weight: 400
-        - asset: assets/fonts/PretendardJP/PretendardJP-Medium.otf
-          weight: 500
-        - asset: assets/fonts/PretendardJP/PretendardJP-SemiBold.otf
+        - asset: assets/fonts/Pretendard/Pretendard-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/PretendardJP/PretendardJP-Bold.otf
-          weight: 700
-        - asset: assets/fonts/PretendardJP/PretendardJP-ExtraBold.otf
-          weight: 800
-        - asset: assets/fonts/PretendardJP/PretendardJP-Black.otf
-          weight: 900
+
   uses-material-design: true
