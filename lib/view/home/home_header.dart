@@ -5,8 +5,11 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      children: [Text("일기")],
-    );
+    return Row(children: [
+      Text(
+        "일기",
+        style: AppTextStyle.h4Semi,
+      ),
+    ]);
   }
 }

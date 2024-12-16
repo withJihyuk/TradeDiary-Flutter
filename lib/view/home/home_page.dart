@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trade_diary/desginSystem/color.dart';
+import 'package:trade_diary/desginSystem/fontsize.dart';
 
 part '../home/home_scaffold.dart';
 part '../home/home_header.dart';
