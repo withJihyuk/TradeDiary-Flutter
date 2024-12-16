@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:markdown_editor_plus/markdown_editor_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:trade_diary/desginSystem/color.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
 
