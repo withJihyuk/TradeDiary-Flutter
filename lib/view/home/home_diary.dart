@@ -1,5 +1,8 @@
 part of '../home/home_page.dart';
 
+// 아이콘 반영 필요
+// 월별 표기 필요
+
 class _DiaryList extends StatelessWidget {
   const _DiaryList({super.key, required this.diaryList});
   final List<DiaryPostModel> diaryList;
@@ -38,7 +41,7 @@ class _DiaryList extends StatelessWidget {
                             : const Divider(
                                 height: 1,
                                 color: DiaryMainGrey.grey50,
-                              ) // 월별 표기 필요
+                              )
                       ],
                     ),
                   ])));
