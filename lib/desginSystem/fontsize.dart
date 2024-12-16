@@ -33,4 +33,11 @@ abstract class AppTextStyle {
   static final TextStyle h2Semi = pretendardSemiBoldStyle(32, 1.2);
   static final TextStyle h1Regular = pretendardRegularStyle(36, 1.2);
   static final TextStyle h1Semi = pretendardSemiBoldStyle(36, 1.2);
+
+  static const bottomLabelStyle = TextStyle(
+    fontFamily: "Pretendard",
+    fontSize: 12,
+    height: 1.3,
+    fontWeight: FontWeight.w400,
+  );
 }

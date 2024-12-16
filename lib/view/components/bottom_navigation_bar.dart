@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:trade_diary/desginSystem/color.dart';
+import 'package:trade_diary/desginSystem/fontsize.dart';
 import 'package:trade_diary/router.dart';
 
 class BottomBar extends StatefulWidget {
@@ -26,7 +29,7 @@ class _BottomBarState extends State<BottomBar> {
       case 2:
         PageRouter.router.go('/todo');
         break;
-      case 4:
+      case 3:
         PageRouter.router.go('/my');
     }
   }
@@ -34,17 +37,64 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: widget.child,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: selectedIndex,
-        destinations: const [
-          NavigationDestination(label: 'home', icon: Icon(Icons.home)),
-          NavigationDestination(label: 'diary', icon: Icon(Icons.note)),
-          NavigationDestination(label: 'todo', icon: Icon(Icons.today)),
-          NavigationDestination(label: 'my', icon: Icon(Icons.my_library_add)),
-        ],
-        onDestinationSelected: onDestinationSelected,
-      ),
-    );
+        body: widget.child,
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                  top: BorderSide(color: DiaryMainGrey.grey100, width: 1))),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            onTap: onDestinationSelected,
+            enableFeedback: false,
+            unselectedLabelStyle: AppTextStyle.bottomLabelStyle.copyWith(
+              color: DiaryMainGrey.grey600,
+            ),
+            selectedLabelStyle: AppTextStyle.bottomLabelStyle.copyWith(
+              color: DiaryColor.globalMainColor,
+            ),
+            fixedColor: DiaryColor.globalMainColor,
+            currentIndex: selectedIndex,
+            elevation: 0,
+            items: [
+              BottomNavigationBarItem(
+                  icon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: SvgPicture.asset(
+                        (selectedIndex == 0)
+                            ? "assets/images/icons/home-fill.svg"
+                            : "assets/images/icons/home-border.svg",
+                      )),
+                  label: '홈'),
+              BottomNavigationBarItem(
+                  icon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: SvgPicture.asset(
+                        (selectedIndex == 1)
+                            ? "assets/images/icons/diary-fill.svg"
+                            : "assets/images/icons/diary-border.svg",
+                      )),
+                  label: '일기'),
+              BottomNavigationBarItem(
+                  icon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: SvgPicture.asset(
+                        (selectedIndex == 2)
+                            ? "assets/images/icons/todo-fill.svg"
+                            : "assets/images/icons/todo-border.svg",
+                      )),
+                  label: '도전과제'),
+              BottomNavigationBarItem(
+                  icon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: SvgPicture.asset(
+                        (selectedIndex == 3)
+                            ? "assets/images/icons/my-fill.svg"
+                            : "assets/images/icons/my-border.svg",
+                      )),
+                  label: '마이'),
+            ],
+          ),
+        ));
   }
 }
