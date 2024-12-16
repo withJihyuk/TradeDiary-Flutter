@@ -16,13 +16,13 @@ class PageRouter {
       GoRoute(
         path: _splashPage,
         builder: (context, state) => const SplashPage(),
-        routes: [
-          GoRoute(
-              path: 'read/:id',
-              builder: (context, state) =>
-                  ReadPage(id: state.pathParameters['id']!)),
-          GoRoute(
-              path: _writePage, builder: (context, state) => const WritePage()),
+        routes: const [
+          // GoRoute(
+          //     path: 'read/:id',
+          //     builder: (context, state) =>
+          //         ReadPage(id: state.pathParameters['id']!)),
+          // GoRoute(
+          //     path: _writePage, builder: (context, state) => const WritePage()),
         ],
       ),
       ShellRoute(
