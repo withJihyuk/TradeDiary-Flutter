@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
 import 'package:trade_diary/model/diary_post.dart';
+import 'package:trade_diary/router.dart';
 import 'package:trade_diary/view/components/diary_home_content_read.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
