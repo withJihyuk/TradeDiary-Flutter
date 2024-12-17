@@ -4,6 +4,7 @@ part of 'diary_page.dart';
 // 월별 표기 필요
 
 class _DiaryList extends StatelessWidget {
+  // ignore: unused_element
   const _DiaryList({super.key, required this.diaryList});
   final List<DiaryPostModel> diaryList;
 

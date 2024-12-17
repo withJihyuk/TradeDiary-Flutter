@@ -1,6 +1,7 @@
 part of 'diary_page.dart';
 
 class _DiaryFloatingButton extends StatelessWidget {
+  // ignore: unused_element
   const _DiaryFloatingButton({super.key});
 
   @override

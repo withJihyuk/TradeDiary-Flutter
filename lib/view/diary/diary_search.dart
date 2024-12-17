@@ -1,6 +1,7 @@
 part of 'diary_page.dart';
 
 class _SearchBox extends StatelessWidget {
+  // ignore: unused_element
   const _SearchBox({super.key});
 
   @override

@@ -1,6 +1,7 @@
 part of 'diary_page.dart';
 
 class _Header extends StatelessWidget {
+  // ignore: unused_element
   const _Header({super.key});
 
   @override

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+// ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
 
 final supabase = Supabase.instance.client;
@@ -65,10 +66,9 @@ class OauthViewModel {
   }
 
   webGoogleLogin() {
-    supabase.auth.signInWithOAuth(
-      OAuthProvider.google,
-      redirectTo: 'https://flhaiiwtaqnmczabiojs.supabase.co/auth/v1/callback'
-    );
+    supabase.auth.signInWithOAuth(OAuthProvider.google,
+        redirectTo:
+            'https://flhaiiwtaqnmczabiojs.supabase.co/auth/v1/callback');
   }
 
   logout() {
@@ -79,4 +79,3 @@ class OauthViewModel {
     return supabase.auth.currentUser!.id;
   }
 }
-
