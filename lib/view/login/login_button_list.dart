@@ -13,7 +13,7 @@ class _LoginButtonList extends StatelessWidget {
             platform: "Google",
             iconPath: "assets/images/icons/google.svg",
             onPressed: () => oauthViewModel.nativeGoogleLogin()),
-        const SizedBox(height: 14),
+        SizedBox(height: 14.h),
         LoginButtonByPlatform(
           platform: "Apple",
           iconPath: "assets/images/icons/google.svg",
@@ -36,13 +36,10 @@ class LoginButtonByPlatform extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double horizontalPadding = 88.w;
-    double verticalPadding = 12.h;
     return GestureDetector(
         onTap: onPressed,
         child: Container(
-          padding: EdgeInsets.symmetric(
-              vertical: verticalPadding, horizontal: horizontalPadding),
+          padding: EdgeInsets.symmetric(vertical: 88.w, horizontal: 12.h),
           decoration: BoxDecoration(
             border: Border.all(color: DiaryMainGrey.grey100),
             borderRadius: BorderRadius.circular(12),
