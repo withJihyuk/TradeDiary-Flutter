@@ -1,6 +1,7 @@
 part of 'write_page.dart';
 
 class _WriteContentInput extends StatelessWidget {
+  // ignore: unused_element
   const _WriteContentInput({super.key});
 
   @override
@@ -14,7 +15,7 @@ class _WriteContentInput extends StatelessWidget {
         const SizedBox(
           height: 12,
         ),
-        InputComponents(hintText: "제목을 입력해주세요"),
+        const InputComponents(hintText: "제목을 입력해주세요"),
         const SizedBox(
           height: 8,
         ),

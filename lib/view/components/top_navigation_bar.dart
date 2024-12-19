@@ -4,8 +4,8 @@ import 'package:trade_diary/desginSystem/fontsize.dart';
 import 'package:trade_diary/router.dart';
 
 class TopNavigationBar extends StatelessWidget {
-  TopNavigationBar({super.key, required this.title});
-  String title;
+  const TopNavigationBar({super.key, required this.title});
+  final String title;
 
   @override
   Widget build(BuildContext context) {

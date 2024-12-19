@@ -3,8 +3,8 @@ import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
 
 class InputComponents extends StatelessWidget {
-  InputComponents({super.key, required this.hintText});
-  String hintText;
+  const InputComponents({super.key, required this.hintText});
+  final String hintText;
 
   @override
   Widget build(BuildContext context) {

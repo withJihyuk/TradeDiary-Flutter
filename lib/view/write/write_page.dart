@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/input.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 
@@ -19,9 +20,9 @@ class _WritePageState extends State<WritePage> {
   @override
   Widget build(BuildContext context) {
     return _Scaffold(
-        header: TopNavigationBar(title: "일기"),
+        header: const TopNavigationBar(title: "일기"),
         subjectInput: const _WriteSubjectInput(),
         contentInput: const _WriteContentInput(),
-        submitButton: const Text("TEST"));
+        submitButton: Button(onPressed: () {}, text: "다음"));
   }
 }
