@@ -17,7 +17,9 @@ class _TodoFloatingButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(100)),
         backgroundColor: DiaryColor.globalMainColor,
         child: SvgPicture.asset(
-          "assets/images/icons/edit.svg",
+          "assets/images/icons/add.svg",
+          width: 28.w,
+          height: 28.h,
         ));
   }
 }
