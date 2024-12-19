@@ -5,6 +5,7 @@ import 'package:trade_diary/view/diary/diary_page.dart';
 import 'package:trade_diary/view/login/login_page.dart';
 import 'package:trade_diary/view/my/my_page.dart';
 import 'package:trade_diary/view/splash/splash_page.dart';
+import 'package:trade_diary/view/todo/todo_page.dart';
 import 'package:trade_diary/view/write/write_page.dart';
 
 class PageRouter {
@@ -46,7 +47,7 @@ class PageRouter {
           GoRoute(
               path: '/todo',
               pageBuilder: (context, state) => const NoTransitionPage(
-                    child: HomePage(),
+                    child: TodoPage(),
                   )),
           GoRoute(
               path: '/my',
