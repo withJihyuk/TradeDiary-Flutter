@@ -44,7 +44,7 @@ void navigationByState(BuildContext context) {
           if (context.mounted && data.session != null) {
             PageRouter.router.go("/home");
           } else {
-            PageRouter.router.go("/onBoarding");
+            PageRouter.router.go("/login");
           }
           break;
 
@@ -56,7 +56,7 @@ void navigationByState(BuildContext context) {
 
         case AuthChangeEvent.signedOut:
           if (context.mounted) {
-            PageRouter.router.go("/onBoarding");
+            PageRouter.router.go("/login");
           }
           break;
 
@@ -65,7 +65,7 @@ void navigationByState(BuildContext context) {
       }
     } catch (e) {
       if (context.mounted) {
-        PageRouter.router.go("/onBoarding");
+        PageRouter.router.go("/login");
       }
     }
   });
