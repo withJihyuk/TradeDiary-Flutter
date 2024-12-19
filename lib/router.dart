@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trade_diary/view/components/bottom_navigation_bar.dart';
 import 'package:trade_diary/view/diary/diary_page.dart';
 import 'package:trade_diary/view/login/login_page.dart';
+import 'package:trade_diary/view/my/my_page.dart';
 import 'package:trade_diary/view/splash/splash_page.dart';
 import 'package:trade_diary/view/write/write_page.dart';
 
@@ -50,7 +51,7 @@ class PageRouter {
           GoRoute(
               path: '/my',
               pageBuilder: (context, state) => const NoTransitionPage(
-                    child: HomePage(),
+                    child: MyPage(),
                   )),
         ],
       ),

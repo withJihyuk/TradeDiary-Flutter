@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/desginSystem/theme_data.dart';
 import 'package:trade_diary/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -22,14 +23,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     navigationByState(context);
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: '교환일기',
-      theme: customThemeData,
-      routeInformationParser: PageRouter.router.routeInformationParser,
-      routeInformationProvider: PageRouter.router.routeInformationProvider,
-      routerDelegate: PageRouter.router.routerDelegate,
-    );
+    return ScreenUtilInit(
+        designSize: const Size(390, 844),
+        builder: (context, child) {
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            title: '교환일기',
+            theme: customThemeData,
+            routeInformationParser: PageRouter.router.routeInformationParser,
+            routeInformationProvider:
+                PageRouter.router.routeInformationProvider,
+            routerDelegate: PageRouter.router.routerDelegate,
+          );
+        });
   }
 }
 
@@ -65,7 +71,7 @@ void navigationByState(BuildContext context) {
       }
     } catch (e) {
       if (context.mounted) {
-        PageRouter.router.go("/login");
+        PageRouter.router.go("/onBoarding");
       }
     }
   });

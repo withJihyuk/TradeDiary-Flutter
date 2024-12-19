@@ -36,10 +36,13 @@ class LoginButtonByPlatform extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double horizontalPadding = 88.w;
+    double verticalPadding = 12.h;
     return GestureDetector(
         onTap: onPressed,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 84),
+          padding: EdgeInsets.symmetric(
+              vertical: verticalPadding, horizontal: horizontalPadding),
           decoration: BoxDecoration(
             border: Border.all(color: DiaryMainGrey.grey100),
             borderRadius: BorderRadius.circular(12),
