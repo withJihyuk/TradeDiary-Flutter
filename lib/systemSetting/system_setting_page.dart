@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/router.dart';
 import 'package:trade_diary/view/components/setting_menu.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 import 'package:trade_diary/viewModel/oauth_model.dart';
@@ -54,21 +55,23 @@ class SystemSettingPage extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/icons/user-exit.svg",
-                          width: 24.w,
-                          height: 24.h,
-                        ),
-                        SizedBox(
-                          width: 12.w,
-                        ),
-                        Text("회원탈퇴",
-                            style: AppTextStyle.m3Regular
-                                .copyWith(color: const Color(0xffCB1111)))
-                      ],
-                    )
+                    GestureDetector(
+                        onTap: () => PageRouter.router.push("/deleteId"),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              "assets/images/icons/user-exit.svg",
+                              width: 24.w,
+                              height: 24.h,
+                            ),
+                            SizedBox(
+                              width: 12.w,
+                            ),
+                            Text("회원탈퇴",
+                                style: AppTextStyle.m3Regular
+                                    .copyWith(color: const Color(0xffCB1111)))
+                          ],
+                        ))
                   ],
                 ))));
   }

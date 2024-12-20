@@ -8,7 +8,9 @@ class _MySettingOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextSettingMenu(menuName: "감자 이름 변경", onPressed: () {}),
+        TextSettingMenu(
+            menuName: "감자 이름 변경",
+            onPressed: () => PageRouter.router.push("/nickname")),
         // SizedBox(height: 32.h),
         // BoolSettingMenu(
         //   ischecked: false,
