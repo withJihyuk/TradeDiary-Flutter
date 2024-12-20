@@ -13,9 +13,12 @@ class _MyHeader extends StatelessWidget {
           "마이",
           style: AppTextStyle.h4Semi,
         ),
-        SvgPicture.asset(
-          "assets/images/icons/alert.svg",
-        ),
+        // GestureDetector(
+        //   onTap: () => PageRouter.router.push("/alert"),
+        //   child: SvgPicture.asset(
+        //     "assets/images/icons/alert.svg",
+        //   ),
+        // )
       ],
     );
   }

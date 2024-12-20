@@ -8,7 +8,7 @@ class _TodoFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
         onPressed: () {
-          PageRouter.router.push("/write");
+          PageRouter.router.push("/add");
         },
         elevation: 0,
         shape: RoundedRectangleBorder(

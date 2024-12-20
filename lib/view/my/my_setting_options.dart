@@ -9,12 +9,12 @@ class _MySettingOptions extends StatelessWidget {
     return Column(
       children: [
         TextSettingMenu(menuName: "감자 이름 변경", onPressed: () {}),
-        SizedBox(height: 32.h),
-        BoolSettingMenu(
-          ischecked: false,
-          menuName: "알림",
-          onPressed: () {},
-        ),
+        // SizedBox(height: 32.h),
+        // BoolSettingMenu(
+        //   ischecked: false,
+        //   menuName: "알림",
+        //   onPressed: () {},
+        // ),
         SizedBox(height: 32.h),
         Container(
           decoration: const BoxDecoration(
@@ -24,7 +24,9 @@ class _MySettingOptions extends StatelessWidget {
           height: 1,
         ),
         SizedBox(height: 32.h),
-        TextSettingMenu(menuName: "시스템", onPressed: () {}),
+        TextSettingMenu(
+            menuName: "시스템",
+            onPressed: () => PageRouter.router.push("/systemSetting")),
       ],
     );
   }

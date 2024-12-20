@@ -39,7 +39,7 @@ class LoginButtonByPlatform extends StatelessWidget {
     return GestureDetector(
         onTap: onPressed,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 88.w, horizontal: 12.h),
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 80.w),
           decoration: BoxDecoration(
             border: Border.all(color: DiaryMainGrey.grey100),
             borderRadius: BorderRadius.circular(12),
@@ -51,6 +51,9 @@ class LoginButtonByPlatform extends StatelessWidget {
                 iconPath,
                 width: 28,
                 height: 28,
+              ),
+              const SizedBox(
+                width: 12,
               ),
               Text("$platform로 시작하기", style: AppTextStyle.m2Semi)
             ],
