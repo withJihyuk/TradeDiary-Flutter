@@ -27,10 +27,18 @@ class _TodoWeekCalendar extends StatelessWidget {
               AppTextStyle.m2Regular.copyWith(color: DiaryMainGrey.grey900),
           disabledTextStyle:
               AppTextStyle.m2Regular.copyWith(color: DiaryMainGrey.grey600)),
-      firstDay: DateTime(2024, 12, 12),
-      lastDay: DateTime(2024, 12, 19),
+      firstDay: findFirstDateOfTheWeek(DateTime.now()),
+      lastDay: findLastDateOfTheWeek(DateTime.now()),
       daysOfWeekHeight: 30,
       headerVisible: false,
     );
   }
+}
+
+DateTime findFirstDateOfTheWeek(DateTime dateTime) {
+  return dateTime.subtract(Duration(days: dateTime.weekday - 1));
+}
+
+DateTime findLastDateOfTheWeek(DateTime dateTime) {
+  return dateTime.add(Duration(days: DateTime.daysPerWeek - dateTime.weekday));
 }
