@@ -37,7 +37,7 @@ class _TodoAddPageState extends State<TodoAddPage> {
                   const SizedBox(
                     height: 12,
                   ),
-                  const InputComponents(hintText: "제목을 입력해주세요"),
+                  const InputComponents(hintText: "제목을 입력해주세요", isLong: false,),
                   SizedBox(
                     height: 28.h,
                   ),

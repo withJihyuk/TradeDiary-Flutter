@@ -47,7 +47,7 @@ class NicknamePage extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const InputComponents(hintText: "이름을 입력해 주세요"),
+                              const InputComponents(hintText: "이름을 입력해 주세요", isLong: false,),
                               SizedBox(
                                 height: 8.h,
                               ),

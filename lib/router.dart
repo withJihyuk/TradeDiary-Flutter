@@ -4,6 +4,7 @@ import 'package:trade_diary/systemSetting/system_setting_page.dart';
 import 'package:trade_diary/view/components/bottom_navigation_bar.dart';
 import 'package:trade_diary/view/deleteId/delete_id_page.dart';
 import 'package:trade_diary/view/diary/diary_page.dart';
+import 'package:trade_diary/view/home/home_page.dart';
 import 'package:trade_diary/view/login/login_page.dart';
 import 'package:trade_diary/view/my/my_page.dart';
 import 'package:trade_diary/view/nickname/nickname_page.dart';
@@ -63,7 +64,7 @@ class PageRouter {
           GoRoute(
               path: '/diary',
               pageBuilder: (context, state) => const NoTransitionPage(
-                    child: HomePage(),
+                    child: DiaryPage(),
                   )),
           GoRoute(
               path: '/todo',

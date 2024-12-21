@@ -15,7 +15,10 @@ class _WriteContentInput extends StatelessWidget {
         const SizedBox(
           height: 12,
         ),
-        const InputComponents(hintText: "제목을 입력해주세요"),
+        const InputComponents(
+          hintText: "내용을 입력해 주세요",
+          isLong: true,
+        ),
         const SizedBox(
           height: 8,
         ),

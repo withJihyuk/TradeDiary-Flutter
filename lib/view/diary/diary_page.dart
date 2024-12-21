@@ -12,14 +12,14 @@ part 'diary_search.dart';
 part 'diary_list.dart';
 part 'diary_floating_button.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class DiaryPage extends StatefulWidget {
+  const DiaryPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<DiaryPage> createState() => _DiaryPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _DiaryPageState extends State<DiaryPage> {
   @override
   Widget build(BuildContext context) {
     return _Scaffold(

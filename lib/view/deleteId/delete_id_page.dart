@@ -37,10 +37,47 @@ class DeleteIdPage extends StatelessWidget {
                     SizedBox(
                       height: 223.h,
                     ),
-                    const Row(
-                      children: [],
+                    Row(
+                      children: [
+                        SmallButton(
+                            onPressed: () {},
+                            text: "회원탈퇴",
+                            color: DiaryMainGrey.grey500),
+                        SizedBox(width: 10.w),
+                        SmallButton(
+                            onPressed: () {},
+                            text: "돌아가기",
+                            color: DiaryColor.globalMainColor),
+                      ],
                     )
                   ],
                 ))));
+  }
+}
+
+class SmallButton extends StatelessWidget {
+  const SmallButton(
+      {super.key,
+      required this.onPressed,
+      required this.text,
+      required this.color});
+  final VoidCallback onPressed;
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 53.w),
+          alignment: Alignment.center,
+          child: Text(text,
+              style: AppTextStyle.m2Semi.copyWith(color: Colors.white)),
+        ));
   }
 }
