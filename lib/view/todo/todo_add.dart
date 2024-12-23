@@ -37,7 +37,10 @@ class _TodoAddPageState extends State<TodoAddPage> {
                   const SizedBox(
                     height: 12,
                   ),
-                  const InputComponents(hintText: "제목을 입력해주세요", isLong: false,),
+                  const InputComponents(
+                    hintText: "제목을 입력해주세요",
+                    isLong: false,
+                  ),
                   SizedBox(
                     height: 28.h,
                   ),
@@ -92,7 +95,6 @@ class _TodoAddPageState extends State<TodoAddPage> {
                                       CupertinoTimerPicker(
                                         mode: CupertinoTimerPickerMode.hm,
                                         onTimerDurationChanged: (value) {
-                                          print(value);
                                           setState(() {
                                             settingTime = value;
                                           });
