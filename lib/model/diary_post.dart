@@ -6,7 +6,8 @@ part 'diary_post.g.dart';
 @freezed
 class DiaryPostModel with _$DiaryPostModel {
   factory DiaryPostModel(
-      {required String subject,
+      {
+      required String subject,
       required String content,
       required DateTime date,
       required String image,
