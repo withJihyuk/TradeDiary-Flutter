@@ -10,6 +10,7 @@ class DiaryPostModel with _$DiaryPostModel {
       required String content,
       required DateTime date,
       required List<String> image,
+      required String emotion,
       required bool isPrivate}) = _DiaryPostModel;
 
   factory DiaryPostModel.fromJson(Map<String, dynamic> json) =>

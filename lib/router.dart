@@ -37,8 +37,7 @@ class PageRouter {
           GoRoute(
               path: _readPage,
               builder: (context, state) {
-                List<DiaryPostModel> posts =
-                    state.extra as List<DiaryPostModel>;
+                final posts = state.extra as List<DiaryPostModel>;
                 int day = int.parse(state.pathParameters['id'] ?? '0');
                 return DiaryView(posts: posts, day: day);
               }),

@@ -47,6 +47,9 @@ class DiaryView extends StatelessWidget {
                     daysOfWeekHeight: 30,
                     headerVisible: false,
                   ),
+                  SizedBox(
+                    height: 30.h,
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
