@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/desginSystem/color.dart';
+import 'package:trade_diary/desginSystem/fontsize.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -65,6 +66,67 @@ class _HomePageState extends State<HomePage> {
                         height: 166.h,
                       ),
                     ),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(32.w, 220.h, 32.w, 38.h),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      "LV.1",
+                                      style: AppTextStyle.m2Semi
+                                          .copyWith(color: Colors.white),
+                                    ),
+                                    SizedBox(
+                                      width: 8.w,
+                                    ),
+                                    Text(
+                                      "감자",
+                                      style: AppTextStyle.m2Semi.copyWith(
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '0',
+                                      style: AppTextStyle.labelRegular.copyWith(
+                                          color: DiaryColor.globalMainColor),
+                                    ),
+                                    Text(
+                                      '/12',
+                                      style: AppTextStyle.labelRegular.copyWith(
+                                          color: DiaryMainGrey.grey200),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 8.h,
+                            ),
+                            Container(
+                              width: double.infinity,
+                              height: 12.h,
+                              decoration: BoxDecoration(
+                                  color: DiaryMainGrey.grey300,
+                                  borderRadius: BorderRadius.circular(16)),
+                            ),
+                            SizedBox(
+                              height: 8.h,
+                            ),
+                            Text(
+                              "일기와 도전과제를 설정하면 감자가 성장해요",
+                              style: AppTextStyle.labelRegular
+                                  .copyWith(color: Colors.white),
+                            )
+                          ],
+                        ))
                   ],
                 ),
               ),
