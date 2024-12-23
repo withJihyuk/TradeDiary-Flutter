@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:trade_diary/desginSystem/theme_data.dart';
 import 'package:trade_diary/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
+  await initializeDateFormatting();
   await Supabase.initialize(
     debug: true,
     url: dotenv.env['DB_URL']!,
@@ -22,14 +25,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     navigationByState(context);
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: '교환일기',
-      theme: customThemeData,
-      routeInformationParser: PageRouter.router.routeInformationParser,
-      routeInformationProvider: PageRouter.router.routeInformationProvider,
-      routerDelegate: PageRouter.router.routerDelegate,
-    );
+    return ScreenUtilInit(
+        designSize: const Size(390, 844),
+        builder: (context, child) {
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            title: '교환일기',
+            theme: customThemeData,
+            routeInformationParser: PageRouter.router.routeInformationParser,
+            routeInformationProvider:
+                PageRouter.router.routeInformationProvider,
+            routerDelegate: PageRouter.router.routerDelegate,
+          );
+        });
   }
 }
 
@@ -44,7 +52,7 @@ void navigationByState(BuildContext context) {
           if (context.mounted && data.session != null) {
             PageRouter.router.go("/home");
           } else {
-            PageRouter.router.go("/onBoarding");
+            PageRouter.router.go("/login");
           }
           break;
 
@@ -56,7 +64,7 @@ void navigationByState(BuildContext context) {
 
         case AuthChangeEvent.signedOut:
           if (context.mounted) {
-            PageRouter.router.go("/onBoarding");
+            PageRouter.router.go("/login");
           }
           break;
 

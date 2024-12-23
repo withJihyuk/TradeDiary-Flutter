@@ -114,7 +114,6 @@
 				34D3DBD3406FFEA8AEC7CB5A /* Pods-RunnerTests.release.xcconfig */,
 				9F05E586E8334CE848FD11A7 /* Pods-RunnerTests.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -701,6 +700,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.tradeDiary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

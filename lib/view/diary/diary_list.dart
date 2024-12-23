@@ -54,11 +54,14 @@ class _DiaryList extends StatelessWidget {
                     Column(
                       children: [
                         DiaryHomeContentRead(
-                            contentName: diaryList[index].subject,
-                            contentDate:
-                                "${diaryList[index].date.month}/${diaryList[index].date.day}",
-                            contentPreview: diaryList[index].content,
-                            contentImage: diaryList[index].image),
+                          contentName: diaryList[index].subject,
+                          contentDate:
+                              "${diaryList[index].date.month}/${diaryList[index].date.day}",
+                          contentPreview: diaryList[index].content,
+                          contentImage: diaryList[index].image.first,
+                          onTap: () => PageRouter.router
+                              .push("/read/$index", extra: diaryList),
+                        ),
                         const SizedBox(height: 24),
                         (diaryList.length == index + 1)
                             ? const SizedBox(

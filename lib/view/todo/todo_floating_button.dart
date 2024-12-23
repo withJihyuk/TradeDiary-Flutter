@@ -1,14 +1,14 @@
-part of 'diary_page.dart';
+part of 'todo_page.dart';
 
-class _DiaryFloatingButton extends StatelessWidget {
+class _TodoFloatingButton extends StatelessWidget {
   // ignore: unused_element
-  const _DiaryFloatingButton({super.key});
+  const _TodoFloatingButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
         onPressed: () {
-          PageRouter.router.push("/write");
+          PageRouter.router.push("/add");
         },
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -17,7 +17,9 @@ class _DiaryFloatingButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(100)),
         backgroundColor: DiaryColor.globalMainColor,
         child: SvgPicture.asset(
-          "assets/images/icons/edit.svg",
+          "assets/images/icons/add.svg",
+          width: 28.w,
+          height: 28.h,
         ));
   }
 }

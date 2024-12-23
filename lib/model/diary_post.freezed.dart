@@ -23,7 +23,8 @@ mixin _$DiaryPostModel {
   String get subject => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
-  String get image => throw _privateConstructorUsedError;
+  List<String> get image => throw _privateConstructorUsedError;
+  String get emotion => throw _privateConstructorUsedError;
   bool get isPrivate => throw _privateConstructorUsedError;
 
   /// Serializes this DiaryPostModel to a JSON map.
@@ -46,7 +47,8 @@ abstract class $DiaryPostModelCopyWith<$Res> {
       {String subject,
       String content,
       DateTime date,
-      String image,
+      List<String> image,
+      String emotion,
       bool isPrivate});
 }
 
@@ -69,6 +71,7 @@ class _$DiaryPostModelCopyWithImpl<$Res, $Val extends DiaryPostModel>
     Object? content = null,
     Object? date = null,
     Object? image = null,
+    Object? emotion = null,
     Object? isPrivate = null,
   }) {
     return _then(_value.copyWith(
@@ -87,6 +90,10 @@ class _$DiaryPostModelCopyWithImpl<$Res, $Val extends DiaryPostModel>
       image: null == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      emotion: null == emotion
+          ? _value.emotion
+          : emotion // ignore: cast_nullable_to_non_nullable
               as String,
       isPrivate: null == isPrivate
           ? _value.isPrivate
@@ -108,7 +115,8 @@ abstract class _$$DiaryPostModelImplCopyWith<$Res>
       {String subject,
       String content,
       DateTime date,
-      String image,
+      List<String> image,
+      String emotion,
       bool isPrivate});
 }
 
@@ -129,6 +137,7 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
     Object? content = null,
     Object? date = null,
     Object? image = null,
+    Object? emotion = null,
     Object? isPrivate = null,
   }) {
     return _then(_$DiaryPostModelImpl(
@@ -145,8 +154,12 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
       image: null == image
-          ? _value.image
+          ? _value._image
           : image // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      emotion: null == emotion
+          ? _value.emotion
+          : emotion // ignore: cast_nullable_to_non_nullable
               as String,
       isPrivate: null == isPrivate
           ? _value.isPrivate
@@ -163,8 +176,10 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
       {required this.subject,
       required this.content,
       required this.date,
-      required this.image,
-      required this.isPrivate});
+      required final List<String> image,
+      required this.emotion,
+      required this.isPrivate})
+      : _image = image;
 
   factory _$DiaryPostModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$DiaryPostModelImplFromJson(json);
@@ -175,14 +190,22 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
   final String content;
   @override
   final DateTime date;
+  final List<String> _image;
   @override
-  final String image;
+  List<String> get image {
+    if (_image is EqualUnmodifiableListView) return _image;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_image);
+  }
+
+  @override
+  final String emotion;
   @override
   final bool isPrivate;
 
   @override
   String toString() {
-    return 'DiaryPostModel(subject: $subject, content: $content, date: $date, image: $image, isPrivate: $isPrivate)';
+    return 'DiaryPostModel(subject: $subject, content: $content, date: $date, image: $image, emotion: $emotion, isPrivate: $isPrivate)';
   }
 
   @override
@@ -193,15 +216,16 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
             (identical(other.subject, subject) || other.subject == subject) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.image, image) || other.image == image) &&
+            const DeepCollectionEquality().equals(other._image, _image) &&
+            (identical(other.emotion, emotion) || other.emotion == emotion) &&
             (identical(other.isPrivate, isPrivate) ||
                 other.isPrivate == isPrivate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, subject, content, date, image, isPrivate);
+  int get hashCode => Object.hash(runtimeType, subject, content, date,
+      const DeepCollectionEquality().hash(_image), emotion, isPrivate);
 
   /// Create a copy of DiaryPostModel
   /// with the given fields replaced by the non-null parameter values.
@@ -225,7 +249,8 @@ abstract class _DiaryPostModel implements DiaryPostModel {
       {required final String subject,
       required final String content,
       required final DateTime date,
-      required final String image,
+      required final List<String> image,
+      required final String emotion,
       required final bool isPrivate}) = _$DiaryPostModelImpl;
 
   factory _DiaryPostModel.fromJson(Map<String, dynamic> json) =
@@ -238,7 +263,9 @@ abstract class _DiaryPostModel implements DiaryPostModel {
   @override
   DateTime get date;
   @override
-  String get image;
+  List<String> get image;
+  @override
+  String get emotion;
   @override
   bool get isPrivate;
 
