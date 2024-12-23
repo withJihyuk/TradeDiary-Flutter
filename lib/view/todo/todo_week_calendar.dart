@@ -40,5 +40,5 @@ DateTime findFirstDateOfTheWeek(DateTime dateTime) {
 }
 
 DateTime findLastDateOfTheWeek(DateTime dateTime) {
-  return dateTime.add(Duration(days: DateTime.daysPerWeek - dateTime.weekday));
+  return dateTime.add(Duration(days: 7 - dateTime.weekday));
 }
