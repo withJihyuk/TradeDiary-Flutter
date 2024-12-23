@@ -13,9 +13,9 @@ class _TodoHeader extends StatelessWidget {
           "도전과제",
           style: AppTextStyle.h4Semi,
         ),
-        SvgPicture.asset(
-          "assets/images/icons/menu.svg",
-        ),
+        // SvgPicture.asset(
+        //   "assets/images/icons/menu.svg",
+        // ),
       ],
     );
   }
