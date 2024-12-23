@@ -11,7 +11,7 @@ _$DiaryPostModelImpl _$$DiaryPostModelImplFromJson(Map<String, dynamic> json) =>
       subject: json['subject'] as String,
       content: json['content'] as String,
       date: DateTime.parse(json['date'] as String),
-      image: json['image'] as String,
+      image: (json['image'] as List<dynamic>).map((e) => e as String).toList(),
       isPrivate: json['isPrivate'] as bool,
     );
 

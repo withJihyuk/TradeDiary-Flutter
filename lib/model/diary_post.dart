@@ -6,11 +6,10 @@ part 'diary_post.g.dart';
 @freezed
 class DiaryPostModel with _$DiaryPostModel {
   factory DiaryPostModel(
-      {
-      required String subject,
+      {required String subject,
       required String content,
       required DateTime date,
-      required String image,
+      required List<String> image,
       required bool isPrivate}) = _DiaryPostModel;
 
   factory DiaryPostModel.fromJson(Map<String, dynamic> json) =>

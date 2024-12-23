@@ -58,7 +58,7 @@ class _DiaryList extends StatelessWidget {
                           contentDate:
                               "${diaryList[index].date.month}/${diaryList[index].date.day}",
                           contentPreview: diaryList[index].content,
-                          contentImage: diaryList[index].image,
+                          contentImage: diaryList[index].image.first,
                           onTap: () => PageRouter.router
                               .push("/read/$index", extra: diaryList),
                         ),

@@ -14,7 +14,7 @@ class DiaryPostViewModel {
   final userId = Supabase.instance.client.auth.currentUser!.id;
 
   Future<void> addDiaryPost(String content, bool isPrivate, String subject,
-      String image, DateTime date) async {
+      List<String> image, DateTime date) async {
     final DiaryPostModel model = DiaryPostModel(
       subject: subject,
       content: content,
