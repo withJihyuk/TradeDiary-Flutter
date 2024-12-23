@@ -4,6 +4,7 @@ import 'package:trade_diary/systemSetting/system_setting_page.dart';
 import 'package:trade_diary/view/components/bottom_navigation_bar.dart';
 import 'package:trade_diary/view/deleteId/delete_id_page.dart';
 import 'package:trade_diary/view/diary/diary_page.dart';
+import 'package:trade_diary/view/diary/diary_selecting_emotion.dart';
 import 'package:trade_diary/view/home/home_page.dart';
 import 'package:trade_diary/view/login/login_page.dart';
 import 'package:trade_diary/view/my/my_page.dart';
@@ -16,8 +17,9 @@ import 'package:trade_diary/view/write/write_page.dart';
 class PageRouter {
   static const _splashPage = "/";
   static const _writePage = "/write";
-  static const _loginPage = "/login";
   static const _todoAddPage = "/add";
+  static const _selectEmotionPage = "/select";
+  static const _loginPage = "/login";
   static const _nicknamePage = "/nickname";
   static const _systemSettingPage = "/systemSetting";
   static const _deleteIdPage = "/deleteId";
@@ -47,8 +49,10 @@ class PageRouter {
           GoRoute(
               path: _todoAddPage,
               builder: (context, state) => const TodoAddPage()),
-          // GoRoute(
-          //     path: _alertPage, builder: (context, state) => const AlertPage()),
+          GoRoute(
+              path: _selectEmotionPage,
+              builder: (context, state) => const DiarySelectingEmotion()),
+
           GoRoute(
               path: _loginPage, builder: (context, state) => const LoginPage()),
         ],
