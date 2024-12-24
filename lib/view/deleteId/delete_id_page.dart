@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
+import 'package:trade_diary/viewModel/oauth_model.dart';
 
 class DeleteIdPage extends StatelessWidget {
   const DeleteIdPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    OauthViewModel oauthViewModel = OauthViewModel();
     return Scaffold(
         body: SafeArea(
             child: Padding(
@@ -40,12 +43,12 @@ class DeleteIdPage extends StatelessWidget {
                     Row(
                       children: [
                         SmallButton(
-                            onPressed: () {},
+                            onPressed: () => oauthViewModel.deleteAccount(),
                             text: "회원탈퇴",
                             color: DiaryMainGrey.grey500),
                         SizedBox(width: 10.w),
                         SmallButton(
-                            onPressed: () {},
+                            onPressed: () => context.pop(),
                             text: "돌아가기",
                             color: DiaryColor.globalMainColor),
                       ],

@@ -17,7 +17,7 @@ class _LoginButtonList extends StatelessWidget {
         LoginButtonByPlatform(
           platform: "Apple",
           iconPath: "assets/images/icons/google.svg",
-          onPressed: () => oauthViewModel.nativeGoogleLogin(),
+          onPressed: () => oauthViewModel.signInWithApple(),
         ),
       ],
     );

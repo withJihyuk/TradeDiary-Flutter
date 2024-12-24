@@ -78,4 +78,9 @@ class OauthViewModel {
   getUserId() {
     return supabase.auth.currentUser!.id;
   }
+
+  deleteAccount() async {
+    await supabase.rpc('delete_user');
+    supabase.auth.signOut();
+  }
 }
