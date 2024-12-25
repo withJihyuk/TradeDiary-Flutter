@@ -5,7 +5,7 @@ import 'package:trade_diary/systemSetting/system_setting_page.dart';
 import 'package:trade_diary/view/components/bottom_navigation_bar.dart';
 import 'package:trade_diary/view/deleteId/delete_id_page.dart';
 import 'package:trade_diary/view/diary/diary_page.dart';
-import 'package:trade_diary/view/diary/diary_selecting_emotion.dart';
+import 'package:trade_diary/view/write/write_selecting_emotion.dart';
 import 'package:trade_diary/view/diary/diary_view.dart';
 import 'package:trade_diary/view/home/home_page.dart';
 import 'package:trade_diary/view/login/login_page.dart';
@@ -35,12 +35,16 @@ class PageRouter {
         builder: (context, state) => const SplashPage(),
         routes: [
           GoRoute(
-              path: _readPage,
-              builder: (context, state) {
-                final posts = state.extra as List<DiaryPostModel>;
-                int day = int.parse(state.pathParameters['id'] ?? '0');
-                return DiaryView(posts: posts, day: day);
-              }),
+            path: _readPage,
+            builder: (context, state) {
+              List<DiaryPostModel> posts = [];
+              if (state.extra != null && state.extra is List<DiaryPostModel>) {
+                posts = state.extra as List<DiaryPostModel>;
+              }
+              int day = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+              return DiaryView(posts: posts, day: day);
+            },
+          ),
           GoRoute(
               path: _writePage, builder: (context, state) => const WritePage()),
           GoRoute(
@@ -57,7 +61,7 @@ class PageRouter {
               builder: (context, state) => const TodoAddPage()),
           GoRoute(
               path: _selectEmotionPage,
-              builder: (context, state) => const DiarySelectingEmotion()),
+              builder: (context, state) => const WriteSelectingEmotion()),
           GoRoute(
               path: _loginPage, builder: (context, state) => const LoginPage()),
         ],
