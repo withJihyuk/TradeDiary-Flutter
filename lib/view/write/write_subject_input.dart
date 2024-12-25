@@ -1,11 +1,11 @@
 part of 'write_page.dart';
 
-class _WriteSubjectInput extends StatelessWidget {
+class _WriteSubjectInput extends ConsumerWidget {
   // ignore: unused_element
   const _WriteSubjectInput({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -15,9 +15,10 @@ class _WriteSubjectInput extends StatelessWidget {
         const SizedBox(
           height: 12,
         ),
-        const InputComponents(
+        InputComponents(
           hintText: "제목을 입력해주세요",
           isLong: false,
+          onChanged: (p0) => ref.read(DiaryProvider.notifier).setSubject(p0),
         ),
       ],
     );

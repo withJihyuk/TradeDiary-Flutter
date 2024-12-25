@@ -6,13 +6,18 @@ import 'package:trade_diary/desginSystem/fontsize.dart';
 
 class InputComponents extends StatelessWidget {
   const InputComponents(
-      {super.key, required this.hintText, required this.isLong});
+      {super.key,
+      required this.hintText,
+      required this.isLong,
+      required this.onChanged});
   final String hintText;
   final bool isLong;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+        onChanged: onChanged,
         maxLines: isLong ? 10 : 1,
         maxLength: isLong ? 500 : 30,
         textAlignVertical: TextAlignVertical.top,

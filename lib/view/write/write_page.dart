@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/provider/diary.dart';
 import 'package:trade_diary/router.dart';
 import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/input.dart';
@@ -10,14 +12,14 @@ part 'write_scaffold.dart';
 part 'write_subject_input.dart';
 part 'write_content_input.dart';
 
-class WritePage extends StatefulWidget {
+class WritePage extends ConsumerStatefulWidget {
   const WritePage({super.key});
 
   @override
-  State<WritePage> createState() => _WritePageState();
+  ConsumerState<WritePage> createState() => _WritePageState();
 }
 
-class _WritePageState extends State<WritePage> {
+class _WritePageState extends ConsumerState<WritePage> {
   @override
   Widget build(BuildContext context) {
     return _Scaffold(

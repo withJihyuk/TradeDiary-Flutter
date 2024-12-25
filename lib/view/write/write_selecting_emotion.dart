@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/provider/diary.dart';
 import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 
-class DiarySelectingEmotion extends StatelessWidget {
-  const DiarySelectingEmotion({super.key});
+class WriteSelectingEmotion extends ConsumerWidget {
+  const WriteSelectingEmotion({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final emotionList = [
       {"image": "assets/images/character/img-potato-sad.png", "name": "슬픈감자"},
       {"image": "assets/images/character/img-potato-rich.png", "name": "부자감자"},
@@ -47,21 +49,32 @@ class DiarySelectingEmotion extends StatelessWidget {
                     crossAxisSpacing: 30,
                   ),
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      width: 160.w,
-                      height: 160.h,
-                      padding: const EdgeInsets.all(30),
-                      decoration: BoxDecoration(
-                          color: DiaryMainGrey.grey50,
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Image.asset(emotionList[index]["image"]!,
-                          width: 100.w, height: 100.h),
-                    );
+                    return GestureDetector(
+                        onTap: () {
+                          ref
+                              .read(DiaryProvider.notifier)
+                              .setEmotion(emotionList[index]["name"]!);
+                        },
+                        child: Container(
+                          width: 160.w,
+                          height: 160.h,
+                          padding: const EdgeInsets.all(30),
+                          decoration: BoxDecoration(
+                              color: DiaryMainGrey.grey50,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Image.asset(emotionList[index]["image"]!,
+                              width: 100.w, height: 100.h),
+                        ));
                   }),
               SizedBox(
                 height: 145.h,
               ),
-              Button(onPressed: () {}, text: "완료하기")
+              Button(
+                  onPressed: () {
+                    // 여기에 뷰모델 요청 함수 실행
+                    // ref.read(DiaryProvider) 값으로
+                  },
+                  text: "완료하기")
             ],
           )),
     ));

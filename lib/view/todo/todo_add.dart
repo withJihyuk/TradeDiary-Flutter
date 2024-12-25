@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
-import 'package:trade_diary/view/components/input.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 
 class TodoAddPage extends StatefulWidget {
