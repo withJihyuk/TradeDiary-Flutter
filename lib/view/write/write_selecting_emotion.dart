@@ -12,6 +12,7 @@ class WriteSelectingEmotion extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var selectedEmotion = ref.watch(DiaryProvider).emotion;
     final emotionList = [
       {"image": "assets/images/character/img-potato-sad.png", "name": "슬픈감자"},
       {"image": "assets/images/character/img-potato-rich.png", "name": "부자감자"},
@@ -59,9 +60,17 @@ class WriteSelectingEmotion extends ConsumerWidget {
                           width: 160.w,
                           height: 160.h,
                           padding: const EdgeInsets.all(30),
-                          decoration: BoxDecoration(
-                              color: DiaryMainGrey.grey50,
-                              borderRadius: BorderRadius.circular(8)),
+                          decoration:
+                              (selectedEmotion == emotionList[index]["name"])
+                                  ? BoxDecoration(
+                                      color: const Color(0xFFF5E0CE),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                          color: DiaryColor.globalMainColor,
+                                          width: 2))
+                                  : BoxDecoration(
+                                      color: DiaryMainGrey.grey50,
+                                      borderRadius: BorderRadius.circular(8)),
                           child: Image.asset(emotionList[index]["image"]!,
                               width: 100.w, height: 100.h),
                         ));

@@ -7,7 +7,7 @@ class DiaryNotifier extends StateNotifier<DiaryPostModel> {
             subject: "",
             date: DateTime.now(),
             content: "",
-            emotion: "",
+            emotion: "배고픈감자",
             image: [],
             isPrivate: false));
 
