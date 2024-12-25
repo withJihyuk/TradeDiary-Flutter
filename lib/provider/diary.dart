@@ -4,6 +4,7 @@ import 'package:trade_diary/model/diary_post.dart';
 class DiaryNotifier extends StateNotifier<DiaryPostModel> {
   DiaryNotifier()
       : super(DiaryPostModel(
+            userId: "",
             subject: "",
             date: DateTime.now(),
             content: "",

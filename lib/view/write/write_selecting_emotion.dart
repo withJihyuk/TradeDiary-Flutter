@@ -6,12 +6,14 @@ import 'package:trade_diary/desginSystem/fontsize.dart';
 import 'package:trade_diary/provider/diary.dart';
 import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
+import 'package:trade_diary/viewModel/diary_model.dart';
 
 class WriteSelectingEmotion extends ConsumerWidget {
   const WriteSelectingEmotion({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel = DiaryPostViewModel();
     var selectedEmotion = ref.watch(DiaryProvider).emotion;
     final emotionList = [
       {"image": "assets/images/character/img-potato-sad.png", "name": "슬픈감자"},
@@ -82,6 +84,8 @@ class WriteSelectingEmotion extends ConsumerWidget {
                   onPressed: () {
                     // 여기에 뷰모델 요청 함수 실행
                     // ref.read(DiaryProvider) 값으로
+                    final value = ref.read(DiaryProvider);
+                    viewModel.addDiaryPost(value);
                   },
                   text: "완료하기")
             ],

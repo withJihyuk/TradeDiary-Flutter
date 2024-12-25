@@ -18,4 +18,14 @@ class DiaryPostDataSource {
     });
     return response.map((item) => DiaryPostModel.fromJson(item)).toList();
   }
+
+  Future<List<DiaryPostModel>> getDiary() async {
+      final response = await supabase
+        .from("diary")
+        .select()
+        .catchError((onError) {
+      throw Exception('글을 가져오는데 실패했어요');
+    });
+    return response.map((item) => DiaryPostModel.fromJson(item)).toList();
+  }
 }

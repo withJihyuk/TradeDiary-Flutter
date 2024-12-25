@@ -28,6 +28,7 @@ class _DiaryPageState extends State<DiaryPage> {
       diaryList: _DiaryList(
         diaryList: [
           DiaryPostModel(
+              userId: "1",
               content: "as",
               subject: "asdf",
               emotion: "A",
@@ -35,6 +36,7 @@ class _DiaryPageState extends State<DiaryPage> {
               image: ["adsf"],
               isPrivate: false),
           DiaryPostModel(
+              userId: "1",
               content: "감자튀김이 좋아요감자튀김이 좋아요감자튀김이 좋아요감자튀김이 좋아요감자튀김이 좋아요",
               subject: "감자튀김이 좋아요",
               emotion: "A",
