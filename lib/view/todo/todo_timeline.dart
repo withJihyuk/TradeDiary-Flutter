@@ -11,29 +11,34 @@ class _TodoTimeLine extends StatefulWidget {
 class __TodoTimeLineState extends State<_TodoTimeLine> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            const Text("6 AM"),
-            Container(
-              height: 76.h,
-              color: DiaryMainGrey.grey100,
-              width: 1,
-            ),
-            const Text("7 AM")
-          ],
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            WhatToDo(ischecked: false, onPressed: () {}, subject: "멍청한고양이"),
-            WhatToDo(ischecked: false, onPressed: () {}, subject: "멍청한고양이")
-          ],
-        )
-      ],
+    return const Center(
+      child: Column(
+        children: [Text("아직 도전과제가 없어요")],
+      ),
     );
+    // return Row(
+    //   mainAxisAlignment: MainAxisAlignment.start,
+    //   children: [
+    //     Column(
+    //       children: [
+    //         const Text("6 AM"),
+    //         Container(
+    //           height: 76.h,
+    //           color: DiaryMainGrey.grey100,
+    //           width: 1,
+    //         ),
+    //         const Text("7 AM")
+    //       ],
+    //     ),
+    //     Column(
+    //       mainAxisAlignment: MainAxisAlignment.start,
+    //       children: [
+    //         WhatToDo(ischecked: false, onPressed: () {}, subject: "멍청한고양이"),
+    //         WhatToDo(ischecked: false, onPressed: () {}, subject: "멍청한고양이")
+    //       ],
+    //     )
+    //   ],
+    // );
   }
 }
 
