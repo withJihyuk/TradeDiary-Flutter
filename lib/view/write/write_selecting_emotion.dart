@@ -15,7 +15,7 @@ class WriteSelectingEmotion extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = DiaryPostViewModel();
-    var selectedEmotion = ref.watch(DiaryProvider).emotion;
+    var selectedEmotion = ref.watch(diaryProvider).emotion;
     final emotionList = [
       {"image": "assets/images/character/img-potato-sad.png", "name": "슬픈감자"},
       {"image": "assets/images/character/img-potato-rich.png", "name": "부자감자"},
@@ -56,7 +56,7 @@ class WriteSelectingEmotion extends ConsumerWidget {
                     return GestureDetector(
                         onTap: () {
                           ref
-                              .read(DiaryProvider.notifier)
+                              .read(diaryProvider.notifier)
                               .setEmotion(emotionList[index]["name"]!);
                         },
                         child: Container(
@@ -83,7 +83,7 @@ class WriteSelectingEmotion extends ConsumerWidget {
               ),
               Button(
                   onPressed: () {
-                    final value = ref.read(DiaryProvider);
+                    final value = ref.read(diaryProvider);
                     viewModel.addDiaryPost(value);
                     PageRouter.router.go("/home");
                   },
