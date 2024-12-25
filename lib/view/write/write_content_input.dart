@@ -20,7 +20,7 @@ class _WriteContentInput extends ConsumerWidget {
           hintText: "내용을 입력해 주세요",
           isLong: true,
           onChanged: (p0) {
-            ref.read(DiaryProvider.notifier).setContent(p0);
+            ref.read(diaryProvider.notifier).setContent(p0);
           },
         ),
         const SizedBox(

@@ -18,7 +18,7 @@ class _WriteSubjectInput extends ConsumerWidget {
         InputComponents(
           hintText: "제목을 입력해주세요",
           isLong: false,
-          onChanged: (p0) => ref.read(DiaryProvider.notifier).setSubject(p0),
+          onChanged: (p0) => ref.read(diaryProvider.notifier).setSubject(p0),
         ),
       ],
     );

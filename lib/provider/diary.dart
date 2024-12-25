@@ -37,7 +37,7 @@ class DiaryNotifier extends StateNotifier<DiaryPostModel> {
   }
 }
 
-final DiaryProvider =
+final diaryProvider =
     StateNotifierProvider<DiaryNotifier, DiaryPostModel>((ref) {
   return DiaryNotifier();
 });
