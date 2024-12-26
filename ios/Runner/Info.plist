@@ -44,6 +44,11 @@
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string></string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+  		<string>sms</string>
+  		<string>tel</string>
+	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string></string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
