@@ -16,7 +16,7 @@ class _LoginButtonList extends StatelessWidget {
         SizedBox(height: 14.h),
         LoginButtonByPlatform(
           platform: "Apple",
-          iconPath: "assets/images/icons/google.svg",
+          iconPath: "assets/images/icons/apple.svg",
           onPressed: () => oauthViewModel.signInWithApple(),
         ),
       ],
@@ -55,7 +55,7 @@ class LoginButtonByPlatform extends StatelessWidget {
               const SizedBox(
                 width: 12,
               ),
-              Text("$platform로 시작하기", style: AppTextStyle.m2Semi)
+              Text("$platform로 계속하기", style: AppTextStyle.m2Semi)
             ],
           ),
         ));

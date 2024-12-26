@@ -18,6 +18,12 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return const _Scaffold(logo: Text("교환일기"), loginButton: _LoginButtonList());
+    return _Scaffold(
+        logo: Image.asset(
+          "assets/images/icons/logo.png",
+          width: 300.w,
+          height: 300.h,
+        ),
+        loginButton: const _LoginButtonList());
   }
 }
