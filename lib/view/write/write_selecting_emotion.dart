@@ -14,7 +14,7 @@ class WriteSelectingEmotion extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = DiaryPostViewModel();
+    final viewModel = DiaryViewModel();
     var selectedEmotion = ref.watch(diaryProvider).emotion;
     final emotionList = [
       {"image": "assets/images/character/img-potato-sad.png", "name": "슬픈감자"},
@@ -85,7 +85,7 @@ class WriteSelectingEmotion extends ConsumerWidget {
                   onPressed: () {
                     final value = ref.read(diaryProvider);
                     viewModel.addDiaryPost(value);
-                    PageRouter.router.go("/home");
+                    PageRouter.router.go("/diary");
                   },
                   text: "완료하기")
             ],

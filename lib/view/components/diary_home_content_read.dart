@@ -8,14 +8,14 @@ class DiaryHomeContentRead extends StatelessWidget {
     required this.contentName,
     required this.contentDate,
     required this.contentPreview,
-    required this.contentImage,
+    required this.contentEmotion,
     required this.onTap,
   });
 
   final String contentName;
   final String contentDate;
   final String contentPreview;
-  final String contentImage;
+  final String contentEmotion;
   final VoidCallback onTap;
 
   @override

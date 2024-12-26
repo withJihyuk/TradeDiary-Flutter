@@ -13,4 +13,10 @@ class DiaryPostRepo {
   Future<void> addDiaryPost(DiaryPostModel data) async {
     return datasource.createDiaryPost(data);
   }
+
+  Future<List<DiaryPostModel>> getDiary() async {
+    return await datasource.getDiary().onError((error, stackTrace) {
+      return [];
+    });
+  }
 }

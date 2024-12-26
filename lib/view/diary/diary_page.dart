@@ -5,6 +5,7 @@ import 'package:trade_diary/model/diary_post.dart';
 import 'package:trade_diary/router.dart';
 import 'package:trade_diary/view/components/diary_home_content_read.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:trade_diary/viewModel/diary_model.dart';
 
 part 'diary_scaffold.dart';
 part 'diary_header.dart';
@@ -20,30 +21,14 @@ class DiaryPage extends StatefulWidget {
 }
 
 class _DiaryPageState extends State<DiaryPage> {
+  DiaryViewModel viewModel = DiaryViewModel();
   @override
   Widget build(BuildContext context) {
     return _Scaffold(
       header: const _Header(),
       searchBox: const _SearchBox(),
       diaryList: _DiaryList(
-        diaryList: [
-          DiaryPostModel(
-              userId: "1",
-              content: "as",
-              subject: "asdf",
-              emotion: "A",
-              date: DateTime(2024, 12, 25),
-              image: ["adsf"],
-              isPrivate: false),
-          DiaryPostModel(
-              userId: "1",
-              content: "감자튀김이 좋아요감자튀김이 좋아요감자튀김이 좋아요감자튀김이 좋아요감자튀김이 좋아요",
-              subject: "감자튀김이 좋아요",
-              emotion: "A",
-              date: DateTime(2024, 12, 23),
-              image: ["adsf"],
-              isPrivate: false)
-        ],
+        diaryList: viewModel.getDiary(),
       ),
       floatingActionButton: const _DiaryFloatingButton(),
     );
