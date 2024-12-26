@@ -6,7 +6,7 @@ class ProfileViewModel {
   final repo = ProfileRepo();
   final userId = Supabase.instance.client.auth.currentUser!.id;
 
-  Future<void> setNickname(String nickname, String userId) async {
+  Future<void> setNickname(String nickname) async {
     return await repo.setNickname(nickname, userId);
   }
 

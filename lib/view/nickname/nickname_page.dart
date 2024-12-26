@@ -2,15 +2,20 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
 import 'package:trade_diary/view/components/button.dart';
+import 'package:trade_diary/view/components/input.dart';
+import 'package:trade_diary/viewModel/profile_model.dart';
 
 class NicknamePage extends StatelessWidget {
   const NicknamePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    String value = "";
+    ProfileViewModel viewModel = ProfileViewModel();
     return Scaffold(
         body: Container(
             decoration: BoxDecoration(
@@ -46,21 +51,32 @@ class NicknamePage extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // const InputComponents(hintText: "이름을 입력해 주세요", isLong: false,),
+                              InputComponents(
+                                hintText: "이름을 입력해 주세요",
+                                isLong: false,
+                                onChanged: (p0) {
+                                  value = p0;
+                                },
+                              ),
                               SizedBox(
                                 height: 8.h,
                               ),
-                              Text(
-                                "이미 존재하는 이름입니다.",
-                                style: AppTextStyle.labelRegular
-                                    .copyWith(color: const Color(0xFFCB1111)),
-                              ),
+                              // Text(
+                              //   "이미 존재하는 이름입니다.",
+                              //   style: AppTextStyle.labelRegular
+                              //       .copyWith(color: const Color(0xFFCB1111)),
+                              // ),
                             ],
                           ),
                           SizedBox(
                             height: 268.h,
                           ),
-                          Button(onPressed: () {}, text: "확인")
+                          Button(
+                              onPressed: () {
+                                viewModel.setNickname(value);
+                                context.go("/my");
+                              },
+                              text: "확인")
                         ],
                       )),
                 )))));

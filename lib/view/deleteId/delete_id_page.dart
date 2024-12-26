@@ -43,7 +43,10 @@ class DeleteIdPage extends StatelessWidget {
                     Row(
                       children: [
                         SmallButton(
-                            onPressed: () => oauthViewModel.deleteAccount(),
+                            onPressed: () => {
+                                  oauthViewModel.deleteAccount(),
+                                  context.go("/login")
+                                },
                             text: "회원탈퇴",
                             color: DiaryMainGrey.grey500),
                         SizedBox(width: 10.w),
