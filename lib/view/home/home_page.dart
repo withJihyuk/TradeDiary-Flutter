@@ -139,13 +139,28 @@ class _HomePageState extends State<HomePage> {
                                   SizedBox(
                                     height: 8.h,
                                   ),
-                                  Container(
+                                  SizedBox(
                                     width: double.infinity,
                                     height: 12.h,
-                                    decoration: BoxDecoration(
-                                        color: DiaryMainGrey.grey300,
-                                        borderRadius:
-                                            BorderRadius.circular(16)),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Row(
+                                        children: [
+                                          Flexible(
+                                            flex: snapshot.data!.exp,
+                                            child: Container(
+                                                color:
+                                                    DiaryColor.globalMainColor),
+                                          ),
+                                          Flexible(
+                                            flex: levelSystem.expToNextLevel(
+                                                snapshot.data!.exp),
+                                            child: Container(
+                                                color: DiaryMainGrey.grey300),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 8.h,

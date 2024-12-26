@@ -1,31 +1,21 @@
 class LevelSystem {
   final List<int> expThresholds = [15, 34, 57, 92, 135, 372];
+  final List<int> expRequired = [15, 34, 57, 92, 135, 372];
 
   int getLevel(int exp) {
-    int level = 1;
-    int accumulatedExp = 0;
-
-    for (int i = 0; i < expThresholds.length; i++) {
-      accumulatedExp += expThresholds[i];
-      if (exp < accumulatedExp) {
-        return level;
+    for (int i = 1; i < expThresholds.length; i++) {
+      if (exp < expThresholds[i]) {
+        return i;
       }
-      level++;
     }
-    return level;
+    return expThresholds.length;
   }
 
   int expToNextLevel(int exp) {
-    int level = getLevel(exp);
-    if (level > expThresholds.length) {
+    int currentLevel = getLevel(exp);
+    if (currentLevel >= expThresholds.length) {
       return 0;
     }
-
-    int accumulatedExp = 0;
-    for (int i = 0; i < level - 1; i++) {
-      accumulatedExp += expThresholds[i];
-    }
-
-    return (accumulatedExp + expThresholds[level - 1]) - exp;
+    return expRequired[currentLevel + 1];
   }
 }
