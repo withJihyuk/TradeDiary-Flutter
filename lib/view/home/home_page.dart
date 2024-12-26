@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                         height: 166.h,
                       ),
                     ),
-                    FutureBuilder<ProfileModel>(
+                    FutureBuilder(
                       future: _profileFuture,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==

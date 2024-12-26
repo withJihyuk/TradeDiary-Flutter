@@ -22,7 +22,6 @@ ProfileModel _$ProfileModelFromJson(Map<String, dynamic> json) {
 mixin _$ProfileModel {
   String get id => throw _privateConstructorUsedError;
   String get nickname => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
   int get level => throw _privateConstructorUsedError;
   int get exp => throw _privateConstructorUsedError;
 
@@ -42,7 +41,7 @@ abstract class $ProfileModelCopyWith<$Res> {
           ProfileModel value, $Res Function(ProfileModel) then) =
       _$ProfileModelCopyWithImpl<$Res, ProfileModel>;
   @useResult
-  $Res call({String id, String nickname, String email, int level, int exp});
+  $Res call({String id, String nickname, int level, int exp});
 }
 
 /// @nodoc
@@ -62,7 +61,6 @@ class _$ProfileModelCopyWithImpl<$Res, $Val extends ProfileModel>
   $Res call({
     Object? id = null,
     Object? nickname = null,
-    Object? email = null,
     Object? level = null,
     Object? exp = null,
   }) {
@@ -74,10 +72,6 @@ class _$ProfileModelCopyWithImpl<$Res, $Val extends ProfileModel>
       nickname: null == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
               as String,
       level: null == level
           ? _value.level
@@ -99,7 +93,7 @@ abstract class _$$ProfileModelImplCopyWith<$Res>
       __$$ProfileModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String nickname, String email, int level, int exp});
+  $Res call({String id, String nickname, int level, int exp});
 }
 
 /// @nodoc
@@ -117,7 +111,6 @@ class __$$ProfileModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? nickname = null,
-    Object? email = null,
     Object? level = null,
     Object? exp = null,
   }) {
@@ -129,10 +122,6 @@ class __$$ProfileModelImplCopyWithImpl<$Res>
       nickname: null == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
               as String,
       level: null == level
           ? _value.level
@@ -152,7 +141,6 @@ class _$ProfileModelImpl implements _ProfileModel {
   _$ProfileModelImpl(
       {required this.id,
       required this.nickname,
-      required this.email,
       required this.level,
       required this.exp});
 
@@ -164,15 +152,13 @@ class _$ProfileModelImpl implements _ProfileModel {
   @override
   final String nickname;
   @override
-  final String email;
-  @override
   final int level;
   @override
   final int exp;
 
   @override
   String toString() {
-    return 'ProfileModel(id: $id, nickname: $nickname, email: $email, level: $level, exp: $exp)';
+    return 'ProfileModel(id: $id, nickname: $nickname, level: $level, exp: $exp)';
   }
 
   @override
@@ -183,14 +169,13 @@ class _$ProfileModelImpl implements _ProfileModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
-            (identical(other.email, email) || other.email == email) &&
             (identical(other.level, level) || other.level == level) &&
             (identical(other.exp, exp) || other.exp == exp));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, nickname, email, level, exp);
+  int get hashCode => Object.hash(runtimeType, id, nickname, level, exp);
 
   /// Create a copy of ProfileModel
   /// with the given fields replaced by the non-null parameter values.
@@ -212,7 +197,6 @@ abstract class _ProfileModel implements ProfileModel {
   factory _ProfileModel(
       {required final String id,
       required final String nickname,
-      required final String email,
       required final int level,
       required final int exp}) = _$ProfileModelImpl;
 
@@ -223,8 +207,6 @@ abstract class _ProfileModel implements ProfileModel {
   String get id;
   @override
   String get nickname;
-  @override
-  String get email;
   @override
   int get level;
   @override

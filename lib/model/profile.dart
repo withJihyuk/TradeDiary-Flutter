@@ -8,7 +8,6 @@ class ProfileModel with _$ProfileModel {
   factory ProfileModel({
     required String id,
     required String nickname,
-    required String email,
     required int level,
     required int exp,
   }) = _ProfileModel;

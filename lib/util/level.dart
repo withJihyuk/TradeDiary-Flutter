@@ -18,7 +18,7 @@ class LevelSystem {
   int expToNextLevel(int exp) {
     int level = getLevel(exp);
     if (level > expThresholds.length) {
-      return 0; // 이미 최대 레벨
+      return 0;
     }
 
     int accumulatedExp = 0;
