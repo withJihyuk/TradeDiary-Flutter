@@ -9,6 +9,7 @@ import 'package:trade_diary/view/components/top_navigation_bar.dart';
 class DiaryView extends StatelessWidget {
   const DiaryView({super.key, required this.posts, required this.day});
   final List<DiaryPostModel> posts;
+  
   final int day;
 
   @override

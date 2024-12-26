@@ -8,7 +8,7 @@ class _DiaryFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
         onPressed: () {
-          PageRouter.router.go("/write");
+          PageRouter.router.push("/write");
         },
         elevation: 0,
         shape: RoundedRectangleBorder(

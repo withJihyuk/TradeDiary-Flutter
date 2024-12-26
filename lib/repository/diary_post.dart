@@ -5,9 +5,7 @@ class DiaryPostRepo {
   final datasource = DiaryPostDataSource();
 
   Future<List> getDiaryPost(String postId) async {
-    return await datasource.getDiaryPost(postId).onError((error, stackTrace) {
-      return [];
-    });
+    return await datasource.getDiaryPost(postId);
   }
 
   Future<void> addDiaryPost(DiaryPostModel data) async {
@@ -15,8 +13,6 @@ class DiaryPostRepo {
   }
 
   Future<List<DiaryPostModel>> getDiary() async {
-    return await datasource.getDiary().onError((error, stackTrace) {
-      return [];
-    });
+    return await datasource.getDiary();
   }
 }

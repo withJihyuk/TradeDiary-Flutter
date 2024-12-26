@@ -32,10 +32,11 @@ class DiaryHomeContentRead extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        contentName,
-                        style: AppTextStyle.m3Semi,
-                      ),
+                      Flexible(
+                          child: Text(contentName,
+                              style: AppTextStyle.m3Semi,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis)),
                       const SizedBox(width: 4),
                       Container(
                         width: 2,
@@ -52,6 +53,7 @@ class DiaryHomeContentRead extends StatelessWidget {
                           color: DiaryMainGrey.grey500,
                         ),
                       ),
+                      const SizedBox(width: 20),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -65,7 +67,7 @@ class DiaryHomeContentRead extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

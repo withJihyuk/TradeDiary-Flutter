@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/model/profile.dart';
+import 'package:trade_diary/util/level.dart';
+import 'package:trade_diary/viewModel/profile_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +14,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ProfileViewModel viewModel = ProfileViewModel();
+  final LevelSystem levelSystem = LevelSystem();
+
+  late Future<ProfileModel> _profileFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileFuture = viewModel.getInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,67 +80,88 @@ class _HomePageState extends State<HomePage> {
                         height: 166.h,
                       ),
                     ),
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(32.w, 220.h, 32.w, 38.h),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "LV.1",
-                                      style: AppTextStyle.m2Semi
-                                          .copyWith(color: Colors.white),
-                                    ),
-                                    SizedBox(
-                                      width: 8.w,
-                                    ),
-                                    Text(
-                                      "감자",
-                                      style: AppTextStyle.m2Semi.copyWith(
-                                        color: Colors.white,
+                    FutureBuilder<ProfileModel>(
+                      future: _profileFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const SizedBox();
+                        } else if (snapshot.hasError) {
+                          return const Text('오류가 발생했거나 연결에 문제가 있어요.');
+                        } else if (snapshot.hasData) {
+                          return Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(32.w, 220.h, 32.w, 38.h),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "LV.${levelSystem.getLevel(snapshot.data!.exp)}",
+                                            style: AppTextStyle.m2Semi
+                                                .copyWith(color: Colors.white),
+                                          ),
+                                          SizedBox(
+                                            width: 8.w,
+                                          ),
+                                          Text(
+                                            snapshot.data!.nickname,
+                                            style: AppTextStyle.m2Semi.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '0',
-                                      style: AppTextStyle.labelRegular.copyWith(
-                                          color: DiaryColor.globalMainColor),
-                                    ),
-                                    Text(
-                                      '/12',
-                                      style: AppTextStyle.labelRegular.copyWith(
-                                          color: DiaryMainGrey.grey200),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 8.h,
-                            ),
-                            Container(
-                              width: double.infinity,
-                              height: 12.h,
-                              decoration: BoxDecoration(
-                                  color: DiaryMainGrey.grey300,
-                                  borderRadius: BorderRadius.circular(16)),
-                            ),
-                            SizedBox(
-                              height: 8.h,
-                            ),
-                            Text(
-                              "일기와 도전과제를 설정하면 감자가 성장해요",
-                              style: AppTextStyle.labelRegular
-                                  .copyWith(color: Colors.white),
-                            )
-                          ],
-                        ))
+                                      Row(
+                                        children: [
+                                          Text(
+                                            snapshot.data!.exp.toString(),
+                                            style: AppTextStyle.labelRegular
+                                                .copyWith(
+                                                    color: DiaryColor
+                                                        .globalMainColor),
+                                          ),
+                                          Text(
+                                            '/${levelSystem.expToNextLevel(snapshot.data!.exp)}',
+                                            style: AppTextStyle.labelRegular
+                                                .copyWith(
+                                                    color:
+                                                        DiaryMainGrey.grey200),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 8.h,
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 12.h,
+                                    decoration: BoxDecoration(
+                                        color: DiaryMainGrey.grey300,
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                  ),
+                                  SizedBox(
+                                    height: 8.h,
+                                  ),
+                                  Text(
+                                    "일기와 도전과제를 설정하면 감자가 성장해요",
+                                    style: AppTextStyle.labelRegular
+                                        .copyWith(color: Colors.white),
+                                  )
+                                ],
+                              ));
+                        } else {
+                          return const Text('No data');
+                        }
+                      },
+                    )
                   ],
                 ),
               ),

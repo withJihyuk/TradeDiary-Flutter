@@ -17,29 +17,27 @@ class _DiaryList extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('오류가 발생했습니다: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Image(
-                  image:
-                      AssetImage('assets/images/character/img-potato-sad.png'),
-                  width: 100,
-                  height: 100,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  "아직 일기가 없어요",
-                  style: AppTextStyle.h4Semi
-                      .copyWith(color: DiaryColor.globalMainColor),
-                ),
-                Text(
-                  "하단의 버튼을 눌러 일기를 작성해 보세요!",
-                  style: AppTextStyle.m3Regular
-                      .copyWith(color: DiaryMainGrey.grey800),
-                ),
-              ],
-            ),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Image(
+                image: AssetImage('assets/images/character/img-potato-sad.png'),
+                width: 100,
+                height: 100,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "아직 일기가 없어요",
+                style: AppTextStyle.h4Semi
+                    .copyWith(color: DiaryColor.globalMainColor),
+              ),
+              Text(
+                "하단의 버튼을 눌러 일기를 작성해 보세요!",
+                style: AppTextStyle.m3Regular
+                    .copyWith(color: DiaryMainGrey.grey800),
+              ),
+            ],
           );
         } else {
           final diaryList = snapshot.data!;
