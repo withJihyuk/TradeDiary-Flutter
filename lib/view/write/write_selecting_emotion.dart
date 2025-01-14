@@ -5,6 +5,7 @@ import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
 import 'package:trade_diary/provider/diary.dart';
 import 'package:trade_diary/router.dart';
+import 'package:trade_diary/util/emotion.dart';
 import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
@@ -16,14 +17,6 @@ class WriteSelectingEmotion extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = DiaryViewModel();
     var selectedEmotion = ref.watch(diaryProvider).emotion;
-    final emotionList = [
-      {"image": "assets/images/character/img-potato-sad.png", "name": "슬픈감자"},
-      {"image": "assets/images/character/img-potato-rich.png", "name": "부자감자"},
-      {
-        "image": "assets/images/character/img-potato-hungry.png",
-        "name": "배고픈감자"
-      },
-    ];
 
     return Scaffold(
         body: SafeArea(
@@ -46,35 +39,38 @@ class WriteSelectingEmotion extends ConsumerWidget {
               ),
               GridView.builder(
                   shrinkWrap: true,
-                  itemCount: emotionList.length,
+                  itemCount: Emotion.emotionMap.keys.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisSpacing: 30,
                     crossAxisSpacing: 30,
                   ),
                   itemBuilder: (BuildContext context, int index) {
+                    final emotionName =
+                        Emotion.emotionMap.keys.elementAt(index);
+                    final emotionImage = Emotion.emotionMap[emotionName]!;
+
                     return GestureDetector(
                         onTap: () {
                           ref
                               .read(diaryProvider.notifier)
-                              .setEmotion(emotionList[index]["name"]!);
+                              .setEmotion(emotionName);
                         },
                         child: Container(
                           width: 160.w,
                           height: 160.h,
                           padding: const EdgeInsets.all(30),
-                          decoration:
-                              (selectedEmotion == emotionList[index]["name"])
-                                  ? BoxDecoration(
-                                      color: const Color(0xFFF5E0CE),
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                          color: DiaryColor.globalMainColor,
-                                          width: 2))
-                                  : BoxDecoration(
-                                      color: DiaryMainGrey.grey50,
-                                      borderRadius: BorderRadius.circular(8)),
-                          child: Image.asset(emotionList[index]["image"]!,
+                          decoration: (selectedEmotion == emotionName)
+                              ? BoxDecoration(
+                                  color: const Color(0xFFF5E0CE),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                      color: DiaryColor.globalMainColor,
+                                      width: 2))
+                              : BoxDecoration(
+                                  color: DiaryMainGrey.grey50,
+                                  borderRadius: BorderRadius.circular(8)),
+                          child: Image.asset(emotionImage,
                               width: 100.w, height: 100.h),
                         ));
                   }),

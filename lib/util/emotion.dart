@@ -1,0 +1,7 @@
+class Emotion {
+  static const Map<String, String> emotionMap = {
+    "슬픈감자": "assets/images/character/img-potato-sad.png",
+    "부자감자": "assets/images/character/img-potato-rich.png",
+    "배고픈감자": "assets/images/character/img-potato-hungry.png",
+  };
+}

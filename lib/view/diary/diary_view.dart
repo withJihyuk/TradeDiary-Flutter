@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
 import 'package:trade_diary/model/diary_post.dart';
+import 'package:trade_diary/util/emotion.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 
 class DiaryView extends StatelessWidget {
@@ -56,6 +58,13 @@ class DiaryView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Center(
+                          child: Image.asset(
+                            Emotion.emotionMap[posts[day].emotion]!,
+                            width: 180.w,
+                            height: 180.h,
+                          ),
+                        ),
                         Text(
                           posts[day].subject,
                           style: AppTextStyle.m1Semi,
