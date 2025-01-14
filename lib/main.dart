@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:trade_diary/desginSystem/theme_data.dart';
 import 'package:trade_diary/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -16,7 +17,12 @@ void main() async {
     url: dotenv.env['DB_URL']!,
     anonKey: dotenv.env['DB_KEY']!,
   );
-  runApp(const ProviderScope(child: MyApp()));
+  await SentryFlutter.init((options) {
+    options.dsn =
+        'https://b29e5a5d9010b383e12e8c78c8caa095@o4508238543060992.ingest.us.sentry.io/4508641960591360';
+    options.tracesSampleRate = 1.0;
+    options.profilesSampleRate = 1.0;
+  }, appRunner: () => runApp(const ProviderScope(child: MyApp())));
 }
 
 class MyApp extends StatelessWidget {
