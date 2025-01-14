@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
 import 'package:trade_diary/model/diary_post.dart';
+import 'package:trade_diary/provider/diary_list.dart';
 import 'package:trade_diary/router.dart';
-import 'package:trade_diary/view/components/diary_home_content_read.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:trade_diary/view/components/diary_home_content_read.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
 
 part 'diary_scaffold.dart';
@@ -24,13 +26,11 @@ class _DiaryPageState extends State<DiaryPage> {
   DiaryViewModel viewModel = DiaryViewModel();
   @override
   Widget build(BuildContext context) {
-    return _Scaffold(
-      header: const _Header(),
-      searchBox: const _SearchBox(),
-      diaryList: _DiaryList(
-        diaryList: viewModel.getDiary(),
-      ),
-      floatingActionButton: const _DiaryFloatingButton(),
+    return const _Scaffold(
+      header: _Header(),
+      searchBox: _SearchBox(),
+      diaryList: _DiaryList(),
+      floatingActionButton: _DiaryFloatingButton(),
     );
   }
 }
