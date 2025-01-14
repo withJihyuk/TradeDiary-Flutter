@@ -16,7 +16,7 @@ class _MyTotalValues extends StatelessWidget {
               children: [
                 Text(
                   "0",
-                  style: AppTextStyle.m3Semi,
+                  style: AppTextStyle.h3Semi,
                 ),
                 Text(
                   "지금까지 뽑은 잡초 수",
@@ -27,7 +27,7 @@ class _MyTotalValues extends StatelessWidget {
             Column(children: [
               Text(
                 "0",
-                style: AppTextStyle.m3Semi,
+                style: AppTextStyle.h3Semi,
               ),
               Text(
                 "비료를 준 횟수",
