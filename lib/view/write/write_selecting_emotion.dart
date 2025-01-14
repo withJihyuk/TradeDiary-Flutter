@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/provider/diary_list.dart';
 import 'package:trade_diary/provider/write_diary.dart';
 import 'package:trade_diary/router.dart';
 import 'package:trade_diary/view/components/button.dart';
@@ -85,6 +86,7 @@ class WriteSelectingEmotion extends ConsumerWidget {
                   onPressed: () {
                     final value = ref.read(diaryProvider);
                     viewModel.addDiaryPost(value);
+                    ref.invalidate(diaryListProvider);
                     PageRouter.router.go("/diary");
                   },
                   text: "완료하기")

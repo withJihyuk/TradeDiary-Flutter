@@ -1,19 +1,30 @@
 part of 'diary_page.dart';
 
-class _DiaryList extends ConsumerWidget {
+class _DiaryList extends ConsumerStatefulWidget {
   // ignore: unused_element
   const _DiaryList({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final result = ref.watch(diaryListNotifier);
-    ref.read(diaryListNotifier.notifier).getDiaryList();
+  ConsumerState<ConsumerStatefulWidget> createState() => _DiaryListState();
+}
 
-    if (result.isEmpty) {
-      return const FaildToFetchDiary();
-    } else {
-      return ListDiary(diaryList: result);
-    }
+class _DiaryListState extends ConsumerState<_DiaryList> {
+  @override
+  Widget build(BuildContext context) {
+    final result = ref.watch(diaryListProvider);
+
+    return result.when(
+      skipLoadingOnRefresh: false,
+      data: (diaryList) {
+        if (diaryList.isEmpty) {
+          return const FaildToFetchDiary();
+        } else {
+          return ListDiary(diaryList: diaryList);
+        }
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text('Error: $error')),
+    );
   }
 }
 
