@@ -9,7 +9,7 @@ import 'package:trade_diary/view/components/top_navigation_bar.dart';
 class DiaryView extends StatelessWidget {
   const DiaryView({super.key, required this.posts, required this.day});
   final List<DiaryPostModel> posts;
-  
+
   final int day;
 
   @override
@@ -51,18 +51,21 @@ class DiaryView extends StatelessWidget {
                   SizedBox(
                     height: 30.h,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        posts[day].subject,
-                        style: AppTextStyle.m1Semi,
-                      ),
-                      Text(
-                        posts[day].content,
-                        style: AppTextStyle.m3Regular,
-                      )
-                    ],
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          posts[day].subject,
+                          style: AppTextStyle.m1Semi,
+                        ),
+                        Text(
+                          posts[day].content,
+                          style: AppTextStyle.m3Regular,
+                        )
+                      ],
+                    ),
                   )
                 ]))));
   }
