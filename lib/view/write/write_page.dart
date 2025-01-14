@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
-import 'package:trade_diary/provider/diary.dart';
+import 'package:trade_diary/provider/write_diary.dart';
 import 'package:trade_diary/router.dart';
 import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/input.dart';
