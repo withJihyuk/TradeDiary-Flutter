@@ -34,6 +34,7 @@ Runner/GeneratedPluginRegistrant.*
 *.certSigningRequest
 .env
 *.json
+*.ipa
 
 # Exceptions to above rules.
 !default.mode1v3
