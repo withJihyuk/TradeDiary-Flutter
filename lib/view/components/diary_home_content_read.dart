@@ -71,11 +71,6 @@ class DiaryHomeContentRead extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              width: 80,
-              height: 80,
-              color: Colors.black,
-            ),
           ],
         ));
   }
