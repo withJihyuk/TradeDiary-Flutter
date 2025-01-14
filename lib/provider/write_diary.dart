@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/model/diary_post.dart';
 
-class DiaryNotifier extends StateNotifier<DiaryPostModel> {
-  DiaryNotifier()
+class WriteDiaryNotifier extends StateNotifier<DiaryPostModel> {
+  WriteDiaryNotifier()
       : super(DiaryPostModel(
             userId: "",
             subject: "",
@@ -38,6 +38,6 @@ class DiaryNotifier extends StateNotifier<DiaryPostModel> {
 }
 
 final diaryProvider =
-    StateNotifierProvider<DiaryNotifier, DiaryPostModel>((ref) {
-  return DiaryNotifier();
+    StateNotifierProvider<WriteDiaryNotifier, DiaryPostModel>((ref) {
+  return WriteDiaryNotifier();
 });
