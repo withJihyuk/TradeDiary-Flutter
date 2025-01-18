@@ -22,8 +22,8 @@ class _DiaryListState extends ConsumerState<_DiaryList> {
           return ListDiary(diaryList: diaryList);
         }
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('Error: $error')),
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stack) => const Center(child: Text('글을 가져오는데 실패했어요')),
     );
   }
 }
