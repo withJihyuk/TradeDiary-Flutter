@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +11,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   await dotenv.load(fileName: '.env');
   await initializeDateFormatting();
   await Supabase.initialize(
@@ -36,7 +42,7 @@ class MyApp extends StatelessWidget {
         builder: (context, child) {
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
-            title: '교환일기',
+            title: '감자일기',
             theme: customThemeData,
             routeInformationParser: PageRouter.router.routeInformationParser,
             routeInformationProvider:
@@ -49,37 +55,35 @@ class MyApp extends StatelessWidget {
 
 void navigationByState(BuildContext context) {
   final supabase = Supabase.instance.client;
-  supabase.auth.onAuthStateChange.listen((data) {
+  supabase.auth.onAuthStateChange.listen((data) async {
     final AuthChangeEvent event = data.event;
 
     try {
-      switch (event) {
-        case AuthChangeEvent.initialSession:
-          if (context.mounted && data.session != null) {
+      if (context.mounted) {
+        switch (event) {
+          case AuthChangeEvent.initialSession:
+            if (data.session != null) {
+              PageRouter.router.go("/home");
+            } else {
+              PageRouter.router.go("/login");
+            }
+            break;
+
+          case AuthChangeEvent.signedIn:
             PageRouter.router.go("/home");
-          } else {
+            break;
+
+          case AuthChangeEvent.signedOut:
             PageRouter.router.go("/login");
-          }
-          break;
+            break;
 
-        case AuthChangeEvent.signedIn:
-          if (context.mounted) {
-            PageRouter.router.go("/home");
-          }
-          break;
-
-        case AuthChangeEvent.signedOut:
-          if (context.mounted) {
-            PageRouter.router.go("/login");
-          }
-          break;
-
-        default:
-          break;
+          default:
+            break;
+        }
       }
     } catch (e) {
       if (context.mounted) {
-        PageRouter.router.go("/onBoarding");
+        PageRouter.router.go("/login");
       }
     }
   });
