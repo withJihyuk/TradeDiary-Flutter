@@ -27,9 +27,6 @@ class _BottomBarState extends State<BottomBar> {
         PageRouter.router.go('/diary');
         break;
       case 2:
-        PageRouter.router.go('/todo');
-        break;
-      case 3:
         PageRouter.router.go('/my');
     }
   }
@@ -80,15 +77,6 @@ class _BottomBarState extends State<BottomBar> {
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       child: SvgPicture.asset(
                         (selectedIndex == 2)
-                            ? "assets/images/icons/todo-fill.svg"
-                            : "assets/images/icons/todo-border.svg",
-                      )),
-                  label: '도전과제'),
-              BottomNavigationBarItem(
-                  icon: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: SvgPicture.asset(
-                        (selectedIndex == 3)
                             ? "assets/images/icons/my-fill.svg"
                             : "assets/images/icons/my-border.svg",
                       )),

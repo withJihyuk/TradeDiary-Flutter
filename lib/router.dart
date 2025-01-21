@@ -12,14 +12,11 @@ import 'package:trade_diary/view/login/login_page.dart';
 import 'package:trade_diary/view/my/my_page.dart';
 import 'package:trade_diary/view/nickname/nickname_page.dart';
 import 'package:trade_diary/view/splash/splash_page.dart';
-import 'package:trade_diary/view/todo/todo_add.dart';
-import 'package:trade_diary/view/todo/todo_page.dart';
 import 'package:trade_diary/view/write/write_page.dart';
 
 class PageRouter {
   static const _splashPage = "/";
   static const _writePage = "/write";
-  static const _todoAddPage = "/add";
   static const _selectEmotionPage = "/select";
   static const _loginPage = "/login";
   static const _nicknamePage = "/nickname";
@@ -57,9 +54,6 @@ class PageRouter {
               path: _nicknamePage,
               builder: (context, state) => const NicknamePage()),
           GoRoute(
-              path: _todoAddPage,
-              builder: (context, state) => const TodoAddPage()),
-          GoRoute(
               path: _selectEmotionPage,
               builder: (context, state) => const WriteSelectingEmotion()),
           GoRoute(
@@ -78,11 +72,6 @@ class PageRouter {
               path: '/diary',
               pageBuilder: (context, state) => const NoTransitionPage(
                     child: DiaryPage(),
-                  )),
-          GoRoute(
-              path: '/todo',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                    child: TodoPage(),
                   )),
           GoRoute(
               path: '/my',
