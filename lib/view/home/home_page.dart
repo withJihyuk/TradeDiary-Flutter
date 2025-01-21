@@ -83,11 +83,11 @@ class _HomePageState extends State<HomePage> {
                     FutureBuilder(
                       future: _profileFuture,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const SizedBox();
-                        } else if (snapshot.hasError) {
-                          return const Text('오류가 발생했거나 연결에 문제가 있어요.');
+                        if (snapshot.hasError) {
+                          return Padding(
+                            padding: EdgeInsets.fromLTRB(80.w, 220.h, 0.w, 0.h),
+                            child: const Text('오류가 발생했거나 연결에 문제가 있어요.'),
+                          );
                         } else if (snapshot.hasData) {
                           return Padding(
                               padding:
@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ));
                         } else {
-                          return const Text('No data');
+                          return const SizedBox();
                         }
                       },
                     )
