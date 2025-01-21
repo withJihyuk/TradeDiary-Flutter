@@ -27,15 +27,6 @@ Flutter/flutter_export_environment.sh
 ServiceDefinitions.json
 Runner/GeneratedPluginRegistrant.*
 
-*.mobileprovision
-*.cer
-*.dSYM.zip
-*.p12
-*.certSigningRequest
-.env
-6ZQ7V7U6U5.json
-*.ipa
-
 # Exceptions to above rules.
 !default.mode1v3
 !default.mode2v3
