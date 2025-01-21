@@ -6,7 +6,6 @@ class _WriteContentInput extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,12 +26,12 @@ class _WriteContentInput extends ConsumerWidget {
           height: 8,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text("마크다운 형식을 지원해요",
+            Text("${ref.watch(diaryProvider).content.length}",
                 style: AppTextStyle.labelRegular
-                    .copyWith(color: DiaryMainGrey.grey400)),
-            Text("0/500",
+                    .copyWith(color: DiaryColor.globalMainColor)),
+            Text("/500",
                 style: AppTextStyle.labelRegular
                     .copyWith(color: DiaryMainGrey.grey500)),
           ],
