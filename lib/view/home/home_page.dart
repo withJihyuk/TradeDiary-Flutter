@@ -209,6 +209,105 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 },
+                    FutureBuilder(
+                      future: _profileFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Padding(
+                            padding: EdgeInsets.fromLTRB(80.w, 220.h, 0.w, 0.h),
+                            child: const Text('오류가 발생했거나 연결에 문제가 있어요.'),
+                          );
+                        } else if (snapshot.hasData) {
+                          return Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(32.w, 220.h, 32.w, 38.h),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "LV.${levelSystem.getLevel(snapshot.data!.exp)}",
+                                            style: AppTextStyle.m2Semi
+                                                .copyWith(color: Colors.white),
+                                          ),
+                                          SizedBox(
+                                            width: 8.w,
+                                          ),
+                                          Text(
+                                            snapshot.data!.nickname,
+                                            style: AppTextStyle.m2Semi.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            snapshot.data!.exp.toString(),
+                                            style: AppTextStyle.labelRegular
+                                                .copyWith(
+                                                    color: DiaryColor
+                                                        .globalMainColor),
+                                          ),
+                                          Text(
+                                            '/${levelSystem.expToNextLevel(snapshot.data!.exp)}',
+                                            style: AppTextStyle.labelRegular
+                                                .copyWith(
+                                                    color:
+                                                        DiaryMainGrey.grey200),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 8.h,
+                                  ),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 12.h,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Row(
+                                        children: [
+                                          Flexible(
+                                            flex: snapshot.data!.exp,
+                                            child: Container(
+                                                color:
+                                                    DiaryColor.globalMainColor),
+                                          ),
+                                          Flexible(
+                                            flex: levelSystem.expToNextLevel(
+                                                snapshot.data!.exp),
+                                            child: Container(
+                                                color: DiaryMainGrey.grey300),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 8.h,
+                                  ),
+                                  Text(
+                                    "일기와 도전과제를 설정하면 감자가 성장해요",
+                                    style: AppTextStyle.labelRegular
+                                        .copyWith(color: Colors.white),
+                                  )
+                                ],
+                              ));
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                    )
+                  ],
+                ),
               ),
             ],
           ),
