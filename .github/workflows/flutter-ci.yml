@@ -1,5 +1,5 @@
 name: flutter-ci
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 jobs:
   analyze:
@@ -38,10 +38,10 @@ jobs:
           REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
       - uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
       - run: flutter build apk
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: release-apk
           path: build/app/outputs/apk/release/app-release.apk
