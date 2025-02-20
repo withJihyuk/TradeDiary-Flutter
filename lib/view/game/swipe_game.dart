@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SwipeGame extends StatelessWidget {
   const SwipeGame({super.key});
@@ -12,10 +13,42 @@ class SwipeGame extends StatelessWidget {
               image: AssetImage(
                 "assets/images/icons/swipe-game-background.png",
               ))),
-      child: const Scaffold(
-          backgroundColor: Colors.transparent, // 배경색을 투명으로 설정
-
-          body: SafeArea(child: Text("테스트 ㅋㅋ"))),
+      child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SafeArea(
+              child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 42.h),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Image.asset(
+                      "assets/images/character/heart.png",
+                      width: 72.w,
+                      height: 60.h,
+                    ),
+                    Image.asset(
+                      "assets/images/character/heart.png",
+                      width: 72.w,
+                      height: 60.h,
+                    ),
+                    Image.asset(
+                      "assets/images/character/heart.png",
+                      width: 72.w,
+                      height: 60.h,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 308.h),
+                Image.asset(
+                  "assets/images/icons/swipe-game.png",
+                  width: 320.w,
+                  height: 320.h,
+                ),
+              ],
+            ),
+          ))),
     );
   }
 }
