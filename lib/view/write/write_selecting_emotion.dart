@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/provider/diary_image.dart';
 import 'package:trade_diary/provider/diary_list.dart';
 import 'package:trade_diary/provider/write_diary.dart';
 import 'package:trade_diary/router.dart';
@@ -79,11 +80,32 @@ class WriteSelectingEmotion extends ConsumerWidget {
                 height: 145.h,
               ),
               Button(
-                  onPressed: () {
-                    final value = ref.read(diaryProvider);
-                    viewModel.addDiaryPost(value);
-                    ref.invalidate(diaryListProvider);
-                    PageRouter.router.go("/diary");
+                  onPressed: () async {
+                    try {
+                      var value = ref.read(diaryProvider);
+                      final imageFiles = ref.read(diaryImageProvider);
+                      List<String> imagePaths = imageFiles
+                          .where((file) => file.path != null && file.path.isNotEmpty)
+                          .map((file) => file.path)
+                          .toList();
+                      
+                      if (imagePaths.isNotEmpty) {
+                        final uploadedUrls = await viewModel.uploadImage(imagePaths);
+                        ref.read(diaryProvider.notifier).setImage(uploadedUrls);
+                        value = ref.read(diaryProvider); // 업데이트된 상태를 다시 읽어옴
+                      }
+                      
+                      await viewModel.addDiaryPost(value);
+                      ref.invalidate(diaryListProvider);
+                      PageRouter.router.go("/diary");
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(e.toString()),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   },
                   text: "완료하기")
             ],

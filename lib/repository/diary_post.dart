@@ -11,4 +11,8 @@ class DiaryPostRepo {
   Future<List<DiaryPostModel>> getDiary() async {
     return await datasource.getDiary();
   }
+
+  Future<List<String>> uploadImage(List<String> imagePath) async {
+    return await datasource.uploadImage(imagePath);
+  }
 }
