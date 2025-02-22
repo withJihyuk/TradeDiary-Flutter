@@ -17,7 +17,7 @@ class DiaryViewModel {
     return repo.getDiary();
   }
 
-  Future<String?> uploadImage(List<String> imagePath)  {
-    return  repo.uploadImage(imagePath);
+  Future<List<String>> uploadImage(List<String> imagePath)  {
+    return repo.uploadImage(imagePath);
   }
 }

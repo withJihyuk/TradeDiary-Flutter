@@ -11,7 +11,8 @@ class DiaryImageNotifier extends StateNotifier<List<XFile>> {
   }
 
   void removeImage(int index) {
-    state = state..removeAt(index);
+    if (index < 0 || index >= state.length) return;
+    state = [...state]..removeAt(index);
   }
 }
 
