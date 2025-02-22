@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/desginSystem/color.dart';
 import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/provider/diary_image.dart';
 import 'package:trade_diary/provider/diary_list.dart';
 import 'package:trade_diary/provider/write_diary.dart';
 import 'package:trade_diary/router.dart';
@@ -79,11 +80,43 @@ class WriteSelectingEmotion extends ConsumerWidget {
                 height: 145.h,
               ),
               Button(
-                  onPressed: () {
-                    final value = ref.read(diaryProvider);
-                    viewModel.addDiaryPost(value);
-                    ref.invalidate(diaryListProvider);
-                    PageRouter.router.go("/diary");
+                  onPressed: () async {
+                    try {
+                      var value = ref.read(diaryProvider);
+                      final imageFiles = ref.read(diaryImageProvider);
+                      List<String> imagePaths =
+                          imageFiles.map((file) => file.path).toList();
+
+                      debugPrint('시작: 일기 작성 시도');
+                      // 로딩 표시
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('일기를 저장하는 중입니다...'),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+
+                      debugPrint('이미지 경로: $imagePaths');
+                      if (imagePaths.isNotEmpty) {
+                        final uploadedUrls =
+                            await viewModel.uploadImage(imagePaths);
+                        ref.read(diaryProvider.notifier).setImage(uploadedUrls);
+                        value = ref.read(diaryProvider);
+                      }
+
+                      await viewModel.addDiaryPost(value);
+
+                      ref.invalidate(diaryListProvider);
+                      PageRouter.router.go("/diary");
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('일기 작성 중 오류가 발생했습니다: ${e.toString()}'),
+                          backgroundColor: Colors.red,
+                          duration: const Duration(seconds: 3),
+                        ),
+                      );
+                    }
                   },
                   text: "완료하기")
             ],

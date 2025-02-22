@@ -54,7 +54,25 @@ class DiaryView extends StatelessWidget {
                         Text(
                           posts[day].content,
                           style: AppTextStyle.m3Regular,
-                        )
+                        ),
+                        if (posts[day].image.isNotEmpty) ...[
+                          const SizedBox(height: 80),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              ...posts[day].image.map((imageUrl) => ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                      imageUrl,
+                                      width: 148,
+                                      height: 148,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ))
+                            ],
+                          ),
+                        ],
                       ],
                     ),
                   )

@@ -36,6 +36,11 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+    	<key>NSAllowsArbitraryLoads</key>
+    	<true/>
+	</dict>
 	<key>CFBundleVersion</key>
 	<string>26</string>
 	<key>FlutterDeepLinkingEnabled</key>
