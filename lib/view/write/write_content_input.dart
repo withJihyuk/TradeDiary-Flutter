@@ -1,9 +1,7 @@
 part of 'write_page.dart';
 
-// 방법 1: 현재 _WriteContentInput을 diaryImageProvider를 사용하도록 수정
-
 class _WriteContentInput extends ConsumerWidget {
-  const _WriteContentInput({super.key});
+  const _WriteContentInput();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,12 +39,23 @@ class _WriteContentInput extends ConsumerWidget {
         ),
         GestureDetector(
           onTap: () async {
-            final pickedFiles =
-                await ImagePicker().pickMultiImage(imageQuality: 50);
-            if (pickedFiles.isNotEmpty) {
-              for (var file in pickedFiles) {
-                ref.read(diaryImageProvider.notifier).addImage(file);
+            try {
+              final pickedFiles =
+                  await ImagePicker().pickMultiImage(imageQuality: 50);
+
+              if (pickedFiles.isNotEmpty) {
+                for (var file in pickedFiles) {
+                  ref.read(diaryImageProvider.notifier).addImage(file);
+                }
               }
+            } catch (e) {
+              ref.read(diaryImageProvider.notifier).clearImages();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('이미지를 불러오는 중 오류가 발생했습니다.'),
+                  backgroundColor: Colors.red,
+                ),
+              );
             }
           },
           child: Container(
@@ -95,7 +104,6 @@ class _WriteContentInput extends ConsumerWidget {
                     right: 4,
                     child: GestureDetector(
                       onTap: () {
-                        // 해당 인덱스의 이미지 삭제
                         ref
                             .read(diaryImageProvider.notifier)
                             .removeImage(index);
