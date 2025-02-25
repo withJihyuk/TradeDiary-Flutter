@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:trade_diary/desginSystem/color.dart';
-import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/designSystem/color.dart';
+import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/viewModel/oauth_model.dart';
 
 part 'login_scaffold.dart';
