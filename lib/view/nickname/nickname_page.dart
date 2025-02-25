@@ -71,7 +71,7 @@ class NicknamePage extends StatelessWidget {
                           SizedBox(
                             height: 268.h,
                           ),
-                          Button(
+                          DiaryButton(
                               onPressed: () {
                                 viewModel.setNickname(value);
                                 context.go("/my");

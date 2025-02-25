@@ -12,11 +12,16 @@ import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
 
-class WriteSelectingEmotion extends ConsumerWidget {
+class WriteSelectingEmotion extends ConsumerStatefulWidget {
   const WriteSelectingEmotion({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WriteSelectingEmotion> createState() => _WriteSelectingEmotionState();
+}
+
+class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
+  @override
+  Widget build(BuildContext context) {
     final viewModel = DiaryViewModel();
     var selectedEmotion = ref.watch(diaryProvider).emotion;
 
@@ -95,7 +100,7 @@ class WriteSelectingEmotion extends ConsumerWidget {
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         spreadRadius: 0,
                         blurRadius: 20,
                         offset: const Offset(0, -2),
@@ -103,7 +108,7 @@ class WriteSelectingEmotion extends ConsumerWidget {
                     ],
                   ),
                   padding: EdgeInsets.symmetric(vertical: 20.h),
-                  child: Button(
+                  child: DiaryButton(
                     onPressed: () async {
                       try {
                         var value = ref.read(diaryProvider);
@@ -112,6 +117,7 @@ class WriteSelectingEmotion extends ConsumerWidget {
                             imageFiles.map((file) => file.path).toList();
 
                         debugPrint('시작: 일기 작성 시도');
+                        if (!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('일기를 저장하는 중입니다...'),
@@ -130,8 +136,10 @@ class WriteSelectingEmotion extends ConsumerWidget {
                         await viewModel.addDiaryPost(value);
 
                         ref.invalidate(diaryListProvider);
+                        if (!mounted) return;
                         PageRouter.router.go("/diary");
                       } catch (e) {
+                        if (!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('일기 작성 중 오류가 발생했습니다: ${e.toString()}'),

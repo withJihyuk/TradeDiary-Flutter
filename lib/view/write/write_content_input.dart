@@ -1,10 +1,15 @@
 part of 'write_page.dart';
 
-class _WriteContentInput extends ConsumerWidget {
+class _WriteContentInput extends ConsumerStatefulWidget {
   const _WriteContentInput();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_WriteContentInput> createState() => _WriteContentInputState();
+}
+
+class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
+  @override
+  Widget build(BuildContext context) {
     final images = ref.watch(diaryImageProvider);
 
     return Column(
@@ -50,6 +55,7 @@ class _WriteContentInput extends ConsumerWidget {
               }
             } catch (e) {
               ref.read(diaryImageProvider.notifier).clearImages();
+              if (!mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('이미지를 불러오는 중 오류가 발생했습니다.'),
