@@ -41,3 +41,26 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# Fastlane specific
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+fastlane/README.md
+/fastlane/.env*
+/fastlane/Error*.png
+/fastlane/device_grid.yml
+
+# Build generated
+build/
+DerivedData/
+
+# Temp files
+*.swp
+.DS_Store
+
+# Code coverage
+*.gcda
+*.gcno
+*.xcresult/
