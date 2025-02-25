@@ -1,12 +1,14 @@
 part of 'diary_page.dart';
 
-class _SearchBox extends StatelessWidget {
-  // ignore: unused_element
-  const _SearchBox({super.key});
+class _SearchBox extends ConsumerWidget {
+  const _SearchBox();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SearchBar(
+      onChanged: (value) {
+        ref.read(searchQueryProvider.notifier).state = value;
+      },
       trailing: [
         SvgPicture.asset(
           'assets/images/icons/search.svg',
@@ -18,8 +20,7 @@ class _SearchBox extends StatelessWidget {
       hintStyle: WidgetStateProperty.all(
         AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey500),
       ),
-      padding:
-          WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12)),
+      padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12)),
       elevation: WidgetStateProperty.all(0),
       backgroundColor: WidgetStateProperty.all(DiaryMainGrey.grey50),
       shape: WidgetStateProperty.all(

@@ -133,7 +133,7 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                           value = ref.read(diaryProvider);
                         }
 
-                        await viewModel.addDiaryPost(value);
+                        await viewModel.addDiaryPost(value, ref);
 
                         ref.invalidate(diaryListProvider);
                         if (!mounted) return;
