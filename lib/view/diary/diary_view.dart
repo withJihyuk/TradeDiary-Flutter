@@ -57,17 +57,17 @@ class DiaryView extends StatelessWidget {
                         ),
                         if (posts[day].image.isNotEmpty) ...[
                           const SizedBox(height: 80),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
+                          Column(
                             children: [
-                              ...posts[day].image.map((imageUrl) => ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      imageUrl,
-                                      width: 148,
-                                      height: 148,
-                                      fit: BoxFit.cover,
+                              ...posts[day].image.map((imageUrl) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 8),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.network(
+                                        imageUrl,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ))
                             ],
