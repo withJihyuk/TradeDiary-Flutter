@@ -31,7 +31,7 @@ class _WritePageState extends ConsumerState<WritePage> {
         header: const TopNavigationBar(title: "일기"),
         subjectInput: const _WriteSubjectInput(),
         contentInput: const _WriteContentInput(),
-        submitButton: Button(
+        submitButton: DiaryButton(
             onPressed: () {
               PageRouter.router.push("/select");
             },
