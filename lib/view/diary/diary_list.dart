@@ -73,6 +73,11 @@ class ListDiary extends StatelessWidget {
       grouped[key]!.add(diary);
     }
     
+    // 각 월별 그룹 내에서 날짜순으로 정렬
+    for (var key in grouped.keys) {
+      grouped[key]!.sort((a, b) => b.date.compareTo(a.date));
+    }
+    
     return Map.fromEntries(
       grouped.entries.toList()
         ..sort((a, b) => b.value.first.date.compareTo(a.value.first.date))
