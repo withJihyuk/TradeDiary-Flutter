@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/model/profile.dart';
@@ -16,26 +15,8 @@ class HomePage extends ConsumerWidget {
       padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 38.h),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(
-                onTap: () => context.push("/swipeGame"),
-                child: Image.asset(
-                  "assets/images/icons/game-01.png",
-                  width: 160.w,
-                  height: 82.h,
-                ),
-              ),
-              Image.asset(
-                "assets/images/icons/game-02.png",
-                width: 160.w,
-                height: 82.h,
-              ),
-            ],
-          ),
           Padding(
-            padding: EdgeInsets.only(left: 213.w),
+            padding: EdgeInsets.only(top: 66.h, left: 213.w),
             child: Image.asset(
               "assets/images/character/sun.png",
               width: 132.w,
@@ -61,7 +42,7 @@ class HomePage extends ConsumerWidget {
     final nextLevelExp = levelSystem.expToNextLevel(profile.exp);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(32.w, 210.h, 32.w, 38.h),
+      padding: EdgeInsets.fromLTRB(32.w, 220.h, 32.w, 38.h),
       child: Column(
         children: [
           Row(
