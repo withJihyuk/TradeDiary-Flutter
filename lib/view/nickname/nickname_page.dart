@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trade_diary/desginSystem/color.dart';
-import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/designSystem/color.dart';
+import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/input.dart';
 import 'package:trade_diary/viewModel/profile_model.dart';
@@ -71,7 +71,7 @@ class NicknamePage extends StatelessWidget {
                           SizedBox(
                             height: 268.h,
                           ),
-                          Button(
+                          DiaryButton(
                               onPressed: () {
                                 viewModel.setNickname(value);
                                 context.go("/my");

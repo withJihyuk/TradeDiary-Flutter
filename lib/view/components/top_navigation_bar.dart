@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/router.dart';
 
 class TopNavigationBar extends StatelessWidget {

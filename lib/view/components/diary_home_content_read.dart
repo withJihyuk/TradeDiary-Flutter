@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trade_diary/desginSystem/color.dart';
-import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/designSystem/color.dart';
+import 'package:trade_diary/designSystem/fontsize.dart';
 
 class DiaryHomeContentRead extends StatelessWidget {
   const DiaryHomeContentRead({

@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:trade_diary/desginSystem/color.dart';
-import 'package:trade_diary/desginSystem/fontsize.dart';
+import 'package:trade_diary/designSystem/color.dart';
+import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/provider/diary_image.dart';
 import 'package:trade_diary/provider/write_diary.dart';
 import 'package:trade_diary/router.dart';
@@ -31,7 +31,7 @@ class _WritePageState extends ConsumerState<WritePage> {
         header: const TopNavigationBar(title: "일기"),
         subjectInput: const _WriteSubjectInput(),
         contentInput: const _WriteContentInput(),
-        submitButton: Button(
+        submitButton: DiaryButton(
             onPressed: () {
               PageRouter.router.push("/select");
             },
