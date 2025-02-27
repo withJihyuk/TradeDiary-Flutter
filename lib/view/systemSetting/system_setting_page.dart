@@ -21,6 +21,7 @@ class SystemSettingPage extends StatefulWidget {
 class _SystemSettingPageState extends State<SystemSettingPage> {
   bool _notificationEnabled = false;
   final OauthViewModel oauthViewModel = OauthViewModel();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -58,7 +59,9 @@ class _SystemSettingPageState extends State<SystemSettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ScaffoldMessenger(
+      key: _scaffoldKey,
+      child: Scaffold(
         body: SafeArea(
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
@@ -101,7 +104,7 @@ class _SystemSettingPageState extends State<SystemSettingPage> {
                         onPressed: () async {
                           await NotificationService().showTestNotification();
                           if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            _scaffoldKey.currentState?.showSnackBar(
                               const SnackBar(
                                 content: Text('테스트 알림을 전송했습니다. 알림이 오는지 확인해주세요.'),
                                 duration: Duration(seconds: 2),
@@ -167,6 +170,6 @@ class _SystemSettingPageState extends State<SystemSettingPage> {
                           ],
                         ))
                   ],
-                ))));
+                )))));
   }
 }

@@ -20,12 +20,16 @@ class WriteSelectingEmotion extends ConsumerStatefulWidget {
 }
 
 class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+
   @override
   Widget build(BuildContext context) {
     final viewModel = DiaryViewModel();
     var selectedEmotion = ref.watch(diaryProvider).emotion;
 
-    return Scaffold(
+    return ScaffoldMessenger(
+      key: _scaffoldKey,
+      child: Scaffold(
         body: SafeArea(
           child: Stack(
             children: [
@@ -112,7 +116,6 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                     onPressed: () async {
                       if (!mounted) return;
                       
-                      final messenger = ScaffoldMessenger.of(context);
                       try {
                         var value = ref.read(diaryProvider);
                         final imageFiles = ref.read(diaryImageProvider);
@@ -120,7 +123,7 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
 
                         debugPrint('시작: 일기 작성 시도');
                         
-                        messenger.showSnackBar(
+                        _scaffoldKey.currentState?.showSnackBar(
                           const SnackBar(
                             content: Text('일기를 저장하는 중입니다...'),
                             duration: Duration(seconds: 1),
@@ -141,7 +144,7 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                         PageRouter.router.go("/diary");
                       } catch (e) {
                         if (!mounted) return;
-                        messenger.showSnackBar(
+                        _scaffoldKey.currentState?.showSnackBar(
                           SnackBar(
                             content: Text('일기 작성 중 오류가 발생했습니다: ${e.toString()}'),
                             backgroundColor: Colors.red,
@@ -156,6 +159,6 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
               ),
             ],
           ),
-        ));
+        )));
   }
 }
