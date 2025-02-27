@@ -1,8 +1,7 @@
 part of 'write_page.dart';
 
 class _WriteSubjectInput extends ConsumerWidget {
-  // ignore: unused_element
-  const _WriteSubjectInput({super.key});
+  const _WriteSubjectInput();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -1,8 +1,7 @@
 part of 'my_page.dart';
 
 class _MyTotalValues extends StatelessWidget {
-  // ignore: unused_element
-  const _MyTotalValues({super.key});
+  const _MyTotalValues();
 
   @override
   Widget build(BuildContext context) {

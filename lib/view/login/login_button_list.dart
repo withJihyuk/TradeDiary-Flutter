@@ -1,8 +1,7 @@
 part of 'login_page.dart';
 
 class _LoginButtonList extends StatelessWidget {
-  // ignore: unused_element
-  const _LoginButtonList({super.key});
+  const _LoginButtonList();
 
   @override
   Widget build(BuildContext context) {

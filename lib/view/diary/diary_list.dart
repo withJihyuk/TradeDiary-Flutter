@@ -1,8 +1,7 @@
 part of 'diary_page.dart';
 
 class _DiaryList extends ConsumerStatefulWidget {
-  // ignore: unused_element
-  const _DiaryList({super.key});
+  const _DiaryList();
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DiaryListState();

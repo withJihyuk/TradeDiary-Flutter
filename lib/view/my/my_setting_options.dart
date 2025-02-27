@@ -1,8 +1,7 @@
 part of 'my_page.dart';
 
 class _MySettingOptions extends StatelessWidget {
-  // ignore: unused_element
-  const _MySettingOptions({super.key});
+  const _MySettingOptions();
 
   @override
   Widget build(BuildContext context) {
