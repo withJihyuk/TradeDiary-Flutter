@@ -11,4 +11,8 @@ class ProfileRepo {
   Future<void> setNickname(String nickname, String userId) async {
     return await datasource.setNickname(nickname, userId);
   }
+
+  Future<void> addExp(int exp, String userId) async {
+    return await datasource.addExp(exp, userId);
+  }
 }

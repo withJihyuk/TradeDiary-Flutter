@@ -8,7 +8,8 @@ class _WriteContentInput extends ConsumerStatefulWidget {
 }
 
 class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +21,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("내용",
-              style:
-                  AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey800)),
+              style: AppTextStyle.m3Regular
+                  .copyWith(color: DiaryMainGrey.grey800)),
           const SizedBox(
             height: 12,
           ),

@@ -45,15 +45,17 @@ void main() async {
       throw ValidationException('Sentry DSN이 설정되지 않았습니다');
     }
 
-    await SentryFlutter.init(
-      (options) {
-        options.dsn = kDebugMode ? '' : sentryDsn!;
-        options.tracesSampleRate = 1.0;
-        options.profilesSampleRate = 1.0;
-      },
-      appRunner: () => runApp(const ProviderScope(child: MyApp())),
-    );
+    // await SentryFlutter.init(
+    //   (options) {
+    //
+    //     options.dsn = kDebugMode ? '' : sentryDsn!;
+    //     options.tracesSampleRate = 1.0;
+    //     options.profilesSampleRate = 1.0;
+    //   },
+    //   appRunner: () => runApp(const ProviderScope(child: MyApp())),
+    // );
 
+    runApp(const ProviderScope(child: MyApp()));
     await NotificationService().init();
   } catch (e, stackTrace) {
     if (e is AppException) {

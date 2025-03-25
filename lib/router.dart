@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trade_diary/model/diary_post.dart';
 import 'package:trade_diary/view/game/swipe_game.dart';
+import 'package:trade_diary/view/game/swipe_game_guide_1.dart';
+import 'package:trade_diary/view/game/swipe_game_guide_2.dart';
+import 'package:trade_diary/view/game/swipe_game_guide_3.dart';
 import 'package:trade_diary/view/systemSetting/system_setting_page.dart';
 import 'package:trade_diary/view/components/bottom_navigation_bar.dart';
 import 'package:trade_diary/view/deleteId/delete_id_page.dart';
@@ -25,6 +28,9 @@ class PageRouter {
   static const _deleteIdPage = "/deleteId";
   static const _readPage = "/read/:id";
   static const _swipeGamePage = "/swipeGame";
+  static const _swipeGameGuidePage1 = "/swipeGameGuide1";
+  static const _swipeGameGuidePage2 = "/swipeGameGuide2";
+  static const _swipeGameGuidePage3 = "/swipeGameGuide3";
 
   static final GoRouter router = GoRouter(
     debugLogDiagnostics: true,
@@ -46,6 +52,15 @@ class PageRouter {
           ),
           GoRoute(
               path: _writePage, builder: (context, state) => const WritePage()),
+          GoRoute(
+              path: _swipeGameGuidePage1,
+              builder: (context, state) => const SwipeGameGuide1()),
+          GoRoute(
+              path: _swipeGameGuidePage2,
+              builder: (context, state) => const SwipeGameGuide2()),
+          GoRoute(
+              path: _swipeGameGuidePage3,
+              builder: (context, state) => const SwipeGameGuide3()),
           GoRoute(
               path: _deleteIdPage,
               builder: (context, state) => const DeleteIdPage()),

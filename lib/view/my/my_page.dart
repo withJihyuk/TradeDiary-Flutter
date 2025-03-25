@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:flutter/cupertino.dart';
+import 'package:trade_diary/service/notification_service.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/router.dart';
 import 'package:trade_diary/view/components/setting_menu.dart';
+import 'package:trade_diary/viewModel/oauth_model.dart';
 
 part 'my_scaffold.dart';
 part 'my_header.dart';
