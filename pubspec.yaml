@@ -3,7 +3,7 @@ description: "감자랑 함께 일기를 써봐요 :)"
 
 publish_to: "none"
 
-version: 1.0.6+4
+version: 1.0.7+5
 
 environment:
   sdk: ">=3.4.3 <4.0.0"
@@ -46,7 +46,7 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   json_serializable: ^6.8.0
   riverpod_generator: ^2.4.3
-  custom_lint: ^0.6.8
+  custom_lint: ^0.7.3
   riverpod_lint: ^2.3.13
   freezed: ^2.5.7
   build_runner: ^2.4.12
