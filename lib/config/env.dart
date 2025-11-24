@@ -24,4 +24,4 @@ class EnvConfig {
       assert(sentryDsn.isNotEmpty, 'SENTRY_DSN is not configured in .env file');
     }
   }
-} 
+}

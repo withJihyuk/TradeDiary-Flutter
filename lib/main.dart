@@ -13,7 +13,6 @@ import 'package:trade_diary/util/app_exception.dart';
 import 'package:trade_diary/util/navigation_service.dart';
 import 'package:trade_diary/service/notification_service.dart';
 
-// 디자인 사이즈 상수
 const Size kDesignSize = Size(390, 844);
 
 void main() async {
@@ -31,29 +30,20 @@ void main() async {
     final dbKey = dotenv.env['DB_KEY'];
     final sentryDsn = dotenv.env['SENTRY_DSN'];
 
-    if (dbUrl == null || dbKey == null) {
-      throw ValidationException('데이터베이스 설정이 올바르지 않습니다');
-    }
-
     await Supabase.initialize(
       debug: kDebugMode,
-      url: dbUrl,
-      anonKey: dbKey,
+      url: dbUrl!,
+      anonKey: dbKey!,
     );
-    
-    if (!kDebugMode && sentryDsn == null) {
-      throw ValidationException('Sentry DSN이 설정되지 않았습니다');
-    }
 
-    // await SentryFlutter.init(
-    //   (options) {
-    //
-    //     options.dsn = kDebugMode ? '' : sentryDsn!;
-    //     options.tracesSampleRate = 1.0;
-    //     options.profilesSampleRate = 1.0;
-    //   },
-    //   appRunner: () => runApp(const ProviderScope(child: MyApp())),
-    // );
+    await SentryFlutter.init(
+      (options) {
+        options.dsn = kDebugMode ? '' : sentryDsn!;
+        options.tracesSampleRate = 1.0;
+        options.profilesSampleRate = 1.0;
+      },
+      appRunner: () => runApp(const ProviderScope(child: MyApp())),
+    );
 
     runApp(const ProviderScope(child: MyApp()));
     await NotificationService().init();

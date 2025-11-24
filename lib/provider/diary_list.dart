@@ -2,7 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/model/diary_post.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
 
-final diaryListProvider = FutureProvider.autoDispose<List<DiaryPostModel>>((ref) async {
+final diaryListProvider =
+    FutureProvider.autoDispose<List<DiaryPostModel>>((ref) async {
   final viewModel = DiaryViewModel();
   return await viewModel.getDiary();
 });
@@ -12,7 +13,7 @@ final searchQueryProvider = StateProvider<String>((ref) => '');
 final filteredDiaryListProvider = Provider<List<DiaryPostModel>>((ref) {
   final diaryListAsyncValue = ref.watch(diaryListProvider);
   final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
-  
+
   return diaryListAsyncValue.when(
     data: (diaryList) {
       if (searchQuery.isEmpty) return diaryList;

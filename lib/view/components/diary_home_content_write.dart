@@ -39,4 +39,4 @@ class DiaryHomeContentWrite extends StatelessWidget {
       ),
     );
   }
-} 
+}

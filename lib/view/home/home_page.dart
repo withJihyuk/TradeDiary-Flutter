@@ -19,19 +19,10 @@ class HomePage extends ConsumerWidget {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                child: Image.asset(
-                  "assets/images/icons/game-01.png",
-                  width: 160.w,
-                  height: 82.h,
-                ),
-              ),
-              GestureDetector(
-                onTap: () => {
-                  context.push('/swipeGameGuide1'),
-                },
+                onTap: () => context.push('/swipeGameGuide1'),
                 child: Image.asset(
                   "assets/images/icons/game-02.png",
                   width: 160.w,

@@ -141,12 +141,11 @@ class _SwipeGameState extends State<SwipeGame> {
                 GestureDetector(
                   onVerticalDragUpdate: (details) {
                     setState(() {
-                      isUp = details.localPosition.dy < 0; 
+                      isUp = details.localPosition.dy < 0;
                     });
                   },
                   onVerticalDragEnd: (details) {
                     if (details.velocity.pixelsPerSecond.dy < 0) {
-                      // 위로 스와이프
                       _triggerVibration();
                       handleSwipe(true);
                     } else {

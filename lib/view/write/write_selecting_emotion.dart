@@ -16,11 +16,13 @@ class WriteSelectingEmotion extends ConsumerStatefulWidget {
   const WriteSelectingEmotion({super.key});
 
   @override
-  ConsumerState<WriteSelectingEmotion> createState() => _WriteSelectingEmotionState();
+  ConsumerState<WriteSelectingEmotion> createState() =>
+      _WriteSelectingEmotionState();
 }
 
 class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +30,9 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
     var selectedEmotion = ref.watch(diaryProvider).emotion;
 
     return ScaffoldMessenger(
-      key: _scaffoldKey,
-      child: Scaffold(
-        body: SafeArea(
+        key: _scaffoldKey,
+        child: Scaffold(
+            body: SafeArea(
           child: Stack(
             children: [
               Padding(
@@ -55,18 +57,23 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: Emotion.emotionMap.keys.length,
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 30,
                                 crossAxisSpacing: 30,
                               ),
                               itemBuilder: (BuildContext context, int index) {
-                                final emotionName = Emotion.emotionMap.keys.elementAt(index);
-                                final emotionImage = Emotion.emotionMap[emotionName]!;
+                                final emotionName =
+                                    Emotion.emotionMap.keys.elementAt(index);
+                                final emotionImage =
+                                    Emotion.emotionMap[emotionName]!;
 
                                 return GestureDetector(
                                   onTap: () {
-                                    ref.read(diaryProvider.notifier).setEmotion(emotionName);
+                                    ref
+                                        .read(diaryProvider.notifier)
+                                        .setEmotion(emotionName);
                                   },
                                   child: Container(
                                     width: 160.w,
@@ -75,13 +82,16 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                                     decoration: (selectedEmotion == emotionName)
                                         ? BoxDecoration(
                                             color: const Color(0xFFF5E0CE),
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                             border: Border.all(
-                                                color: DiaryColor.globalMainColor,
+                                                color:
+                                                    DiaryColor.globalMainColor,
                                                 width: 2))
                                         : BoxDecoration(
                                             color: DiaryMainGrey.grey50,
-                                            borderRadius: BorderRadius.circular(8)),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
                                     child: Image.asset(emotionImage,
                                         width: 100.w, height: 100.h),
                                   ),
@@ -115,14 +125,15 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                   child: DiaryButton(
                     onPressed: () async {
                       if (!mounted) return;
-                      
+
                       try {
                         var value = ref.read(diaryProvider);
                         final imageFiles = ref.read(diaryImageProvider);
-                        List<String> imagePaths = imageFiles.map((file) => file.path).toList();
+                        List<String> imagePaths =
+                            imageFiles.map((file) => file.path).toList();
 
                         debugPrint('시작: 일기 작성 시도');
-                        
+
                         _scaffoldKey.currentState?.showSnackBar(
                           const SnackBar(
                             content: Text('일기를 저장하는 중입니다...'),
@@ -132,8 +143,11 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
 
                         debugPrint('이미지 경로: $imagePaths');
                         if (imagePaths.isNotEmpty) {
-                          final uploadedUrls = await viewModel.uploadImage(imagePaths);
-                          ref.read(diaryProvider.notifier).setImage(uploadedUrls);
+                          final uploadedUrls =
+                              await viewModel.uploadImage(imagePaths);
+                          ref
+                              .read(diaryProvider.notifier)
+                              .setImage(uploadedUrls);
                           value = ref.read(diaryProvider);
                         }
 
@@ -146,7 +160,8 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                         if (!mounted) return;
                         _scaffoldKey.currentState?.showSnackBar(
                           SnackBar(
-                            content: Text('일기 작성 중 오류가 발생했습니다: ${e.toString()}'),
+                            content:
+                                Text('일기 작성 중 오류가 발생했습니다: ${e.toString()}'),
                             backgroundColor: Colors.red,
                             duration: const Duration(seconds: 3),
                           ),

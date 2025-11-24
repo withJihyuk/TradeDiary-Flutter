@@ -20,7 +20,8 @@ class _SearchBox extends ConsumerWidget {
       hintStyle: WidgetStateProperty.all(
         AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey500),
       ),
-      padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12)),
+      padding:
+          WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12)),
       elevation: WidgetStateProperty.all(0),
       backgroundColor: WidgetStateProperty.all(DiaryMainGrey.grey50),
       shape: WidgetStateProperty.all(

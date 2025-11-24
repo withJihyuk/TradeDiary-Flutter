@@ -43,4 +43,4 @@ class ValidationException extends AppException {
     super.code,
     super.originalError,
   });
-} 
+}

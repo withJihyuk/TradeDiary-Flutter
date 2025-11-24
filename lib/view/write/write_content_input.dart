@@ -11,6 +11,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
 
+  
+
   @override
   Widget build(BuildContext context) {
     final images = ref.watch(diaryImageProvider);

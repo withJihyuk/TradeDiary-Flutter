@@ -23,7 +23,8 @@ class DiaryViewModel {
     try {
       final value = model.copyWith(userId: userId);
       await repo.addDiaryPost(value);
-      ref.read(diaryRefreshProvider.notifier).state = !ref.read(diaryRefreshProvider);
+      ref.read(diaryRefreshProvider.notifier).state =
+          !ref.read(diaryRefreshProvider);
       ref.read(profileProvider.notifier).refresh();
     } catch (e) {
       if (e is AppException) rethrow;
