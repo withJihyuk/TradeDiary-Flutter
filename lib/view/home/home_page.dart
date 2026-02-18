@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/model/profile.dart';
@@ -19,19 +18,6 @@ class HomePage extends ConsumerWidget {
       padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 38.h),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () => context.push('/swipeGameGuide1'),
-                child: Image.asset(
-                  "assets/images/icons/game-02.png",
-                  width: 160.w,
-                  height: 82.h,
-                ),
-              ),
-            ],
-          ),
           Padding(
             padding: EdgeInsets.only(left: 213.w),
             child: Image.asset(
@@ -59,7 +45,7 @@ class HomePage extends ConsumerWidget {
     final nextLevelExp = levelSystem.expToNextLevel(profile.exp);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(32.w, 200.h, 32.w, 38.h),
+      padding: EdgeInsets.fromLTRB(32.w, 300.h, 32.w, 38.h),
       child: Column(
         children: [
           Row(
