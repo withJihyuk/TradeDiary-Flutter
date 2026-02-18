@@ -70,26 +70,36 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
                   ),
                 );
               }
-            },
-            child: Container(
-              width: 115.w,
-              height: 50.h,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                  color: DiaryMainGrey.grey50,
-                  borderRadius: BorderRadius.circular(8)),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text("사진 추가",
-                      style: AppTextStyle.m3Regular
-                          .copyWith(color: DiaryMainGrey.grey600)),
-                  const SizedBox(width: 8),
-                  SvgPicture.asset(
-                    "assets/images/icons/add-image.svg",
-                  )
-                ],
-              ),
+            } catch (e) {
+              ref.read(diaryImageProvider.notifier).clearImages();
+              if (!mounted) return;
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('이미지를 불러오는 중 오류가 발생했습니다.'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: Container(
+            width: 115.w,
+            height: 50.h,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+                color: DiaryMainGrey.grey50,
+                borderRadius: BorderRadius.circular(8)),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text("사진 추가",
+                    style: AppTextStyle.m3Regular
+                        .copyWith(color: DiaryMainGrey.grey600)),
+                const SizedBox(width: 8),
+                SvgPicture.asset(
+                  "assets/images/icons/add-image.svg",
+                )
+              ],
             ),
           ),
           SizedBox(height: 12.h),

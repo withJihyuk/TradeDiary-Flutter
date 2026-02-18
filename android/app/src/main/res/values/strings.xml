@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">감자일기</string>
+    <string name="widget_name">감자일기 위젯</string>
+    <string name="widget_description">감자의 성장과 일기 연속 기록을 확인하세요</string>
+</resources>

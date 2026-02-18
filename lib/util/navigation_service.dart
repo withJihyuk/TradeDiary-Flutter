@@ -1,12 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/router.dart';
 
 class NavigationService {
-  static void handleAuthStateChange(BuildContext context) {
+  static StreamSubscription<AuthState> handleAuthStateChange(BuildContext context) {
     final supabase = Supabase.instance.client;
-    supabase.auth.onAuthStateChange.listen(
+    return supabase.auth.onAuthStateChange.listen(
       (data) async {
         final AuthChangeEvent event = data.event;
 

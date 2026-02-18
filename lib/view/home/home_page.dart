@@ -7,6 +7,7 @@ import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/model/profile.dart';
 import 'package:trade_diary/provider/profile_provider.dart';
 import 'package:trade_diary/util/level.dart';
+import 'package:trade_diary/provider/widget_update_provider.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -157,6 +158,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileProvider);
+    ref.watch(widgetUpdateProvider);
 
     return Scaffold(
       body: Container(

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/streak_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="오늘부터 시작!"
+        android:textColor="#333333"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/potato_image"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="감자 캐릭터"
+        android:src="@drawable/img_potato_1lv" />
+
+    <TextView
+        android:id="@+id/level_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="LV.1"
+        android:textColor="#826A56"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <ProgressBar
+        android:id="@+id/exp_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_marginTop="4dp"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/widget_progress_bar" />
+</LinearLayout>

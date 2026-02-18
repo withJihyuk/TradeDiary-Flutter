@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:trade_diary/config/env.dart';
 import 'package:trade_diary/util/app_exception.dart';
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
@@ -12,17 +14,36 @@ final supabase = Supabase.instance.client;
 
 class OauthViewModel {
   Future<AuthResponse?> nativeGoogleLogin() async {
-    const webClientId =
-        '758208968172-65nfap2bd31f3bn3kcd29g5q0k084lqq.apps.googleusercontent.com';
-    const iosClientId =
-        '758208968172-8q68eo2oh2j2v6b7hklu35qb6rgophik.apps.googleusercontent.com';
-    final GoogleSignIn googleSignIn = GoogleSignIn(
-      clientId: Platform.isIOS ? iosClientId : null,
-      serverClientId: webClientId,
-    );
-    final googleUser = await googleSignIn.signIn();
-    if (googleUser == null) {
-      throw AuthenticationException('구글 로그인이 취소되었습니다');
+    if (Platform.isAndroid || Platform.isIOS) {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        clientId: EnvConfig.googleIosClientId,
+        serverClientId: EnvConfig.googleWebClientId,
+      );
+      try {
+        final googleUser = await googleSignIn.signIn();
+        if (googleUser == null) {
+          throw AuthenticationException('구글 로그인이 취소되었습니다');
+        }
+
+        final googleAuth = await googleUser.authentication;
+        final accessToken = googleAuth.accessToken;
+        final idToken = googleAuth.idToken;
+
+        if (accessToken == null || idToken == null) {
+          throw AuthenticationException('구글 로그인 인증에 실패했습니다');
+        }
+
+        // ignore: experimental_member_use
+        return await supabase.auth.signInWithIdToken(
+          provider: OAuthProvider.google,
+          idToken: idToken,
+          accessToken: accessToken,
+        );
+      } catch (e) {
+        log(e.toString());
+        if (e is AuthenticationException) rethrow;
+        throw AuthenticationException('구글 로그인 중 오류가 발생했습니다', originalError: e);
+      }
     }
 
     final googleAuth = await googleUser.authentication;
@@ -58,12 +79,14 @@ class OauthViewModel {
         throw AuthenticationException('애플 로그인 인증에 실패했습니다');
       }
 
+      // ignore: experimental_member_use
       return await supabase.auth.signInWithIdToken(
         provider: OAuthProvider.apple,
         idToken: idToken,
         nonce: rawNonce,
       );
     } catch (e) {
+      log(e.toString());
       if (e is AuthenticationException) rethrow;
       throw AuthenticationException('애플 로그인 중 오류가 발생했습니다', originalError: e);
     }
@@ -72,8 +95,7 @@ class OauthViewModel {
   Future<void> webGoogleLogin() async {
     try {
       await supabase.auth.signInWithOAuth(OAuthProvider.google,
-          redirectTo:
-              'https://flhaiiwtaqnmczabiojs.supabase.co/auth/v1/callback');
+          redirectTo: EnvConfig.authCallbackUrl);
     } catch (e) {
       throw AuthenticationException('구글 로그인 중 오류가 발생했습니다', originalError: e);
     }
@@ -98,8 +120,7 @@ class OauthViewModel {
   Future<void> deleteAccount() async {
     try {
       final response = await http.get(
-          Uri.parse(
-              "https://flhaiiwtaqnmczabiojs.supabase.co/functions/v1/delete-user"),
+          Uri.parse(EnvConfig.deleteUserUrl),
           headers: {
             'Content-Type': 'application/json',
             'Authorization':

@@ -11,6 +11,8 @@ import 'package:trade_diary/util/emotion.dart';
 import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
+import 'package:trade_diary/service/streak_service.dart';
+import 'package:trade_diary/provider/profile_provider.dart';
 
 class WriteSelectingEmotion extends ConsumerStatefulWidget {
   const WriteSelectingEmotion({super.key});
@@ -154,11 +156,24 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                         await viewModel.addDiaryPost(value, ref);
 
                         ref.invalidate(diaryListProvider);
+
+                        try {
+                          final diaries = await ref.read(diaryListProvider.future);
+                          final profile = ref.read(profileProvider).value;
+                          if (profile != null) {
+                            await StreakService.updateWidgetData(
+                              diaries: diaries,
+                              profile: profile,
+                            );
+                          }
+                        } catch (_) {}
+
                         if (!mounted) return;
                         PageRouter.router.go("/diary");
                       } catch (e) {
                         if (!mounted) return;
-                        _scaffoldKey.currentState?.showSnackBar(
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content:
                                 Text('일기 작성 중 오류가 발생했습니다: ${e.toString()}'),
