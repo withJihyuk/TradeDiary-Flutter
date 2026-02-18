@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide AuthException;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:trade_diary/config/env.dart';
 import 'package:trade_diary/util/app_exception.dart';
@@ -45,20 +45,7 @@ class OauthViewModel {
         throw AuthenticationException('구글 로그인 중 오류가 발생했습니다', originalError: e);
       }
     }
-
-    final googleAuth = await googleUser.authentication;
-    final accessToken = googleAuth.accessToken;
-    final idToken = googleAuth.idToken;
-
-    if (accessToken == null || idToken == null) {
-      throw AuthenticationException('구글 로그인 인증에 실패했습니다');
-    }
-
-    return await supabase.auth.signInWithIdToken(
-      provider: OAuthProvider.google,
-      idToken: idToken,
-      accessToken: accessToken,
-    );
+    return null;
   }
 
   Future<AuthResponse> signInWithApple() async {

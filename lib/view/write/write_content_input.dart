@@ -11,8 +11,6 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
 
-  
-
   @override
   Widget build(BuildContext context) {
     final images = ref.watch(diaryImageProvider);
@@ -70,19 +68,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
                   ),
                 );
               }
-            } catch (e) {
-              ref.read(diaryImageProvider.notifier).clearImages();
-              if (!mounted) return;
-              // ignore: use_build_context_synchronously
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('이미지를 불러오는 중 오류가 발생했습니다.'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          },
-          child: Container(
+            },
+            child: Container(
             width: 115.w,
             height: 50.h,
             padding: const EdgeInsets.all(12),
@@ -101,6 +88,7 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
                 )
               ],
             ),
+          ),
           ),
           SizedBox(height: 12.h),
           Wrap(

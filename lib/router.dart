@@ -44,15 +44,6 @@ class PageRouter {
           GoRoute(
               path: _writePage, builder: (context, state) => const WritePage()),
           GoRoute(
-              path: _swipeGameGuidePage1,
-              builder: (context, state) => const SwipeGameGuide1()),
-          GoRoute(
-              path: _swipeGameGuidePage2,
-              builder: (context, state) => const SwipeGameGuide2()),
-          GoRoute(
-              path: _swipeGameGuidePage3,
-              builder: (context, state) => const SwipeGameGuide3()),
-          GoRoute(
               path: _deleteIdPage,
               builder: (context, state) => const DeleteIdPage()),
           GoRoute(
@@ -61,7 +52,7 @@ class PageRouter {
           GoRoute(
               path: _nicknamePage,
               builder: (context, state) => const NicknamePage()),
-GoRoute(
+          GoRoute(
               path: _selectEmotionPage,
               builder: (context, state) => const WriteSelectingEmotion()),
           GoRoute(

@@ -16,35 +16,7 @@ class _MySettingOptions extends StatelessWidget {
         //   menuName: "알림",
         //   onPressed: () {},
         // ),
-        SizedBox(height: 28.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '일기 작성 알림',
-              style: AppTextStyle.m3Regular,
-            ),
-            CupertinoSwitch(
-              value: _notificationEnabled,
-              activeTrackColor: DiaryColor.globalMainColor,
-              onChanged: (value) async {
-                if (value) {
-                  final service = NotificationService();
-                  final hasPermission = await service.checkPermissions();
-                  if (!hasPermission) {
-                    _showPermissionDeniedDialog();
-                    return;
-                  }
-                }
-                await NotificationService().setNotificationEnabled(value);
-                setState(() {
-                  _notificationEnabled = value;
-                });
-              },
-            ),
-          ],
-        ),
-        SizedBox(height: 28.h),
+        SizedBox(height: 32.h),
         Container(
           decoration: const BoxDecoration(
             color: DiaryMainGrey.grey100,
@@ -52,7 +24,7 @@ class _MySettingOptions extends StatelessWidget {
           width: double.infinity,
           height: 1,
         ),
-        SizedBox(height: 28.h),
+        SizedBox(height: 32.h),
         TextSettingMenu(
             menuName: "시스템",
             onPressed: () => PageRouter.router.push("/systemSetting")),
