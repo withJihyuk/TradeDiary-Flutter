@@ -10,12 +10,6 @@ class _MySettingOptions extends StatelessWidget {
         TextSettingMenu(
             menuName: "감자 이름 변경",
             onPressed: () => PageRouter.router.push("/nickname")),
-        // SizedBox(height: 32.h),
-        // BoolSettingMenu(
-        //   ischecked: false,
-        //   menuName: "알림",
-        //   onPressed: () {},
-        // ),
         SizedBox(height: 32.h),
         Container(
           decoration: const BoxDecoration(

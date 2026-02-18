@@ -8,7 +8,6 @@ import 'package:trade_diary/view/components/setting_menu.dart';
 
 part 'my_scaffold.dart';
 part 'my_header.dart';
-part 'my_total_values.dart';
 part 'my_setting_options.dart';
 
 class MyPage extends StatefulWidget {
@@ -23,7 +22,6 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     return const _Scaffold(
       header: _MyHeader(),
-      totalValues: _MyTotalValues(),
       settingOptions: _MySettingOptions(),
     );
   }
