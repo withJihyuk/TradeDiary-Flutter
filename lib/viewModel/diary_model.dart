@@ -21,6 +21,17 @@ class DiaryViewModel {
 
   Future<void> addDiaryPost(DiaryPostModel model, WidgetRef ref) async {
     try {
+      final existing = await _dataSource.getDiary();
+      final today = DateTime.now();
+      final todayOnly = DateTime(today.year, today.month, today.day);
+      final hasTodayDiary = existing.any((d) {
+        final dd = DateTime(d.date.year, d.date.month, d.date.day);
+        return dd == todayOnly;
+      });
+      if (hasTodayDiary) {
+        throw DatabaseException('오늘은 이미 일기를 작성했어요');
+      }
+
       final value = model.copyWith(userId: userId);
       await _dataSource.createDiaryPost(value);
       ref.read(diaryRefreshProvider.notifier).state = !ref.read(diaryRefreshProvider);

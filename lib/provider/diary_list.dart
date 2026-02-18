@@ -28,6 +28,19 @@ final filteredDiaryListProvider = Provider<List<DiaryPostModel>>((ref) {
   );
 });
 
+final todayDiaryProvider = Provider<DiaryPostModel?>((ref) {
+  final diaryList = ref.watch(diaryListProvider);
+  return diaryList.whenOrNull(data: (diaries) {
+    final today = DateTime.now();
+    final todayOnly = DateTime(today.year, today.month, today.day);
+    for (final diary in diaries) {
+      final d = DateTime(diary.date.year, diary.date.month, diary.date.day);
+      if (d == todayOnly) return diary;
+    }
+    return null;
+  });
+});
+
 final diaryRefreshProvider = StateProvider<bool>((ref) => false);
 
 final diaryListControllerProvider = Provider((ref) {

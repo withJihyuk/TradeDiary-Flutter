@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trade_diary/model/diary_post.dart';
 import 'package:trade_diary/model/profile.dart';
 import 'package:trade_diary/util/level.dart';
@@ -47,6 +50,26 @@ class StreakService {
     return '';
   }
 
+  static String getWeeklyEmotions(List<DiaryPostModel> diaries) {
+    final now = DateTime.now();
+    final monday = now.subtract(Duration(days: now.weekday - 1));
+    final Map<String, String> weekData = {};
+
+    for (int i = 0; i < 7; i++) {
+      final day = DateTime(monday.year, monday.month, monday.day + i);
+      final key =
+          "${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}";
+      for (final diary in diaries) {
+        final d = DateTime(diary.date.year, diary.date.month, diary.date.day);
+        if (d == day) {
+          weekData[key] = diary.emotion;
+          break;
+        }
+      }
+    }
+    return jsonEncode(weekData);
+  }
+
   static Future<void> updateWidgetData({
     required List<DiaryPostModel> diaries,
     required ProfileModel profile,
@@ -68,7 +91,12 @@ class StreakService {
         HomeWidget.saveWidgetData<int>('current_exp', profile.exp),
         HomeWidget.saveWidgetData<int>('next_level_exp', nextLevelExp),
         HomeWidget.saveWidgetData<String>('nickname', profile.nickname),
+        HomeWidget.saveWidgetData<String>(
+            'weekly_emotions', getWeeklyEmotions(diaries)),
       ]);
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('has_today_diary', todayEmotion.isNotEmpty);
 
       await HomeWidget.updateWidget(
         iOSName: iOSWidgetName,
@@ -89,6 +117,7 @@ class StreakService {
         HomeWidget.saveWidgetData<int>('current_exp', 0),
         HomeWidget.saveWidgetData<int>('next_level_exp', 0),
         HomeWidget.saveWidgetData<String>('nickname', ''),
+        HomeWidget.saveWidgetData<String>('weekly_emotions', '{}'),
       ]);
       await HomeWidget.updateWidget(
         iOSName: iOSWidgetName,

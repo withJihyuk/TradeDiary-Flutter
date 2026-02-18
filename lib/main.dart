@@ -16,6 +16,7 @@ import 'package:trade_diary/util/navigation_service.dart';
 import 'package:trade_diary/service/notification_service.dart';
 import 'package:trade_diary/service/streak_service.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const Size kDesignSize = Size(390, 844);
 
@@ -48,7 +49,11 @@ void main() async {
     await HomeWidget.setAppGroupId(StreakService.appGroupId);
     final initialUri = await HomeWidget.initiallyLaunchedFromHomeWidget();
     if (initialUri != null) {
-      NavigationService.pendingWidgetRoute = '/write';
+      final prefs = await SharedPreferences.getInstance();
+      final hasTodayDiary = prefs.getBool('has_today_diary') ?? false;
+      if (!hasTodayDiary) {
+        NavigationService.pendingWidgetRoute = '/write';
+      }
     }
 
     await SentryFlutter.init(
@@ -63,11 +68,15 @@ void main() async {
 
     await NotificationService().init();
 
-    HomeWidget.widgetClicked.listen((uri) {
+    HomeWidget.widgetClicked.listen((uri) async {
       if (uri != null) {
         final session = Supabase.instance.client.auth.currentSession;
         if (session != null) {
-          PageRouter.router.push('/write');
+          final prefs = await SharedPreferences.getInstance();
+          final hasTodayDiary = prefs.getBool('has_today_diary') ?? false;
+          if (!hasTodayDiary) {
+            PageRouter.router.push('/write');
+          }
         }
       }
     });
