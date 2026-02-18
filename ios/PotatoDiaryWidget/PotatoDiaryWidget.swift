@@ -9,13 +9,14 @@ struct PotatoDiaryEntry: TimelineEntry {
     let currentExp: Int
     let nextLevelExp: Int
     let nickname: String
+    let hasData: Bool
 }
 
 struct PotatoDiaryProvider: TimelineProvider {
     let appGroupId = "group.com.example.tradeDiary"
 
     func placeholder(in context: Context) -> PotatoDiaryEntry {
-        PotatoDiaryEntry(date: Date(), streakCount: 5, todayEmotion: "행복한감자", currentLevel: 3, currentExp: 40, nextLevelExp: 57, nickname: "감자")
+        PotatoDiaryEntry(date: Date(), streakCount: 5, todayEmotion: "행복한감자", currentLevel: 3, currentExp: 40, nextLevelExp: 57, nickname: "감자", hasData: true)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (PotatoDiaryEntry) -> Void) {
@@ -31,6 +32,7 @@ struct PotatoDiaryProvider: TimelineProvider {
 
     private func readEntry() -> PotatoDiaryEntry {
         let defaults = UserDefaults(suiteName: appGroupId)
+        let nickname = defaults?.string(forKey: "nickname") ?? ""
         return PotatoDiaryEntry(
             date: Date(),
             streakCount: defaults?.integer(forKey: "streak_count") ?? 0,
@@ -38,8 +40,27 @@ struct PotatoDiaryProvider: TimelineProvider {
             currentLevel: defaults?.integer(forKey: "current_level") ?? 1,
             currentExp: defaults?.integer(forKey: "current_exp") ?? 0,
             nextLevelExp: defaults?.integer(forKey: "next_level_exp") ?? 15,
-            nickname: defaults?.string(forKey: "nickname") ?? ""
+            nickname: nickname,
+            hasData: !nickname.isEmpty
         )
+    }
+}
+
+struct LoggedOutView: View {
+    var body: some View {
+        VStack(spacing: 8) {
+            Image("img_potato_1lv")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 48, height: 48)
+                .opacity(0.5)
+            Text("로그인하고\n일기를 시작하세요")
+                .font(.system(size: 12))
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+        }
+        .padding(12)
+        .widgetURL(URL(string: "potatoDiary://write"))
     }
 }
 
@@ -162,11 +183,15 @@ struct WidgetEntryView: View {
     let entry: PotatoDiaryEntry
 
     var body: some View {
-        switch family {
-        case .systemMedium:
-            MediumWidgetView(entry: entry)
-        default:
-            SmallWidgetView(entry: entry)
+        if !entry.hasData {
+            LoggedOutView()
+        } else {
+            switch family {
+            case .systemMedium:
+                MediumWidgetView(entry: entry)
+            default:
+                SmallWidgetView(entry: entry)
+            }
         }
     }
 }

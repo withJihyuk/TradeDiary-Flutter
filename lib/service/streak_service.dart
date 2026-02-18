@@ -78,4 +78,24 @@ class StreakService {
       debugPrint('위젯 데이터 업데이트 실패: $e');
     }
   }
+
+  static Future<void> clearWidgetData() async {
+    try {
+      await HomeWidget.setAppGroupId(appGroupId);
+      await Future.wait([
+        HomeWidget.saveWidgetData<int>('streak_count', 0),
+        HomeWidget.saveWidgetData<String>('today_emotion', ''),
+        HomeWidget.saveWidgetData<int>('current_level', 0),
+        HomeWidget.saveWidgetData<int>('current_exp', 0),
+        HomeWidget.saveWidgetData<int>('next_level_exp', 0),
+        HomeWidget.saveWidgetData<String>('nickname', ''),
+      ]);
+      await HomeWidget.updateWidget(
+        iOSName: iOSWidgetName,
+        androidName: androidWidgetName,
+      );
+    } catch (e) {
+      debugPrint('위젯 데이터 초기화 실패: $e');
+    }
+  }
 }

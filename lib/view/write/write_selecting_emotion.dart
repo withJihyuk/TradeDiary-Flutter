@@ -25,6 +25,7 @@ class WriteSelectingEmotion extends ConsumerStatefulWidget {
 class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
+  bool _isSaving = false;
 
   @override
   Widget build(BuildContext context) {
@@ -124,67 +125,100 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                     ],
                   ),
                   padding: EdgeInsets.symmetric(vertical: 20.h),
-                  child: DiaryButton(
-                    onPressed: () async {
-                      if (!mounted) return;
-
-                      try {
-                        var value = ref.read(diaryProvider);
-                        final imageFiles = ref.read(diaryImageProvider);
-                        List<String> imagePaths =
-                            imageFiles.map((file) => file.path).toList();
-
-                        debugPrint('시작: 일기 작성 시도');
-
-                        _scaffoldKey.currentState?.showSnackBar(
-                          const SnackBar(
-                            content: Text('일기를 저장하는 중입니다...'),
-                            duration: Duration(seconds: 1),
+                  child: _isSaving
+                    ? SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: ElevatedButton(
+                          onPressed: null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: DiaryColor.globalMainColor,
+                            disabledBackgroundColor: DiaryColor.globalMainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            elevation: 0,
                           ),
-                        );
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                '저장 중...',
+                                style: AppTextStyle.m2Semi.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : DiaryButton(
+                        onPressed: () async {
+                          if (!mounted || _isSaving) return;
 
-                        debugPrint('이미지 경로: $imagePaths');
-                        if (imagePaths.isNotEmpty) {
-                          final uploadedUrls =
-                              await viewModel.uploadImage(imagePaths);
-                          ref
-                              .read(diaryProvider.notifier)
-                              .setImage(uploadedUrls);
-                          value = ref.read(diaryProvider);
-                        }
+                          setState(() => _isSaving = true);
 
-                        await viewModel.addDiaryPost(value, ref);
+                          try {
+                            var value = ref.read(diaryProvider);
+                            final imageFiles = ref.read(diaryImageProvider);
+                            List<String> imagePaths =
+                                imageFiles.map((file) => file.path).toList();
 
-                        ref.invalidate(diaryListProvider);
+                            debugPrint('시작: 일기 작성 시도');
 
-                        try {
-                          final diaries = await ref.read(diaryListProvider.future);
-                          final profile = ref.read(profileProvider).value;
-                          if (profile != null) {
-                            await StreakService.updateWidgetData(
-                              diaries: diaries,
-                              profile: profile,
+                            debugPrint('이미지 경로: $imagePaths');
+                            if (imagePaths.isNotEmpty) {
+                              final uploadedUrls =
+                                  await viewModel.uploadImage(imagePaths);
+                              ref
+                                  .read(diaryProvider.notifier)
+                                  .setImage(uploadedUrls);
+                              value = ref.read(diaryProvider);
+                            }
+
+                            await viewModel.addDiaryPost(value, ref);
+
+                            ref.invalidate(diaryListProvider);
+
+                            try {
+                              final diaries =
+                                  await ref.read(diaryListProvider.future);
+                              final profile = ref.read(profileProvider).value;
+                              if (profile != null) {
+                                await StreakService.updateWidgetData(
+                                  diaries: diaries,
+                                  profile: profile,
+                                );
+                              }
+                            } catch (_) {}
+
+                            if (!mounted) return;
+                            PageRouter.router.go("/diary");
+                          } catch (e) {
+                            if (!mounted) return;
+                            setState(() => _isSaving = false);
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    '일기 작성 중 오류가 발생했습니다: ${e.toString()}'),
+                                backgroundColor: Colors.red,
+                                duration: const Duration(seconds: 3),
+                              ),
                             );
                           }
-                        } catch (_) {}
-
-                        if (!mounted) return;
-                        PageRouter.router.go("/diary");
-                      } catch (e) {
-                        if (!mounted) return;
-                        // ignore: use_build_context_synchronously
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content:
-                                Text('일기 작성 중 오류가 발생했습니다: ${e.toString()}'),
-                            backgroundColor: Colors.red,
-                            duration: const Duration(seconds: 3),
-                          ),
-                        );
-                      }
-                    },
-                    text: "완료하기",
-                  ),
+                        },
+                        text: "완료하기",
+                      ),
                 ),
               ),
             ],

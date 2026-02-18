@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/router.dart';
+import 'package:trade_diary/service/streak_service.dart';
 
 class NavigationService {
-  static StreamSubscription<AuthState> handleAuthStateChange(BuildContext context) {
+  static String? pendingWidgetRoute;
+
+  static StreamSubscription<AuthState> handleAuthStateChange(
+      BuildContext context) {
     final supabase = Supabase.instance.client;
     return supabase.auth.onAuthStateChange.listen(
       (data) async {
@@ -15,19 +19,12 @@ class NavigationService {
         try {
           if (context.mounted) {
             switch (event) {
-              case AuthChangeEvent.initialSession:
-                if (data.session != null) {
-                  PageRouter.router.go("/home");
-                } else {
-                  PageRouter.router.go("/login");
-                }
-                break;
-
               case AuthChangeEvent.signedIn:
                 PageRouter.router.go("/home");
                 break;
 
               case AuthChangeEvent.signedOut:
+                StreakService.clearWidgetData();
                 PageRouter.router.go("/login");
                 break;
 

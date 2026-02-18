@@ -44,6 +44,13 @@ void main() async {
       throw ValidationException('Sentry DSN이 설정되지 않았습니다');
     }
 
+    // 위젯에서 앱 실행 여부를 runApp 전에 동기적으로 확인
+    await HomeWidget.setAppGroupId(StreakService.appGroupId);
+    final initialUri = await HomeWidget.initiallyLaunchedFromHomeWidget();
+    if (initialUri != null) {
+      NavigationService.pendingWidgetRoute = '/write';
+    }
+
     await SentryFlutter.init(
       (options) {
         options.dsn = kDebugMode ? '' : EnvConfig.sentryDsn;
@@ -54,15 +61,15 @@ void main() async {
       appRunner: () => runApp(const ProviderScope(child: MyApp())),
     );
 
-    runApp(const ProviderScope(child: MyApp()));
     await NotificationService().init();
 
-    await HomeWidget.setAppGroupId(StreakService.appGroupId);
-    HomeWidget.initiallyLaunchedFromHomeWidget().then((uri) {
-      if (uri != null) PageRouter.router.go('/write');
-    });
     HomeWidget.widgetClicked.listen((uri) {
-      if (uri != null) PageRouter.router.go('/write');
+      if (uri != null) {
+        final session = Supabase.instance.client.auth.currentSession;
+        if (session != null) {
+          PageRouter.router.push('/write');
+        }
+      }
     });
   } catch (e, stackTrace) {
     if (e is AppException) {
