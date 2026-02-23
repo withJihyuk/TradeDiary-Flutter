@@ -3,11 +3,6 @@ import SwiftUI
 
 struct PotatoDiaryEntry: TimelineEntry {
     let date: Date
-    let streakCount: Int
-    let todayEmotion: String
-    let currentLevel: Int
-    let currentExp: Int
-    let nextLevelExp: Int
     let nickname: String
     let hasData: Bool
     let weeklyEmotions: [String: String]
@@ -17,7 +12,7 @@ struct PotatoDiaryProvider: TimelineProvider {
     let appGroupId = "group.com.example.tradeDiary"
 
     func placeholder(in context: Context) -> PotatoDiaryEntry {
-        PotatoDiaryEntry(date: Date(), streakCount: 5, todayEmotion: "행복한감자", currentLevel: 3, currentExp: 40, nextLevelExp: 57, nickname: "감자", hasData: true, weeklyEmotions: [:])
+        PotatoDiaryEntry(date: Date(), nickname: "감자", hasData: true, weeklyEmotions: [:])
     }
 
     func getSnapshot(in context: Context, completion: @escaping (PotatoDiaryEntry) -> Void) {
@@ -40,11 +35,6 @@ struct PotatoDiaryProvider: TimelineProvider {
 
         return PotatoDiaryEntry(
             date: Date(),
-            streakCount: defaults?.integer(forKey: "streak_count") ?? 0,
-            todayEmotion: defaults?.string(forKey: "today_emotion") ?? "",
-            currentLevel: defaults?.integer(forKey: "current_level") ?? 1,
-            currentExp: defaults?.integer(forKey: "current_exp") ?? 0,
-            nextLevelExp: defaults?.integer(forKey: "next_level_exp") ?? 15,
             nickname: nickname,
             hasData: !nickname.isEmpty,
             weeklyEmotions: weeklyEmotions
@@ -67,47 +57,6 @@ struct LoggedOutView: View {
         }
         .padding(12)
         .widgetURL(URL(string: "potatoDiary://write"))
-    }
-}
-
-struct SmallWidgetView: View {
-    let entry: PotatoDiaryEntry
-
-    var body: some View {
-        VStack(spacing: 4) {
-            Text(entry.streakCount > 0 ? "🔥 \(entry.streakCount)일 연속" : "오늘부터 시작!")
-                .font(.system(size: 13, weight: .bold))
-                .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
-
-            Image("img_potato_\(min(max(entry.currentLevel, 1), 7))lv")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 56, height: 56)
-
-            Text("LV.\(entry.currentLevel)")
-                .font(.system(size: 12, weight: .bold))
-                .foregroundColor(Color(red: 0.51, green: 0.42, blue: 0.34))
-
-            GeometryReader { geometry in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(height: 6)
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color(red: 0.78, green: 0.66, blue: 0.49))
-                        .frame(width: geometry.size.width * progress, height: 6)
-                }
-            }
-            .frame(height: 6)
-            .padding(.horizontal, 8)
-        }
-        .padding(12)
-        .widgetURL(URL(string: "potatoDiary://write"))
-    }
-
-    var progress: CGFloat {
-        guard entry.nextLevelExp > 0 else { return 0 }
-        return CGFloat(entry.currentExp) / CGFloat(entry.nextLevelExp)
     }
 }
 
@@ -206,24 +155,18 @@ struct PotatoDiaryWidget: Widget {
         }
         .configurationDisplayName("감자일기")
         .description("감자의 성장과 일기 연속 기록을 확인하세요")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([.systemMedium])
     }
 }
 
 struct WidgetEntryView: View {
-    @Environment(\.widgetFamily) var family
     let entry: PotatoDiaryEntry
 
     var body: some View {
         if !entry.hasData {
             LoggedOutView()
         } else {
-            switch family {
-            case .systemMedium:
-                MediumWidgetView(entry: entry)
-            default:
-                SmallWidgetView(entry: entry)
-            }
+            MediumWidgetView(entry: entry)
         }
     }
 }
