@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/model/diary_post.dart';
+import 'package:trade_diary/util/quill_content_util.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
 
 final diaryListProvider =
@@ -19,7 +20,7 @@ final filteredDiaryListProvider = Provider<List<DiaryPostModel>>((ref) {
       if (searchQuery.isEmpty) return diaryList;
       return diaryList.where((diary) {
         final subject = diary.subject.toLowerCase();
-        final content = diary.content.toLowerCase();
+        final content = QuillContentUtil.contentToPlainText(diary.content).toLowerCase();
         return subject.contains(searchQuery) || content.contains(searchQuery);
       }).toList();
     },

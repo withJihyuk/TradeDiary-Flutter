@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/model/diary_post.dart';
 import 'package:trade_diary/util/emotion.dart';
+import 'package:trade_diary/util/quill_content_util.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 
 class DiaryView extends StatelessWidget {
@@ -51,9 +53,15 @@ class DiaryView extends StatelessWidget {
                           posts[day].subject,
                           style: AppTextStyle.m1Semi,
                         ),
-                        Text(
-                          posts[day].content,
-                          style: AppTextStyle.m3Regular,
+                        QuillEditor.basic(
+                          controller: QuillController(
+                            document: QuillContentUtil.contentToDocument(posts[day].content),
+                            selection: const TextSelection.collapsed(offset: 0),
+                            readOnly: true,
+                          ),
+                          config: const QuillEditorConfig(
+                            showCursor: false,
+                          ),
                         ),
                         if (posts[day].image.isNotEmpty) ...[
                           const SizedBox(height: 80),

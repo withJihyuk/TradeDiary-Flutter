@@ -10,10 +10,30 @@ class _WriteContentInput extends ConsumerStatefulWidget {
 class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
+  int _charCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final controller = ref.read(quillControllerProvider);
+      controller.addListener(_updateCharCount);
+    });
+  }
+
+  void _updateCharCount() {
+    if (!mounted) return;
+    final controller = ref.read(quillControllerProvider);
+    final count = controller.document.toPlainText().trim().length;
+    if (count != _charCount) {
+      setState(() => _charCount = count);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final images = ref.watch(diaryImageProvider);
+    final quillController = ref.watch(quillControllerProvider);
 
     return ScaffoldMessenger(
       key: _scaffoldKey,
@@ -23,23 +43,67 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
           Text("내용",
               style: AppTextStyle.m3Regular
                   .copyWith(color: DiaryMainGrey.grey800)),
-          const SizedBox(
-            height: 12,
+          const SizedBox(height: 12),
+
+          // 툴바 (6개 버튼만)
+          QuillSimpleToolbar(
+            controller: quillController,
+            config: const QuillSimpleToolbarConfig(
+              showBoldButton: true,
+              showItalicButton: true,
+              showUnderLineButton: true,
+              showListBullets: true,
+              showListNumbers: true,
+              showQuote: true,
+              // 나머지 전부 숨김
+              showStrikeThrough: false,
+              showColorButton: false,
+              showBackgroundColorButton: false,
+              showClearFormat: false,
+              showAlignmentButtons: false,
+              showHeaderStyle: false,
+              showLink: false,
+              showSearchButton: false,
+              showCodeBlock: false,
+              showInlineCode: false,
+              showIndent: false,
+              showFontFamily: false,
+              showFontSize: false,
+              showSubscript: false,
+              showSuperscript: false,
+              showSmallButton: false,
+              showDirection: false,
+              showDividers: false,
+              showRedo: false,
+              showUndo: false,
+              showListCheck: false,
+              showLineHeightButton: false,
+            ),
           ),
-          InputComponents(
-            hintText: "내용을 입력해 주세요",
-            isLong: true,
-            onChanged: (p0) {
-              ref.read(diaryProvider.notifier).setContent(p0);
-            },
+          const SizedBox(height: 8),
+
+          // 에디터 본문
+          Container(
+            height: 250.h,
+            decoration: BoxDecoration(
+              color: DiaryMainGrey.grey50,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+            child: QuillEditor.basic(
+              controller: quillController,
+              config: const QuillEditorConfig(
+                placeholder: '내용을 입력해 주세요',
+              ),
+            ),
           ),
-          const SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
+
+          // 글자 수 카운터
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text("${ref.watch(diaryProvider).content.length}",
+              Text("$_charCount",
                   style: AppTextStyle.labelRegular
                       .copyWith(color: DiaryColor.globalMainColor)),
               Text("/500",
@@ -47,6 +111,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
                       .copyWith(color: DiaryMainGrey.grey500)),
             ],
           ),
+
+          // 이미지 선택
           GestureDetector(
             onTap: () async {
               try {
@@ -70,27 +136,29 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
               }
             },
             child: Container(
-            width: 115.w,
-            height: 50.h,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-                color: DiaryMainGrey.grey50,
-                borderRadius: BorderRadius.circular(8)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text("사진 추가",
-                    style: AppTextStyle.m3Regular
-                        .copyWith(color: DiaryMainGrey.grey600)),
-                const SizedBox(width: 8),
-                SvgPicture.asset(
-                  "assets/images/icons/add-image.svg",
-                )
-              ],
+              width: 115.w,
+              height: 50.h,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                  color: DiaryMainGrey.grey50,
+                  borderRadius: BorderRadius.circular(8)),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text("사진 추가",
+                      style: AppTextStyle.m3Regular
+                          .copyWith(color: DiaryMainGrey.grey600)),
+                  const SizedBox(width: 8),
+                  SvgPicture.asset(
+                    "assets/images/icons/add-image.svg",
+                  )
+                ],
+              ),
             ),
           ),
-          ),
           SizedBox(height: 12.h),
+
+          // 이미지 미리보기
           Wrap(
             spacing: 8,
             runSpacing: 8,

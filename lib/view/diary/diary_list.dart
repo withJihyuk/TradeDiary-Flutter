@@ -119,7 +119,7 @@ class ListDiary extends StatelessWidget {
                         DiaryHomeContentRead(
                           contentName: diary.subject,
                           contentDate: "${diary.date.month}/${diary.date.day}",
-                          contentPreview: diary.content,
+                          contentPreview: QuillContentUtil.contentToPlainText(diary.content),
                           contentEmotion: diary.emotion,
                           onTap: () => PageRouter.router.push(
                               "/read/${diaryList.indexOf(diary)}",

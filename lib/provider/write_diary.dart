@@ -1,3 +1,4 @@
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/model/diary_post.dart';
 
@@ -40,4 +41,8 @@ class WriteDiaryNotifier extends StateNotifier<DiaryPostModel> {
 final diaryProvider =
     StateNotifierProvider<WriteDiaryNotifier, DiaryPostModel>((ref) {
   return WriteDiaryNotifier();
+});
+
+final quillControllerProvider = StateProvider.autoDispose<QuillController>((ref) {
+  return QuillController.basic();
 });

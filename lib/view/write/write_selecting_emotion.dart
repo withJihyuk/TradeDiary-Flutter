@@ -8,6 +8,7 @@ import 'package:trade_diary/provider/diary_list.dart';
 import 'package:trade_diary/provider/write_diary.dart';
 import 'package:trade_diary/router.dart';
 import 'package:trade_diary/util/emotion.dart';
+import 'package:trade_diary/util/quill_content_util.dart';
 import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
@@ -168,6 +169,36 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                           setState(() => _isSaving = true);
 
                           try {
+                            // Delta → JSON 직렬화 + 500자 검증
+                            final quillController = ref.read(quillControllerProvider);
+                            final plainText = quillController.document.toPlainText().trim();
+
+                            if (plainText.isEmpty) {
+                              setState(() => _isSaving = false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('내용을 입력해 주세요'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              return;
+                            }
+
+                            if (plainText.length > 500) {
+                              setState(() => _isSaving = false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('내용은 500자 이내로 입력해 주세요'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              return;
+                            }
+
+                            // content를 Delta JSON으로 세팅
+                            final contentJson = QuillContentUtil.documentToContent(quillController.document);
+                            ref.read(diaryProvider.notifier).setContent(contentJson);
+
                             var value = ref.read(diaryProvider);
                             final imageFiles = ref.read(diaryImageProvider);
                             List<String> imagePaths =

@@ -12,6 +12,8 @@ import 'package:trade_diary/designSystem/theme_data.dart';
 import 'package:trade_diary/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthException;
 import 'package:trade_diary/util/app_exception.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:trade_diary/util/navigation_service.dart';
 import 'package:trade_diary/service/notification_service.dart';
 import 'package:trade_diary/service/streak_service.dart';
@@ -125,6 +127,13 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: '감자일기',
           theme: customThemeData,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            FlutterQuillLocalizations.delegate,
+          ],
+          supportedLocales: const [Locale('ko', 'KR')],
           routeInformationParser: PageRouter.router.routeInformationParser,
           routeInformationProvider: PageRouter.router.routeInformationProvider,
           routerDelegate: PageRouter.router.routerDelegate,
