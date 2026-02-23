@@ -79,8 +79,7 @@ class _EditorToolbar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final quillController = ref.watch(quillControllerProvider);
-    final fontNotifier = ref.watch(fontProvider.notifier);
-    final enabledFonts = fontNotifier.enabledFontMap;
+    final enabledFonts = ref.watch(fontProvider);
 
     return Container(
       decoration: const BoxDecoration(
