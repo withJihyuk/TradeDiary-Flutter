@@ -1,14 +1,32 @@
 part of 'diary_page.dart';
 
-class _SearchBox extends ConsumerWidget {
+class _SearchBox extends ConsumerStatefulWidget {
   const _SearchBox();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_SearchBox> createState() => _SearchBoxState();
+}
+
+class _SearchBoxState extends ConsumerState<_SearchBox> {
+  Timer? _debounce;
+
+  void _onChanged(String value) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      ref.read(paginatedDiaryProvider.notifier).setQuery(value);
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SearchBar(
-      onChanged: (value) {
-        ref.read(searchQueryProvider.notifier).state = value;
-      },
+      onChanged: _onChanged,
       trailing: [
         SvgPicture.asset(
           'assets/images/icons/search.svg',

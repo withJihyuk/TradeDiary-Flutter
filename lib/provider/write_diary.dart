@@ -46,3 +46,9 @@ final diaryProvider =
 final quillControllerProvider = StateProvider.autoDispose<QuillController>((ref) {
   return QuillController.basic();
 });
+
+/// 쓰기 시작 시간
+final writeStartTimeProvider = StateProvider.autoDispose<DateTime?>((ref) => null);
+
+/// 마지막 수정 시간
+final lastModifiedTimeProvider = StateProvider.autoDispose<DateTime?>((ref) => null);

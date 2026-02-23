@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -40,7 +39,6 @@ class OauthViewModel {
           accessToken: accessToken,
         );
       } catch (e) {
-        log(e.toString());
         if (e is AuthenticationException) rethrow;
         throw AuthenticationException('구글 로그인 중 오류가 발생했습니다', originalError: e);
       }
@@ -73,7 +71,6 @@ class OauthViewModel {
         nonce: rawNonce,
       );
     } catch (e) {
-      log(e.toString());
       if (e is AuthenticationException) rethrow;
       throw AuthenticationException('애플 로그인 중 오류가 발생했습니다', originalError: e);
     }
@@ -106,13 +103,11 @@ class OauthViewModel {
 
   Future<void> deleteAccount() async {
     try {
-      final response = await http.get(
-          Uri.parse(EnvConfig.deleteUserUrl),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization':
-                'Bearer ${supabase.auth.currentSession?.accessToken}'
-          });
+      final response =
+          await http.get(Uri.parse(EnvConfig.deleteUserUrl), headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${supabase.auth.currentSession?.accessToken}'
+      });
 
       if (response.statusCode != 200) {
         throw NetworkException('계정 삭제에 실패했습니다',

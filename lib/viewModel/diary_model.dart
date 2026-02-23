@@ -34,7 +34,8 @@ class DiaryViewModel {
 
       final value = model.copyWith(userId: userId);
       await _dataSource.createDiaryPost(value);
-      ref.read(diaryRefreshProvider.notifier).state = !ref.read(diaryRefreshProvider);
+      ref.read(diaryRefreshProvider.notifier).state =
+          !ref.read(diaryRefreshProvider);
       ref.read(profileProvider.notifier).refresh();
     } catch (e) {
       if (e is AppException) rethrow;
@@ -57,6 +58,60 @@ class DiaryViewModel {
     } catch (e) {
       if (e is AppException) rethrow;
       throw NetworkException('이미지 업로드 중 오류가 발생했습니다', originalError: e);
+    }
+  }
+
+  Future<DiaryPostModel?> getLatestDraft() async {
+    return await _dataSource.getLatestDraft();
+  }
+
+  Future<DiaryPostModel?> getDraftById(String id) async {
+    return await _dataSource.getDraftById(id);
+  }
+
+  Future<void> deleteDraft(String id) async {
+    await _dataSource.deleteDraft(id);
+  }
+
+  Future<List<DiaryPostModel>> getDiaryPaginated({
+    int page = 0,
+    int pageSize = 20,
+    String? query,
+  }) async {
+    try {
+      return await _dataSource.getDiaryPaginated(
+        page: page,
+        pageSize: pageSize,
+        query: query,
+      );
+    } catch (e) {
+      if (e is AppException) rethrow;
+      throw DatabaseException('일기를 가져오는 중 오류가 발생했습니다', originalError: e);
+    }
+  }
+
+  /// 드래프트 저장 (upsert). 반환값은 드래프트 ID.
+  Future<String> saveDraft(DiaryPostModel model, WidgetRef ref) async {
+    try {
+      final value = model.copyWith(userId: userId, isDraft: true);
+      return await _dataSource.upsertDraft(value);
+    } catch (e) {
+      if (e is AppException) rethrow;
+      throw DatabaseException('임시저장 중 오류가 발생했습니다', originalError: e);
+    }
+  }
+
+  /// 드래프트를 완성된 일기로 전환
+  Future<void> finalizeDraft(
+      String id, DiaryPostModel model, WidgetRef ref) async {
+    try {
+      await _dataSource.finalizeDraft(id, model.copyWith(userId: userId));
+      ref.read(diaryRefreshProvider.notifier).state =
+          !ref.read(diaryRefreshProvider);
+      ref.read(profileProvider.notifier).refresh();
+    } catch (e) {
+      if (e is AppException) rethrow;
+      throw DatabaseException('일기 저장 중 오류가 발생했습니다', originalError: e);
     }
   }
 }

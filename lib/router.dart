@@ -49,11 +49,17 @@ class PageRouter {
       ),
       GoRoute(
         path: '/write',
-        builder: (context, state) => const WritePage(),
+        builder: (context, state) {
+          final draftId = state.extra as String?;
+          return WritePage(draftId: draftId);
+        },
       ),
       GoRoute(
         path: '/select',
-        builder: (context, state) => const WriteSelectingEmotion(),
+        builder: (context, state) {
+          final draftId = state.extra as String?;
+          return WriteSelectingEmotion(draftId: draftId);
+        },
       ),
       GoRoute(
         path: '/nickname',

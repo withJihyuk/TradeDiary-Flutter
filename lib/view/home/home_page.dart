@@ -70,7 +70,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final nextLevelExp = levelSystem.expToNextLevel(profile.exp);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(32.w, 300.h, 32.w, 38.h),
+      padding: EdgeInsets.fromLTRB(32.w, 280.h, 32.w, 28.h),
       child: Column(
         children: [
           Row(

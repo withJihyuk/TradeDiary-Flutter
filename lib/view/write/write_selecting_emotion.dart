@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
-import 'package:trade_diary/provider/diary_image.dart';
 import 'package:trade_diary/provider/diary_list.dart';
 import 'package:trade_diary/provider/write_diary.dart';
 import 'package:trade_diary/router.dart';
@@ -16,7 +15,9 @@ import 'package:trade_diary/service/streak_service.dart';
 import 'package:trade_diary/provider/profile_provider.dart';
 
 class WriteSelectingEmotion extends ConsumerStatefulWidget {
-  const WriteSelectingEmotion({super.key});
+  const WriteSelectingEmotion({super.key, this.draftId});
+
+  final String? draftId;
 
   @override
   ConsumerState<WriteSelectingEmotion> createState() =>
@@ -195,30 +196,30 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                               return;
                             }
 
-                            // content를 Delta JSON으로 세팅
-                            final contentJson = QuillContentUtil.documentToContent(quillController.document);
-                            ref.read(diaryProvider.notifier).setContent(contentJson);
-
-                            var value = ref.read(diaryProvider);
-                            final imageFiles = ref.read(diaryImageProvider);
-                            List<String> imagePaths =
-                                imageFiles.map((file) => file.path).toList();
-
-                            debugPrint('시작: 일기 작성 시도');
-
-                            debugPrint('이미지 경로: $imagePaths');
-                            if (imagePaths.isNotEmpty) {
-                              final uploadedUrls =
-                                  await viewModel.uploadImage(imagePaths);
-                              ref
-                                  .read(diaryProvider.notifier)
-                                  .setImage(uploadedUrls);
-                              value = ref.read(diaryProvider);
+                            // 인라인 이미지 추출 → 업로드 → CDN URL 치환
+                            final localPaths = QuillContentUtil.extractLocalImagePaths(quillController.document);
+                            List<String> cdnUrls = [];
+                            if (localPaths.isNotEmpty) {
+                              cdnUrls = await viewModel.uploadImage(localPaths);
                             }
 
-                            await viewModel.addDiaryPost(value, ref);
+                            final contentJson = localPaths.isNotEmpty
+                                ? QuillContentUtil.replaceImagePaths(quillController.document, localPaths, cdnUrls)
+                                : QuillContentUtil.documentToContent(quillController.document);
+                            ref.read(diaryProvider.notifier).setContent(contentJson);
+                            ref.read(diaryProvider.notifier).setImage(cdnUrls);
+
+                            var value = ref.read(diaryProvider);
+
+                            if (widget.draftId != null) {
+                              await viewModel.finalizeDraft(
+                                  widget.draftId!, value, ref);
+                            } else {
+                              await viewModel.addDiaryPost(value, ref);
+                            }
 
                             ref.invalidate(diaryListProvider);
+                            ref.read(paginatedDiaryProvider.notifier).refresh();
 
                             try {
                               final diaries =

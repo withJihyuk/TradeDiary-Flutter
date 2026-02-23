@@ -5,6 +5,7 @@ import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/model/diary_post.dart';
 import 'package:trade_diary/util/emotion.dart';
+import 'package:trade_diary/util/diary_image_embed_builder.dart';
 import 'package:trade_diary/util/quill_content_util.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 
@@ -59,11 +60,13 @@ class DiaryView extends StatelessWidget {
                             selection: const TextSelection.collapsed(offset: 0),
                             readOnly: true,
                           ),
-                          config: const QuillEditorConfig(
+                          config: QuillEditorConfig(
                             showCursor: false,
+                            embedBuilders: [DiaryImageEmbedBuilder()],
                           ),
                         ),
-                        if (posts[day].image.isNotEmpty) ...[
+                        if (!posts[day].content.contains('"image"') &&
+                            posts[day].image.isNotEmpty) ...[
                           const SizedBox(height: 80),
                           Column(
                             children: [
