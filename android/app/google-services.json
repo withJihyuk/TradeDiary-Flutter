@@ -1,0 +1,106 @@
+{
+  "project_info": {
+    "project_number": "548875410267",
+    "project_id": "potato-4-cut",
+    "storage_bucket": "potato-4-cut.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:548875410267:android:2c0b3238030419d1d4987e",
+        "android_client_info": {
+          "package_name": "com.jihyuk.potatodiary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "548875410267-ko7a605h8019i05rboo363cnqs08iibs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSXtRqtm0SyAelhPxY8omnMOihnA53WiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "548875410267-ko7a605h8019i05rboo363cnqs08iibs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "548875410267-7chlsnita8f66ojtui8gjpsmt3omum3v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.potato.fourcut"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:548875410267:android:643918a4bbc066f6d4987e",
+        "android_client_info": {
+          "package_name": "com.potato.fourcut"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "548875410267-drr7qodgo20lh69fmtf5r3ljeprctd7s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.potato.fourcut",
+            "certificate_hash": "f0929fafeb5fdcb502dfd8783c623a5610fe19f8"
+          }
+        },
+        {
+          "client_id": "548875410267-ipn8h8fr3jbk5nvqi0ul9asfm7u7e5md.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.potato.fourcut",
+            "certificate_hash": "5449f0eaabdcf235eba4a475dafa57a8784cdc93"
+          }
+        },
+        {
+          "client_id": "548875410267-pufv3ou9dbauh52c026eg5v9vln3vbtg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.potato.fourcut",
+            "certificate_hash": "ecee9e408c659a4949f0967d23c7bcc75bad0bd8"
+          }
+        },
+        {
+          "client_id": "548875410267-ko7a605h8019i05rboo363cnqs08iibs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSXtRqtm0SyAelhPxY8omnMOihnA53WiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "548875410267-ko7a605h8019i05rboo363cnqs08iibs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "548875410267-7chlsnita8f66ojtui8gjpsmt3omum3v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.potato.fourcut"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
