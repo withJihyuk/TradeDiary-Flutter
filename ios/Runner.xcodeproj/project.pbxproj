@@ -15,6 +15,7 @@
 		4D9A1EAB2F456DD600F4A385 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D9A1EAA2F456DD600F4A385 /* WidgetKit.framework */; };
 		4D9A1EAD2F456DD600F4A385 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D9A1EAC2F456DD600F4A385 /* SwiftUI.framework */; };
 		4D9A1EB82F456DD800F4A385 /* PotatoDiaryWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4D9A1EA92F456DD600F4A385 /* PotatoDiaryWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6148A1CA0C07C9D8E736868B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CFEAE43DFDC8A65B52FD722 /* GoogleService-Info.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -70,6 +71,7 @@
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		4CFEAE43DFDC8A65B52FD722 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4D71C2522D1A4AB9005A85E2 /* RunnerDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunnerDebug.entitlements; sourceTree = "<group>"; };
 		4D76A26B2D1A497500CDB343 /* RunnerRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunnerRelease.entitlements; sourceTree = "<group>"; };
 		4D9A1EA92F456DD600F4A385 /* PotatoDiaryWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PotatoDiaryWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -200,6 +202,7 @@
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				6DAD454E33D5C4AC64DF1E35 /* Pods */,
 				1253339EF87C766C711A09C3 /* Frameworks */,
+				4CFEAE43DFDC8A65B52FD722 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -364,6 +367,7 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				6148A1CA0C07C9D8E736868B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
