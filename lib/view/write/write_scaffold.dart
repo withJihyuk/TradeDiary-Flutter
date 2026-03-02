@@ -7,7 +7,6 @@ class _Scaffold extends StatelessWidget {
     required this.editor,
     required this.toolbar,
     required this.submitButton,
-    this.infoPanel,
     this.autoSaveStatus,
   });
 
@@ -16,7 +15,6 @@ class _Scaffold extends StatelessWidget {
   final Widget editor;
   final Widget toolbar;
   final Widget submitButton;
-  final Widget? infoPanel;
   final Widget? autoSaveStatus;
 
   @override
@@ -41,25 +39,25 @@ class _Scaffold extends StatelessWidget {
                 ],
               ),
             ),
-            // 스크롤 가능 영역 (제목 + 에디터)
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 12),
-                    subjectInput,
-                    const Divider(color: DiaryMainGrey.grey200, height: 24),
-                    editor,
-                    const SizedBox(height: 24),
-                  ],
-                ),
+            // 제목 (고정)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  subjectInput,
+                  const Divider(color: DiaryMainGrey.grey200, height: 24),
+                ],
               ),
             ),
-            // 본문 정보 패널 (토글)
-            if (infoPanel != null) infoPanel!,
-            // 툴바 (키보드 위에 고정)
+            // 에디터 (자체 스크롤 + 커서 따라감)
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: editor,
+              ),
+            ),
+            // 툴바 (서브패널 포함)
             toolbar,
             // 완료 버튼 (키보드 없을 때만)
             if (!keyboardVisible)

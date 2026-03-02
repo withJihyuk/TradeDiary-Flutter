@@ -1,6 +1,83 @@
 part of 'write_page.dart';
 
-/// 에디터 본문만 (툴바는 _EditorToolbar로 분리됨)
+const bool _kImeStyleDebugLogs = false;
+const double _kEditorLineHeight = 1.8;
+
+void _imeStyleLog(String message) {
+  if (!_kImeStyleDebugLogs) return;
+  debugPrint('[IME_STYLE] $message');
+}
+
+void _imeStyleLogLazy(String Function() builder) {
+  if (!_kImeStyleDebugLogs) return;
+  debugPrint('[IME_STYLE] ${builder()}');
+}
+
+String _selectionLog(TextSelection sel) {
+  return 'sel(base:${sel.baseOffset}, extent:${sel.extentOffset}, '
+      'collapsed:${sel.isCollapsed}, valid:${sel.isValid})';
+}
+
+String _styleLog(Style style) {
+  if (style.isEmpty) return '{}';
+  final pairs = style.attributes.entries
+      .map((e) => '${e.key}:${e.value.value}')
+      .join(', ');
+  return '{$pairs}';
+}
+
+Style _inlineStyleOnly(Style style) {
+  var result = const Style();
+  for (final entry in style.attributes.entries) {
+    if (Attribute.inlineKeys.contains(entry.key)) {
+      result = result.put(entry.value);
+    }
+  }
+  return result;
+}
+
+Style _mergeInlinePreserveNull(Style base, Style overlay) {
+  final merged = <String, Attribute>{
+    ...base.attributes,
+    ...overlay.attributes,
+  };
+  return Style.attr(merged);
+}
+
+void _rememberInlineIntent(
+  WidgetRef ref,
+  QuillController controller,
+  Attribute attribute,
+) {
+  if (!Attribute.inlineKeys.contains(attribute.key)) return;
+  final selection = controller.selection;
+  if (!selection.isValid ||
+      !selection.isCollapsed ||
+      selection.baseOffset < 0) {
+    _imeStyleLogLazy(
+      () => 'rememberIntent skip attr(${attribute.key}:${attribute.value}) '
+          '${_selectionLog(selection)}',
+    );
+    return;
+  }
+
+  final caretIndex =
+      selection.baseOffset.clamp(0, controller.document.length - 1);
+  final base =
+      _inlineStyleOnly(controller.document.collectStyle(caretIndex, 0));
+  final overlay = _inlineStyleOnly(Style.attr({attribute.key: attribute}));
+  final intentStyle = _mergeInlinePreserveNull(base, overlay);
+
+  ref.read(inlineTypingStyleProvider.notifier).state = intentStyle;
+  ref.read(inlineTypingOffsetProvider.notifier).state = selection.baseOffset;
+  _imeStyleLogLazy(
+    () => 'rememberIntent attr(${attribute.key}:${attribute.value}) '
+        '${_selectionLog(selection)} base:${_styleLog(base)} '
+        'intent:${_styleLog(intentStyle)}',
+  );
+}
+
+/// 에디터 본문
 class _WriteContentInput extends ConsumerStatefulWidget {
   const _WriteContentInput({required this.editorFocusNode});
 
@@ -11,41 +88,401 @@ class _WriteContentInput extends ConsumerStatefulWidget {
 }
 
 class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
+  QuillController? _attachedController;
+  Style _pendingInputStyle = const Style();
+  int? _pendingInputOffset;
+  int? _lastValidCursorOffset;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final controller = ref.read(quillControllerProvider);
-      controller.onReplaceText = _preserveStyleOnReplace;
+      if (!mounted) return;
+      _attachController(ref.read(quillControllerProvider));
     });
   }
 
-  /// iOS 자동완성이 텍스트를 교체할 때 인라인 스타일(볼드, 색상 등)을 보존
-  bool _preserveStyleOnReplace(int index, int len, Object? data) {
-    if (len > 0 && data is String && data.isNotEmpty && !data.contains('\n')) {
-      final controller = ref.read(quillControllerProvider);
-      final style = controller.document.collectStyle(index, len);
-      final inlineAttrs = <String, Attribute>{};
-      for (final entry in style.attributes.entries) {
-        if (Attribute.inlineKeys.contains(entry.key)) {
-          inlineAttrs[entry.key] = entry.value;
-        }
+  @override
+  void dispose() {
+    _detachController(resetProviderIntent: false);
+    super.dispose();
+  }
+
+  void _attachController(QuillController controller) {
+    if (_attachedController == controller) return;
+    _detachController();
+    _attachedController = controller;
+    controller.onReplaceText = _onBeforeReplace;
+    controller.addListener(_captureStyleIntent);
+  }
+
+  void _detachController({bool resetProviderIntent = true}) {
+    _attachedController?.removeListener(_captureStyleIntent);
+    if (_attachedController?.onReplaceText == _onBeforeReplace) {
+      _attachedController?.onReplaceText = null;
+    }
+    _attachedController = null;
+    _clearPendingStyleIntent(resetProviderIntent: resetProviderIntent);
+  }
+
+  void _clearPendingStyleIntent({
+    String reason = '',
+    bool resetProviderIntent = true,
+  }) {
+    if (reason.isNotEmpty) {
+      _imeStyleLogLazy(
+        () => 'clearPending reason:$reason '
+            'pending:${_styleLog(_pendingInputStyle)} '
+            'offset:$_pendingInputOffset',
+      );
+    }
+    _pendingInputStyle = const Style();
+    _pendingInputOffset = null;
+    if (resetProviderIntent) {
+      ref.read(inlineTypingStyleProvider.notifier).state = const Style();
+      ref.read(inlineTypingOffsetProvider.notifier).state = null;
+    }
+  }
+
+  /// 팝업/바텀시트 전환으로 toggledStyle이 사라져도
+  /// 직전 스타일 적용 의도를 첫 입력까지 보존한다.
+  void _captureStyleIntent() {
+    final c = _attachedController;
+    if (c == null) return;
+
+    final sel = c.selection;
+    if (sel.isValid && sel.baseOffset >= 0) {
+      _lastValidCursorOffset = sel.baseOffset;
+    }
+
+    final toggledInline = _inlineOf(c.toggledStyle);
+    _imeStyleLogLazy(
+      () => 'capture ${_selectionLog(sel)} '
+          'hasFocus:${widget.editorFocusNode.hasFocus} '
+          'toggled:${_styleLog(toggledInline)} '
+          'pending:${_styleLog(_pendingInputStyle)} '
+          'pendingOffset:$_pendingInputOffset '
+          'lastValid:$_lastValidCursorOffset',
+    );
+    if (toggledInline.isNotEmpty) {
+      final intentOffset = (sel.isValid && sel.baseOffset >= 0)
+          ? sel.baseOffset
+          : _lastValidCursorOffset;
+      if (intentOffset == null) return;
+      _pendingInputStyle = toggledInline;
+      _pendingInputOffset = intentOffset;
+      _imeStyleLogLazy(
+        () => 'capture setPending from toggled '
+            'style:${_styleLog(toggledInline)} offset:$intentOffset',
+      );
+      return;
+    }
+
+    // 색상/폰트/사이즈 팝업 전환 중에는 selection이 invalid(-1)로 오갈 수 있으므로
+    // 이 구간에서는 pending 스타일을 폐기하지 않는다.
+    if (!widget.editorFocusNode.hasFocus ||
+        !sel.isValid ||
+        sel.baseOffset < 0) {
+      _imeStyleLog('capture keepPending while focus/selection unstable');
+      return;
+    }
+
+    // 한글 조합 입력 중에는 selection이 잠시 range로 바뀌므로
+    // non-collapsed 상태에서 pending을 지우지 않는다.
+    if (!sel.isCollapsed) {
+      _imeStyleLog('capture non-collapsed; keep pending');
+      return;
+    }
+
+    if (_pendingInputOffset != null) {
+      if (sel.baseOffset < _pendingInputOffset!) {
+        _imeStyleLogLazy(
+          () => 'capture ignore backward sync '
+              'from:${_pendingInputOffset!} to:${sel.baseOffset}',
+        );
+        return;
       }
-      if (inlineAttrs.isNotEmpty) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          for (final attr in inlineAttrs.values) {
-            controller.formatText(index, data.length, attr);
-          }
-        });
+      _pendingInputOffset = sel.baseOffset;
+      _imeStyleLogLazy(
+        () => 'capture sync pendingOffset -> $_pendingInputOffset',
+      );
+    }
+  }
+
+  bool _matchesPendingRange(int index, int len) {
+    final p = _pendingInputOffset;
+    if (p == null || _pendingInputStyle.isEmpty) return false;
+
+    // 한글 조합 commit에서 replace 시작점이 앞쪽으로 당겨지는 경우를 허용
+    final start = index - 1;
+    final end = index + (len > 0 ? len : 0) + 1;
+    final matched = p >= start && p <= end;
+    _imeStyleLogLazy(
+      () => 'matchPending index:$index len:$len start:$start end:$end '
+          'pendingOffset:$p matched:$matched',
+    );
+    return matched;
+  }
+
+  /// IME/자동교정 교체 입력에서도 인라인 스타일이 끊기지 않게 보정.
+  bool _onBeforeReplace(int index, int len, Object? data) {
+    if (data is! String || data.isEmpty || data.contains('\n')) return true;
+
+    final c = _attachedController;
+    if (c == null) return true;
+
+    final explicitPendingStyle = ref.read(inlineTypingStyleProvider);
+    final explicitPendingOffset = ref.read(inlineTypingOffsetProvider);
+    final hasExplicitPending = explicitPendingStyle.isNotEmpty;
+    final explicitAnchor = explicitPendingOffset;
+    final explicitTouchesRange = hasExplicitPending &&
+        (explicitAnchor == null || (index + data.length) > explicitAnchor);
+    final allowToggledInjection = !hasExplicitPending ||
+        explicitAnchor == null ||
+        index >= explicitAnchor;
+    _imeStyleLogLazy(
+      () => 'onBeforeReplace index:$index len:$len data:"$data" '
+          '${_selectionLog(c.selection)} '
+          'toggled:${_styleLog(_inlineOf(c.toggledStyle))} '
+          'pending:${_styleLog(_pendingInputStyle)} '
+          'pendingOffset:$_pendingInputOffset '
+          'explicit:${_styleLog(explicitPendingStyle)} '
+          'explicitOffset:$explicitPendingOffset '
+          'explicitTouches:$explicitTouchesRange',
+    );
+
+    Style? forcedIntentStyle;
+    if (hasExplicitPending) {
+      _pendingInputStyle = explicitPendingStyle;
+      if (explicitPendingOffset != null) {
+        _pendingInputOffset = explicitPendingOffset;
+      }
+
+      if (explicitTouchesRange) {
+        final caretInline = _inlineAtCursor(c, index);
+        forcedIntentStyle = _mergeStylesPreserveNull(
+          caretInline,
+          explicitPendingStyle,
+        );
+        final forcedStyle = forcedIntentStyle;
+        if (allowToggledInjection &&
+            c.toggledStyle.isEmpty &&
+            forcedStyle.isNotEmpty) {
+          c.toggledStyle = forcedStyle;
+          _imeStyleLogLazy(
+            () => 'onBeforeReplace apply forced '
+                'toggled:${_styleLog(forcedStyle)}',
+          );
+        } else if (!allowToggledInjection) {
+          _imeStyleLogLazy(
+            () => 'onBeforeReplace keep old style before anchor '
+                'anchor:$explicitAnchor index:$index',
+          );
+        }
+
+        _pendingInputOffset = index + data.length;
+        _imeStyleLogLazy(
+          () =>
+              'onBeforeReplace explicit pendingOffset -> $_pendingInputOffset '
+              'forced:${_styleLog(forcedStyle)}',
+        );
+      } else {
+        _imeStyleLogLazy(
+          () => 'onBeforeReplace explicit skip before anchor '
+              'anchor:$explicitAnchor index:$index',
+        );
       }
     }
+
+    // 스타일 적용 직후 첫 입력에서 toggledStyle이 비어 있으면 의도 스타일 복원
+    final pendingMatch = explicitTouchesRange ||
+        (!hasExplicitPending && _matchesPendingRange(index, len));
+    _imeStyleLogLazy(() => 'onBeforeReplace pendingMatch:$pendingMatch');
+    if (pendingMatch) {
+      final caretInline = _inlineAtCursor(c, index);
+      final pendingMerged = _mergeStylesPreserveNull(
+        caretInline,
+        _pendingInputStyle,
+      );
+      if (allowToggledInjection &&
+          c.toggledStyle.isEmpty &&
+          pendingMerged.isNotEmpty) {
+        c.toggledStyle = pendingMerged;
+        _imeStyleLogLazy(
+          () => 'onBeforeReplace restore pending '
+              'toggled:${_styleLog(pendingMerged)}',
+        );
+      } else if (!allowToggledInjection) {
+        _imeStyleLogLazy(
+          () => 'onBeforeReplace skip pending toggled before anchor '
+              'anchor:$explicitAnchor index:$index',
+        );
+      }
+    }
+
+    if (pendingMatch) {
+      _pendingInputOffset = index + data.length;
+      _imeStyleLogLazy(
+        () => 'onBeforeReplace pendingOffset -> $_pendingInputOffset',
+      );
+    } else if (!hasExplicitPending &&
+        _pendingInputOffset != null &&
+        (index - _pendingInputOffset!).abs() > 8) {
+      // 충분히 떨어진 위치에서 입력하면 오래된 pending 의도는 폐기
+      _clearPendingStyleIntent(
+        reason:
+            'beforeReplace far from pending index:$index pending:$_pendingInputOffset',
+      );
+    }
+
+    // 일반 단일 문자 입력은 Quill 기본 규칙이 더 안정적이므로 개입하지 않는다.
+    if (len == 0 && data.length == 1) {
+      _imeStyleLog('onBeforeReplace single-char fast-path');
+      return true;
+    }
+
+    final inlineStyle =
+        (forcedIntentStyle != null && forcedIntentStyle.isNotEmpty)
+            ? forcedIntentStyle
+            : _resolveInlineStyle(c, index, len);
+    if (inlineStyle.isEmpty) {
+      _imeStyleLog('onBeforeReplace inlineStyle empty -> pass');
+      return true;
+    }
+    _imeStyleLogLazy(
+      () => 'onBeforeReplace inlineStyle:${_styleLog(inlineStyle)}',
+    );
+
+    // 다음 입력에도 스타일이 이어지도록 현재 삽입 의도 스타일 주입
+    if (allowToggledInjection && c.toggledStyle.isEmpty) {
+      c.toggledStyle = inlineStyle;
+      _imeStyleLog('onBeforeReplace set toggled from inlineStyle');
+    } else if (!allowToggledInjection) {
+      _imeStyleLogLazy(
+        () => 'onBeforeReplace keep toggled untouched before anchor '
+            'anchor:$explicitAnchor index:$index',
+      );
+    }
+
+    // IME/자동교정의 교체 입력(len > 0)은 Quill 내부 스타일 유지가
+    // 간헐적으로 누락될 수 있어, 삽입 직후 한 번 더 보정한다.
+    if (len > 0 || data.length > 1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || _attachedController != c) return;
+
+        final docTextLength = c.document.length - 1; // trailing '\n' 제외
+        if (docTextLength <= 0 || index >= docTextLength) return;
+
+        final applyLen = (index + data.length <= docTextLength)
+            ? data.length
+            : docTextLength - index;
+        if (applyLen <= 0) return;
+
+        var formatIndex = index;
+        var formatLen = applyLen;
+        if (hasExplicitPending && explicitAnchor != null) {
+          final shift = explicitAnchor - formatIndex;
+          if (shift > 0) {
+            if (shift >= formatLen) {
+              _imeStyleLogLazy(
+                () => 'postFrame skip before anchor '
+                    'anchor:$explicitAnchor index:$index applyLen:$applyLen',
+              );
+              return;
+            }
+            formatIndex = explicitAnchor;
+            formatLen -= shift;
+          }
+        }
+
+        final currentInline =
+            _inlineOf(c.document.collectStyle(formatIndex, formatLen));
+        _imeStyleLogLazy(
+          () => 'postFrame index:$formatIndex applyLen:$formatLen '
+              'current:${_styleLog(currentInline)} '
+              'target:${_styleLog(inlineStyle)}',
+        );
+        for (final attr in inlineStyle.attributes.values) {
+          final current = currentInline.attributes[attr.key]?.value;
+          if (current != attr.value) {
+            _imeStyleLogLazy(
+              () => 'postFrame formatText key:${attr.key} '
+                  'current:$current -> ${attr.value}',
+            );
+            c.formatText(formatIndex, formatLen, attr);
+          }
+        }
+      });
+    }
+
     return true;
+  }
+
+  static int _safeDocIndex(QuillController c, int index) {
+    return index.clamp(0, c.document.length - 1);
+  }
+
+  static Style _inlineAtCursor(QuillController c, int index) {
+    return _inlineOf(c.document.collectStyle(_safeDocIndex(c, index), 0));
+  }
+
+  static Style _resolveInlineStyle(QuillController c, int index, int len) {
+    final caretStyle = _inlineAtCursor(c, index);
+    Style base = caretStyle;
+    if (len > 0) {
+      final replacedIntersection =
+          _inlineOf(c.document.collectStyle(index, len));
+      if (replacedIntersection.isNotEmpty) {
+        base = replacedIntersection;
+      } else {
+        final replacedTail = _inlineFromRangeTail(c, index, len);
+        if (replacedTail.isNotEmpty) base = replacedTail;
+      }
+    }
+
+    final toggled = _inlineOf(c.toggledStyle);
+    if (toggled.isNotEmpty) {
+      return _mergeStylesPreserveNull(base, toggled);
+    }
+    if (base.isNotEmpty) return base;
+
+    // 문서가 비어 있거나 경계 케이스에서 collectStyle이 비는 경우 fallback
+    return _inlineAtCursor(c, index);
+  }
+
+  static Style _inlineFromRangeTail(QuillController c, int index, int len) {
+    final start = index.clamp(0, c.document.length - 1);
+    final end = (index + len - 1).clamp(0, c.document.length - 1);
+    for (var i = end; i >= start; i--) {
+      final s = _inlineOf(c.document.collectStyle(i, 1));
+      if (s.isNotEmpty) return s;
+    }
+    return const Style();
+  }
+
+  static Style _mergeStylesPreserveNull(Style base, Style overlay) {
+    final merged = <String, Attribute>{
+      ...base.attributes,
+      ...overlay.attributes,
+    };
+    return Style.attr(merged);
+  }
+
+  /// Style에서 인라인 속성만 추출
+  static Style _inlineOf(Style style) {
+    return _inlineStyleOnly(style);
   }
 
   @override
   Widget build(BuildContext context) {
     final quillController = ref.watch(quillControllerProvider);
+
+    // Provider에서 controller가 변경된 경우 (드래프트 복원 등) 재연결
+    if (quillController != _attachedController) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _attachController(quillController);
+      });
+    }
 
     return QuillEditor.basic(
       controller: quillController,
@@ -56,8 +493,11 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
         customStyles: const DefaultStyles(
           paragraph: DefaultTextBlockStyle(
             TextStyle(
+              fontFamily: 'Pretendard',
               fontSize: 16,
-              height: 1.8,
+              height: _kEditorLineHeight,
+              leadingDistribution: TextLeadingDistribution.even,
+              textBaseline: TextBaseline.alphabetic,
               color: DiaryMainGrey.grey900,
             ),
             HorizontalSpacing.zero,
@@ -66,472 +506,22 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
             null,
           ),
         ),
-        embedBuilders: [DiaryImageEmbedBuilder()],
-      ),
-    );
-  }
-}
-
-/// 키보드 위에 고정되는 에디터 툴바
-class _EditorToolbar extends ConsumerWidget {
-  const _EditorToolbar();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final quillController = ref.watch(quillControllerProvider);
-    final enabledFonts = ref.watch(fontProvider);
-
-    return Container(
-      decoration: const BoxDecoration(
-        color: DiaryMainGrey.grey50,
-        border: Border(
-          top: BorderSide(color: DiaryMainGrey.grey200, width: 0.5),
-        ),
-      ),
-      child: QuillSimpleToolbar(
-        controller: quillController,
-        config: QuillSimpleToolbarConfig(
-          multiRowsDisplay: false,
-          showDividers: true,
-          sectionDividerColor: DiaryMainGrey.grey200,
-          sectionDividerSpace: 2,
-          dialogTheme: QuillDialogTheme(
-            dialogBackgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            labelTextStyle: AppTextStyle.labelRegular
-                .copyWith(color: DiaryMainGrey.grey600),
-            inputTextStyle:
-                AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey900),
-            buttonTextStyle:
-                AppTextStyle.m3Semi.copyWith(color: DiaryColor.globalMainColor),
-            buttonStyle: TextButton.styleFrom(
-              foregroundColor: DiaryColor.globalMainColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            ),
-          ),
-          iconTheme: const QuillIconTheme(
-            iconButtonSelectedData: IconButtonData(
-              color: DiaryColor.globalMainColor,
-            ),
-            iconButtonUnselectedData: IconButtonData(
-              color: DiaryMainGrey.grey700,
-            ),
-          ),
-          buttonOptions: QuillSimpleToolbarButtonOptions(
-            fontFamily: QuillToolbarFontFamilyButtonOptions(
-              items: enabledFonts.isNotEmpty
-                  ? enabledFonts
-                  : const {'프리텐다드': 'Pretendard'},
-              defaultDisplayText: '프리텐다드',
-            ),
-            fontSize: const QuillToolbarFontSizeButtonOptions(
-              items: {
-                '12': '12',
-                '14': '14',
-                '16': '16',
-                '18': '18',
-                '20': '20',
-                '24': '24',
-              },
-              defaultDisplayText: '16',
-            ),
-            color: QuillToolbarColorButtonOptions(
-              customOnPressedCallback: (controller, isBackground) async {
-                await _showColorPicker(context, ref, controller, isBackground);
-              },
-            ),
-          ),
-          embedButtons: const [imageEmbedButton],
-          customButtons: [
-            // 링크 삽입 버튼 (바텀시트)
-            QuillToolbarCustomButtonOptions(
-              icon: const Icon(Icons.link, size: 20),
-              tooltip: '링크 삽입',
-              onPressed: () => _showLinkSheet(context, ref),
-            ),
-          ],
-          showFontFamily: enabledFonts.length > 1,
-          showFontSize: true,
-          showBoldButton: true,
-          showItalicButton: true,
-          showUnderLineButton: true,
-          showStrikeThrough: true,
-          showColorButton: true,
-          showLink: false,
-          showClearFormat: true,
-          showHeaderStyle: true,
-          showUndo: true,
-          showRedo: true,
-          showBackgroundColorButton: false,
-          showAlignmentButtons: false,
-          showListBullets: false,
-          showListNumbers: false,
-          showQuote: false,
-          showIndent: false,
-          showCodeBlock: false,
-          showInlineCode: false,
-          showSearchButton: false,
-          showSubscript: false,
-          showSuperscript: false,
-          showSmallButton: false,
-          showDirection: false,
-          showListCheck: false,
-          showLineHeightButton: false,
-        ),
-      ),
-    );
-  }
-
-  /// 링크 삽입 바텀시트
-  static void _showLinkSheet(BuildContext context, WidgetRef ref) {
-    final controller = ref.read(quillControllerProvider);
-    final initial = QuillTextLink.prepare(controller);
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (_) => _LinkSheet(
-        initialText: initial.text,
-        initialLink: initial.link,
-        onSubmit: (text, link) {
-          if (text.isNotEmpty && link.isNotEmpty) {
-            QuillTextLink(text, link).submit(controller);
+        customStyleBuilder: (attribute) {
+          // 폰트/사이즈/색상 등 인라인 속성이 줄 높이를 흔들지 않도록 고정
+          if (Attribute.inlineKeys.contains(attribute.key)) {
+            return const TextStyle(
+              height: _kEditorLineHeight,
+              leadingDistribution: TextLeadingDistribution.even,
+              textBaseline: TextBaseline.alphabetic,
+            );
           }
+          return const TextStyle();
         },
-      ),
-    );
-  }
-
-  /// 커스텀 색상 피커 (자주 쓰는 색 + 최근 사용 색)
-  static Future<void> _showColorPicker(
-    BuildContext context,
-    WidgetRef ref,
-    QuillController controller,
-    bool isBackground,
-  ) async {
-    final recentColors = ref.read(recentColorsProvider);
-
-    final Color? picked = await showModalBottomSheet<Color>(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (_) => _ColorPickerSheet(
-        recentColors: recentColors,
-        isBackground: isBackground,
-      ),
-    );
-
-    if (picked == null) return;
-
-    // 최근 사용 색에 추가
-    ref.read(recentColorsProvider.notifier).add(picked);
-
-    // 색상 적용
-    final hex =
-        '#${picked.toARGB32().toRadixString(16).padLeft(8, '0').substring(2)}';
-    if (isBackground) {
-      controller.formatSelection(BackgroundAttribute(hex));
-    } else {
-      controller.formatSelection(ColorAttribute(hex));
-    }
-  }
-}
-
-/// 자주 쓰는 색상 목록
-const _frequentColors = [
-  Colors.black,
-  Color(0xFF333333),
-  Color(0xFF666666),
-  Color(0xFF999999),
-  Colors.red,
-  Color(0xFFE53935),
-  Color(0xFFFF7043),
-  Colors.orange,
-  Color(0xFFFFC107),
-  Colors.green,
-  Color(0xFF43A047),
-  Color(0xFF26A69A),
-  Colors.blue,
-  Color(0xFF1E88E5),
-  Color(0xFF5C6BC0),
-  Colors.purple,
-  Color(0xFFAB47BC),
-  Color(0xFFEC407A),
-  Color(0xFFD8A980), // globalMainColor
-  Colors.brown,
-];
-
-/// 최근 사용 색상 Provider
-class RecentColorsNotifier extends StateNotifier<List<Color>> {
-  RecentColorsNotifier() : super([]);
-
-  void add(Color color) {
-    final updated = [
-      color,
-      ...state.where((c) => c.toARGB32() != color.toARGB32())
-    ];
-    state = updated.take(10).toList();
-  }
-}
-
-final recentColorsProvider =
-    StateNotifierProvider<RecentColorsNotifier, List<Color>>((ref) {
-  return RecentColorsNotifier();
-});
-
-/// 색상 피커 바텀시트
-class _ColorPickerSheet extends StatelessWidget {
-  const _ColorPickerSheet({
-    required this.recentColors,
-    required this.isBackground,
-  });
-
-  final List<Color> recentColors;
-  final bool isBackground;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            isBackground ? '배경 색상' : '글자 색상',
-            style: AppTextStyle.m2Semi,
-          ),
-          if (recentColors.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            Text(
-              '최근 사용한 색',
-              style: AppTextStyle.labelRegular
-                  .copyWith(color: DiaryMainGrey.grey500),
-            ),
-            const SizedBox(height: 8),
-            _ColorGrid(
-              colors: recentColors,
-              onSelect: (c) => Navigator.of(context).pop(c),
-            ),
-          ],
-          const SizedBox(height: 16),
-          Text(
-            '자주 쓰는 색',
-            style: AppTextStyle.labelRegular
-                .copyWith(color: DiaryMainGrey.grey500),
-          ),
-          const SizedBox(height: 8),
-          _ColorGrid(
-            colors: _frequentColors,
-            onSelect: (c) => Navigator.of(context).pop(c),
-          ),
-          const SizedBox(height: 12),
-          // 검은색 초기화 버튼
-          Center(
-            child: TextButton(
-              onPressed: () => Navigator.of(context).pop(Colors.black),
-              child: Text(
-                '기본 색상으로',
-                style: AppTextStyle.labelRegular
-                    .copyWith(color: DiaryMainGrey.grey700),
-              ),
-            ),
-          ),
+        embedBuilders: [
+          DiaryImageEmbedBuilder(),
+          DividerEmbedBuilder(),
         ],
       ),
     );
   }
 }
-
-class _ColorGrid extends StatelessWidget {
-  const _ColorGrid({required this.colors, required this.onSelect});
-  final List<Color> colors;
-  final ValueChanged<Color> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: colors
-          .map((c) => GestureDetector(
-                onTap: () => onSelect(c),
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: c,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                      color: c.computeLuminance() > 0.9
-                          ? DiaryMainGrey.grey300
-                          : Colors.transparent,
-                      width: 1,
-                    ),
-                  ),
-                ),
-              ))
-          .toList(),
-    );
-  }
-}
-
-/// 링크 삽입 바텀시트
-class _LinkSheet extends StatefulWidget {
-  const _LinkSheet({
-    required this.initialText,
-    required this.initialLink,
-    required this.onSubmit,
-  });
-
-  final String initialText;
-  final String? initialLink;
-  final void Function(String text, String link) onSubmit;
-
-  @override
-  State<_LinkSheet> createState() => _LinkSheetState();
-}
-
-class _LinkSheetState extends State<_LinkSheet> {
-  late final TextEditingController _textController;
-  late final TextEditingController _linkController;
-
-  @override
-  void initState() {
-    super.initState();
-    _textController = TextEditingController(text: widget.initialText);
-    _linkController = TextEditingController(text: widget.initialLink ?? '');
-  }
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    _linkController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 20,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 40,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('링크 삽입', style: AppTextStyle.m2Semi),
-          const SizedBox(height: 16),
-          Text(
-            '표시 텍스트',
-            style: AppTextStyle.labelRegular
-                .copyWith(color: DiaryMainGrey.grey500),
-          ),
-          const SizedBox(height: 6),
-          TextField(
-            controller: _textController,
-            style:
-                AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey900),
-            decoration: InputDecoration(
-              hintText: '링크에 표시될 텍스트',
-              hintStyle:
-                  AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey400),
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide:
-                    const BorderSide(color: DiaryMainGrey.grey200, width: 1),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide:
-                    const BorderSide(color: DiaryMainGrey.grey200, width: 1),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                    color: DiaryColor.globalMainColor, width: 1),
-              ),
-            ),
-          ),
-          const SizedBox(height: 14),
-          Text(
-            'URL',
-            style: AppTextStyle.labelRegular
-                .copyWith(color: DiaryMainGrey.grey500),
-          ),
-          const SizedBox(height: 6),
-          TextField(
-            controller: _linkController,
-            keyboardType: TextInputType.url,
-            autocorrect: false,
-            style:
-                AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey900),
-            decoration: InputDecoration(
-              hintText: 'https://',
-              hintStyle:
-                  AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey400),
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide:
-                    const BorderSide(color: DiaryMainGrey.grey200, width: 1),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide:
-                    const BorderSide(color: DiaryMainGrey.grey200, width: 1),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                    color: DiaryColor.globalMainColor, width: 1),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: TextButton(
-              onPressed: () {
-                widget.onSubmit(
-                  _textController.text.trim(),
-                  _linkController.text.trim(),
-                );
-                Navigator.of(context).pop();
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: DiaryColor.globalMainColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text('확인', style: AppTextStyle.m3Semi),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-

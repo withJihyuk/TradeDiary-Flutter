@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/provider/font_provider.dart';
@@ -20,7 +22,11 @@ import 'package:trade_diary/view/components/top_navigation_bar.dart';
 part 'write_scaffold.dart';
 part 'write_subject_input.dart';
 part 'write_content_input.dart';
-part 'write_info_panel.dart';
+part 'write_editor_toolbar.dart';
+part 'write_text_toolbar.dart';
+part 'write_toolbar_common.dart';
+part 'write_color_picker.dart';
+part 'write_link_sheet.dart';
 
 class WritePage extends ConsumerStatefulWidget {
   const WritePage({super.key, this.draftId});
@@ -36,7 +42,7 @@ class _WritePageState extends ConsumerState<WritePage> {
   String? _draftId;
   bool _isDirty = false;
   DateTime? _lastSavedAt;
-  bool _showInfoPanel = false;
+  QuillController? _attachedQuillController;
   final FocusNode _editorFocusNode = FocusNode();
   final TextEditingController _subjectController = TextEditingController();
 
@@ -44,9 +50,12 @@ class _WritePageState extends ConsumerState<WritePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       ref.read(writeStartTimeProvider.notifier).state = DateTime.now();
+      ref.read(inlineTypingStyleProvider.notifier).state = const Style();
+      ref.read(inlineTypingOffsetProvider.notifier).state = null;
       final controller = ref.read(quillControllerProvider);
-      controller.addListener(_onContentChanged);
+      _bindContentListener(controller);
       _checkDraft();
     });
     _autoSaveTimer = Timer.periodic(const Duration(seconds: 30), (_) {
@@ -56,14 +65,22 @@ class _WritePageState extends ConsumerState<WritePage> {
 
   @override
   void dispose() {
+    _attachedQuillController?.removeListener(_onContentChanged);
+    _attachedQuillController = null;
     _autoSaveTimer?.cancel();
     _editorFocusNode.dispose();
     _subjectController.dispose();
     super.dispose();
   }
 
+  void _bindContentListener(QuillController controller) {
+    if (_attachedQuillController == controller) return;
+    _attachedQuillController?.removeListener(_onContentChanged);
+    _attachedQuillController = controller;
+    controller.addListener(_onContentChanged);
+  }
+
   Future<void> _checkDraft() async {
-    // 리스트에서 특정 드래프트를 눌러 진입한 경우 해당 드래프트 바로 복원
     if (widget.draftId != null) {
       final draft = await DiaryViewModel().getDraftById(widget.draftId!);
       if (draft != null && mounted) _restoreDraft(draft);
@@ -78,7 +95,7 @@ class _WritePageState extends ConsumerState<WritePage> {
       builder: (context) => AlertDialog(
         title: const Text('작성 중인 글이 있습니다'),
         content: Text(
-          '${_formatDraftDate(draft.updatedAt ?? draft.date)}에 작성중이던 내용이 있습니다.\n이어서 작성하시겠습니까?',
+          '${_formatDraftDate(draft.updatedAt ?? draft.createdAt ?? DateTime.now())}에 작성중이던 내용이 있습니다.\n이어서 작성하시겠습니까?',
         ),
         actions: [
           TextButton(
@@ -103,19 +120,17 @@ class _WritePageState extends ConsumerState<WritePage> {
   }
 
   void _restoreDraft(DiaryPostModel draft) {
-    // QuillController에 content 복원
     final doc = QuillContentUtil.contentToDocument(draft.content);
-    ref.read(quillControllerProvider.notifier).state = QuillController(
+    final restoredController = QuillController(
       document: doc,
       selection: const TextSelection.collapsed(offset: 0),
     );
-    ref.read(quillControllerProvider).addListener(_onContentChanged);
+    ref.read(quillControllerProvider.notifier).state = restoredController;
+    _bindContentListener(restoredController);
 
-    // 제목 복원
     _subjectController.text = draft.subject;
     final notifier = ref.read(diaryProvider.notifier);
     notifier.setSubject(draft.subject);
-    notifier.setDate(draft.date);
     if (draft.emotion.isNotEmpty) notifier.setEmotion(draft.emotion);
 
     _draftId = draft.id;
@@ -153,9 +168,7 @@ class _WritePageState extends ConsumerState<WritePage> {
       if (mounted) {
         setState(() => _lastSavedAt = DateTime.now());
       }
-    } catch (_) {
-      // 자동 저장 실패는 조용히 무시
-    }
+    } catch (_) {}
   }
 
   @override
@@ -177,58 +190,13 @@ class _WritePageState extends ConsumerState<WritePage> {
         controller: _subjectController,
       ),
       editor: _WriteContentInput(editorFocusNode: _editorFocusNode),
-      toolbar: _EditorToolbarWithInfo(
-        showInfoPanel: _showInfoPanel,
-        onToggleInfo: () =>
-            setState(() => _showInfoPanel = !_showInfoPanel),
-      ),
-      infoPanel: _showInfoPanel ? const _InfoPanel() : null,
+      toolbar: _EditorToolbar(editorFocusNode: _editorFocusNode),
       submitButton: DiaryButton(
         onPressed: () {
-          // draftId를 route extra로 전달
           PageRouter.router.push("/select", extra: _draftId);
         },
         text: "다음",
       ),
-    );
-  }
-}
-
-/// 툴바 + 정보 패널 토글 버튼을 포함하는 래퍼
-class _EditorToolbarWithInfo extends ConsumerWidget {
-  const _EditorToolbarWithInfo({
-    required this.showInfoPanel,
-    required this.onToggleInfo,
-  });
-
-  final bool showInfoPanel;
-  final VoidCallback onToggleInfo;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          children: [
-            const Expanded(child: _EditorToolbar()),
-            // 정보 패널 토글 버튼
-            IconButton(
-              icon: Icon(
-                showInfoPanel ? Icons.info : Icons.info_outline,
-                color: showInfoPanel
-                    ? DiaryColor.globalMainColor
-                    : DiaryMainGrey.grey700,
-                size: 20,
-              ),
-              onPressed: onToggleInfo,
-              padding: const EdgeInsets.all(8),
-              constraints: const BoxConstraints(),
-            ),
-            const SizedBox(width: 4),
-          ],
-        ),
-      ],
     );
   }
 }
