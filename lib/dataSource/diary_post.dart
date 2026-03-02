@@ -123,7 +123,7 @@ class DiaryPostDataSource {
       final from = page * pageSize;
       final to = from + pageSize - 1;
       final response =
-          await request.order('date', ascending: false).range(from, to);
+          await request.order('createdAt', ascending: false).range(from, to);
       return response.map((item) => DiaryPostModel.fromJson(item)).toList();
     } catch (e) {
       throw DatabaseException('글을 가져오는데 실패했어요', originalError: e);

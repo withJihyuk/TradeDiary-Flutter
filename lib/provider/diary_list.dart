@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/dataSource/diary_post.dart';
 import 'package:trade_diary/model/diary_post.dart';
+import 'package:trade_diary/util/diary_post_date_util.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
 
 /// 전체 일기 목록 (위젯 업데이트, 오늘 체크용)
@@ -16,7 +17,7 @@ final todayDiaryProvider = Provider<DiaryPostModel?>((ref) {
     final today = DateTime.now();
     final todayOnly = DateTime(today.year, today.month, today.day);
     for (final diary in diaries) {
-      final d = DateTime(diary.date.year, diary.date.month, diary.date.day);
+      final d = diaryDateOnly(diary);
       if (d == todayOnly) return diary;
     }
     return null;

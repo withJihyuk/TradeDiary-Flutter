@@ -5,6 +5,7 @@ import 'package:trade_diary/provider/diary_list.dart';
 import 'package:trade_diary/provider/profile_provider.dart';
 import 'package:trade_diary/dataSource/diary_post.dart';
 import 'package:trade_diary/util/app_exception.dart';
+import 'package:trade_diary/util/diary_post_date_util.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DiaryViewModel {
@@ -25,7 +26,7 @@ class DiaryViewModel {
       final today = DateTime.now();
       final todayOnly = DateTime(today.year, today.month, today.day);
       final hasTodayDiary = existing.any((d) {
-        final dd = DateTime(d.date.year, d.date.month, d.date.day);
+        final dd = diaryDateOnly(d);
         return dd == todayOnly;
       });
       if (hasTodayDiary) {

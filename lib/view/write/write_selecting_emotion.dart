@@ -128,129 +128,142 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                   ),
                   padding: EdgeInsets.symmetric(vertical: 20.h),
                   child: _isSaving
-                    ? SizedBox(
-                        width: double.infinity,
-                        height: 52,
-                        child: ElevatedButton(
-                          onPressed: null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: DiaryColor.globalMainColor,
-                            disabledBackgroundColor: DiaryColor.globalMainColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                      ? SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: ElevatedButton(
+                            onPressed: null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: DiaryColor.globalMainColor,
+                              disabledBackgroundColor:
+                                  DiaryColor.globalMainColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              elevation: 0,
                             ),
-                            elevation: 0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '저장 중...',
+                                  style: AppTextStyle.m2Semi.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '저장 중...',
-                                style: AppTextStyle.m2Semi.copyWith(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    : DiaryButton(
-                        onPressed: () async {
-                          if (!mounted || _isSaving) return;
+                        )
+                      : DiaryButton(
+                          onPressed: () async {
+                            if (!mounted || _isSaving) return;
 
-                          setState(() => _isSaving = true);
-
-                          try {
-                            // Delta → JSON 직렬화 + 500자 검증
-                            final quillController = ref.read(quillControllerProvider);
-                            final plainText = quillController.document.toPlainText().trim();
-
-                            if (plainText.isEmpty) {
-                              setState(() => _isSaving = false);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('내용을 입력해 주세요'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                              return;
-                            }
-
-                            if (plainText.length > 500) {
-                              setState(() => _isSaving = false);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('내용은 500자 이내로 입력해 주세요'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                              return;
-                            }
-
-                            // 인라인 이미지 추출 → 업로드 → CDN URL 치환
-                            final localPaths = QuillContentUtil.extractLocalImagePaths(quillController.document);
-                            List<String> cdnUrls = [];
-                            if (localPaths.isNotEmpty) {
-                              cdnUrls = await viewModel.uploadImage(localPaths);
-                            }
-
-                            final contentJson = localPaths.isNotEmpty
-                                ? QuillContentUtil.replaceImagePaths(quillController.document, localPaths, cdnUrls)
-                                : QuillContentUtil.documentToContent(quillController.document);
-                            ref.read(diaryProvider.notifier).setContent(contentJson);
-                            ref.read(diaryProvider.notifier).setImage(cdnUrls);
-
-                            var value = ref.read(diaryProvider);
-
-                            if (widget.draftId != null) {
-                              await viewModel.finalizeDraft(
-                                  widget.draftId!, value, ref);
-                            } else {
-                              await viewModel.addDiaryPost(value, ref);
-                            }
-
-                            ref.invalidate(diaryListProvider);
-                            ref.read(paginatedDiaryProvider.notifier).refresh();
+                            setState(() => _isSaving = true);
 
                             try {
-                              final diaries =
-                                  await ref.read(diaryListProvider.future);
-                              final profile = ref.read(profileProvider).value;
-                              if (profile != null) {
-                                await StreakService.updateWidgetData(
-                                  diaries: diaries,
-                                  profile: profile,
-                                );
-                              }
-                            } catch (_) {}
+                              // Delta → JSON 직렬화 + 500자 검증
+                              final quillController =
+                                  ref.read(quillControllerProvider);
+                              final plainText =
+                                  quillController.document.toPlainText().trim();
 
-                            if (!mounted) return;
-                            PageRouter.router.go("/diary");
-                          } catch (e) {
-                            if (!mounted) return;
-                            setState(() => _isSaving = false);
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    '일기 작성 중 오류가 발생했습니다: ${e.toString()}'),
-                                backgroundColor: Colors.red,
-                                duration: const Duration(seconds: 3),
-                              ),
-                            );
-                          }
-                        },
-                        text: "완료하기",
-                      ),
+                              if (plainText.isEmpty) {
+                                setState(() => _isSaving = false);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('내용을 입력해 주세요'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              if (plainText.length > 500) {
+                                setState(() => _isSaving = false);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('내용은 500자 이내로 입력해 주세요'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              // 인라인 이미지 추출 → 업로드 → CDN URL 치환
+                              final localPaths =
+                                  QuillContentUtil.extractLocalImagePaths(
+                                      quillController.document);
+                              List<String> cdnUrls = [];
+                              if (localPaths.isNotEmpty) {
+                                cdnUrls =
+                                    await viewModel.uploadImage(localPaths);
+                              }
+
+                              final contentJson = localPaths.isNotEmpty
+                                  ? QuillContentUtil.replaceImagePaths(
+                                      quillController.document,
+                                      localPaths,
+                                      cdnUrls)
+                                  : QuillContentUtil.documentToContent(
+                                      quillController.document);
+                              ref
+                                  .read(diaryProvider.notifier)
+                                  .setContent(contentJson);
+
+                              var value = ref.read(diaryProvider);
+
+                              if (widget.draftId != null) {
+                                await viewModel.finalizeDraft(
+                                    widget.draftId!, value, ref);
+                              } else {
+                                await viewModel.addDiaryPost(value, ref);
+                              }
+
+                              ref.invalidate(diaryListProvider);
+                              ref
+                                  .read(paginatedDiaryProvider.notifier)
+                                  .refresh();
+
+                              try {
+                                final diaries =
+                                    await ref.read(diaryListProvider.future);
+                                final profile = ref.read(profileProvider).value;
+                                if (profile != null) {
+                                  await StreakService.updateWidgetData(
+                                    diaries: diaries,
+                                    profile: profile,
+                                  );
+                                }
+                              } catch (_) {}
+
+                              if (!mounted) return;
+                              PageRouter.router.go("/diary");
+                            } catch (e) {
+                              if (!mounted) return;
+                              setState(() => _isSaving = false);
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      '일기 작성 중 오류가 발생했습니다: ${e.toString()}'),
+                                  backgroundColor: Colors.red,
+                                  duration: const Duration(seconds: 3),
+                                ),
+                              );
+                            }
+                          },
+                          text: "완료하기",
+                        ),
                 ),
               ),
             ],

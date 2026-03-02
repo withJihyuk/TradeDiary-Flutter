@@ -5,6 +5,7 @@ import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trade_diary/model/diary_post.dart';
 import 'package:trade_diary/model/profile.dart';
+import 'package:trade_diary/util/diary_post_date_util.dart';
 
 class StreakService {
   static const String appGroupId = 'group.com.example.tradeDiary';
@@ -16,7 +17,7 @@ class StreakService {
     final todayOnly = DateTime(today.year, today.month, today.day);
 
     for (final diary in diaries) {
-      final diaryDate = DateTime(diary.date.year, diary.date.month, diary.date.day);
+      final diaryDate = diaryDateOnly(diary);
       if (diaryDate == todayOnly) return diary.emotion;
     }
     return '';
@@ -32,7 +33,7 @@ class StreakService {
       final key =
           "${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}";
       for (final diary in diaries) {
-        final d = DateTime(diary.date.year, diary.date.month, diary.date.day);
+        final d = diaryDateOnly(diary);
         if (d == day) {
           weekData[key] = diary.emotion;
           break;

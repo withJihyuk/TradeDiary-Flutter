@@ -78,7 +78,8 @@ class ListDiary extends StatelessWidget {
     final Map<String, List<DiaryPostModel>> grouped = {};
 
     for (var diary in diaries) {
-      final key = '${diary.date.year}년 ${diary.date.month}월';
+      final diaryDate = diaryEffectiveDateTime(diary);
+      final key = '${diaryDate.year}년 ${diaryDate.month}월';
       if (!grouped.containsKey(key)) {
         grouped[key] = [];
       }
@@ -87,17 +88,18 @@ class ListDiary extends StatelessWidget {
 
     // 각 월별 그룹 내에서 날짜순으로 정렬
     for (var key in grouped.keys) {
-      grouped[key]!.sort((a, b) => b.date.compareTo(a.date));
+      grouped[key]!.sort((a, b) =>
+          diaryEffectiveDateTime(b).compareTo(diaryEffectiveDateTime(a)));
     }
 
     return Map.fromEntries(grouped.entries.toList()
-      ..sort((a, b) => b.value.first.date.compareTo(a.value.first.date)));
+      ..sort((a, b) => diaryEffectiveDateTime(b.value.first)
+          .compareTo(diaryEffectiveDateTime(a.value.first))));
   }
 
   Future<void> _showDraftContextMenu(
       BuildContext context, DiaryPostModel diary, Offset globalPosition) async {
-    final overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     final local = overlay.globalToLocal(globalPosition);
 
     final menuOffset = RelativeRect.fromLTRB(
@@ -184,6 +186,7 @@ class ListDiary extends StatelessWidget {
                   itemCount: monthDiaries.length,
                   itemBuilder: (context, index) {
                     final diary = monthDiaries[index];
+                    final diaryDate = diaryEffectiveDateTime(diary);
                     return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         child: Column(
@@ -193,7 +196,7 @@ class ListDiary extends StatelessWidget {
                                   ? '제목 없음'
                                   : diary.subject,
                               contentDate:
-                                  "${diary.date.month}/${diary.date.day}",
+                                  "${diaryDate.month}/${diaryDate.day}",
                               contentPreview:
                                   QuillContentUtil.contentToPlainText(
                                       diary.content),
@@ -205,8 +208,8 @@ class ListDiary extends StatelessWidget {
                                   : null,
                               onTap: () {
                                 if (diary.isDraft) {
-                                  PageRouter.router.push("/write",
-                                      extra: diary.id);
+                                  PageRouter.router
+                                      .push("/write", extra: diary.id);
                                 } else {
                                   final nonDraftList = diaryList
                                       .where((d) => !d.isDraft)

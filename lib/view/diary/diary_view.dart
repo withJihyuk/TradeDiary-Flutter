@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/model/diary_post.dart';
+import 'package:trade_diary/util/diary_post_date_util.dart';
 import 'package:trade_diary/util/emotion.dart';
 import 'package:trade_diary/util/diary_image_embed_builder.dart';
 import 'package:trade_diary/util/quill_content_util.dart';
@@ -17,6 +18,8 @@ class DiaryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final diaryDate = diaryEffectiveDateTime(posts[day]);
+
     return Scaffold(
         body: SafeArea(
             child: Padding(
@@ -27,8 +30,7 @@ class DiaryView extends StatelessWidget {
                   const SizedBox(height: 40),
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Text(
-                        "${posts[day].date.month}월 ${posts[day].date.day}일",
+                    child: Text("${diaryDate.month}월 ${diaryDate.day}일",
                         style: AppTextStyle.h3Semi
                             .copyWith(color: DiaryColor.globalMainColor)),
                   ),
@@ -56,34 +58,19 @@ class DiaryView extends StatelessWidget {
                         ),
                         QuillEditor.basic(
                           controller: QuillController(
-                            document: QuillContentUtil.contentToDocument(posts[day].content),
+                            document: QuillContentUtil.contentToDocument(
+                                posts[day].content),
                             selection: const TextSelection.collapsed(offset: 0),
                             readOnly: true,
                           ),
                           config: QuillEditorConfig(
                             showCursor: false,
-                            embedBuilders: [DiaryImageEmbedBuilder()],
-                          ),
-                        ),
-                        if (!posts[day].content.contains('"image"') &&
-                            posts[day].image.isNotEmpty) ...[
-                          const SizedBox(height: 80),
-                          Column(
-                            children: [
-                              ...posts[day].image.map((imageUrl) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.network(
-                                        imageUrl,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ))
+                            embedBuilders: [
+                              DiaryImageEmbedBuilder(),
+                              DividerEmbedBuilder(),
                             ],
                           ),
-                        ],
+                        ),
                       ],
                     ),
                   )
