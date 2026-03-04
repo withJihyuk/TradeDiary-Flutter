@@ -42,6 +42,7 @@ class _WritePageState extends ConsumerState<WritePage> {
   String? _draftId;
   bool _isDirty = false;
   DateTime? _lastSavedAt;
+  Future<void>? _savingFuture;
   QuillController? _attachedQuillController;
   final FocusNode _editorFocusNode = FocusNode();
   final TextEditingController _subjectController = TextEditingController();
@@ -154,6 +155,12 @@ class _WritePageState extends ConsumerState<WritePage> {
 
   Future<void> _saveDraft() async {
     if (!mounted) return;
+    final future = _doSaveDraft();
+    _savingFuture = future;
+    await future;
+  }
+
+  Future<void> _doSaveDraft() async {
     try {
       final quillController = ref.read(quillControllerProvider);
       final content =
@@ -192,7 +199,11 @@ class _WritePageState extends ConsumerState<WritePage> {
       editor: _WriteContentInput(editorFocusNode: _editorFocusNode),
       toolbar: _EditorToolbar(editorFocusNode: _editorFocusNode),
       submitButton: DiaryButton(
-        onPressed: () {
+        onPressed: () async {
+          _autoSaveTimer?.cancel();
+          if (_savingFuture != null) await _savingFuture;
+          if (_draftId == null && _isDirty) await _saveDraft();
+          if (!mounted) return;
           PageRouter.router.push("/select", extra: _draftId);
         },
         text: "다음",
