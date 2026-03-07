@@ -221,18 +221,33 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                                   .setContent(contentJson);
 
                               var value = ref.read(diaryProvider);
+                              String? draftId = widget.draftId ??
+                                  ref.read(currentDraftIdProvider);
 
-                              if (widget.draftId != null) {
+                              if (draftId != null) {
+                                draftId = await viewModel.saveDraft(
+                                  value.copyWith(
+                                    id: draftId,
+                                    content: contentJson,
+                                    isDraft: true,
+                                  ),
+                                  ref,
+                                );
                                 await viewModel.finalizeDraft(
-                                    widget.draftId!, value, ref);
+                                  draftId,
+                                  value,
+                                  ref,
+                                );
                               } else {
                                 await viewModel.addDiaryPost(value, ref);
                               }
 
+                              ref.read(currentDraftIdProvider.notifier).state =
+                                  null;
+                              ref.read(diaryProvider.notifier).reset();
+
                               ref.invalidate(diaryListProvider);
-                              ref
-                                  .read(paginatedDiaryProvider.notifier)
-                                  .refresh();
+                              ref.invalidate(paginatedDiaryProvider);
 
                               try {
                                 final diaries =

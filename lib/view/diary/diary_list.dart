@@ -3,9 +3,21 @@ part of 'diary_page.dart';
 class _DiaryList extends ConsumerWidget {
   const _DiaryList();
 
-  Future<void> _deleteDraft(WidgetRef ref, String id) async {
-    await DiaryPostDataSource().deleteDraft(id);
-    ref.invalidate(paginatedDiaryProvider);
+  Future<void> _deleteDraft(
+      BuildContext context, WidgetRef ref, String id) async {
+    try {
+      await DiaryPostDataSource().deleteDraft(id);
+      ref.invalidate(diaryListProvider);
+      ref.read(paginatedDiaryProvider.notifier).refresh();
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -26,7 +38,7 @@ class _DiaryList extends ConsumerWidget {
       diaryList: diaryState.items,
       isLoadingMore: diaryState.isLoading && diaryState.items.isNotEmpty,
       hasMore: diaryState.hasMore,
-      onDeleteDraft: (id) => _deleteDraft(ref, id),
+      onDeleteDraft: (id) => _deleteDraft(context, ref, id),
     );
   }
 }

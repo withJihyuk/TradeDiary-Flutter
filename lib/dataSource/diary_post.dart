@@ -12,7 +12,10 @@ class DiaryPostDataSource {
 
   Future<void> createDiaryPost(DiaryPostModel data) async {
     try {
-      await supabase.from("diary").insert(data.toJson());
+      final json = data.toJson();
+      json['isDraft'] = false;
+      json['updatedAt'] = DateTime.now().toIso8601String();
+      await supabase.from("diary").insert(json);
     } catch (e) {
       throw DatabaseException('글을 작성하는데 실패했어요', originalError: e);
     }
@@ -87,8 +90,12 @@ class DiaryPostDataSource {
   /// 특정 드래프트 조회
   Future<DiaryPostModel?> getDraftById(String id) async {
     try {
-      final response =
-          await supabase.from("diary").select().eq('id', id).maybeSingle();
+      final response = await supabase
+          .from("diary")
+          .select()
+          .eq('id', id)
+          .eq('isDraft', true)
+          .maybeSingle();
       if (response == null) return null;
       return DiaryPostModel.fromJson(response);
     } catch (e) {
@@ -100,7 +107,7 @@ class DiaryPostDataSource {
   /// 드래프트 삭제
   Future<void> deleteDraft(String id) async {
     try {
-      await supabase.from("diary").delete().eq('id', id).select();
+      await supabase.from("diary").delete().eq('id', id);
     } catch (e) {
       if (e is AppException) rethrow;
       throw DatabaseException('임시저장 글을 삭제하지 못했어요', originalError: e);

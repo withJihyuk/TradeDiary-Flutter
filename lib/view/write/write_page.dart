@@ -52,6 +52,8 @@ class _WritePageState extends ConsumerState<WritePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
+      ref.read(diaryProvider.notifier).reset();
+      ref.read(currentDraftIdProvider.notifier).state = widget.draftId;
       ref.read(writeStartTimeProvider.notifier).state = DateTime.now();
       ref.read(inlineTypingStyleProvider.notifier).state = const Style();
       ref.read(inlineTypingOffsetProvider.notifier).state = null;
@@ -84,7 +86,12 @@ class _WritePageState extends ConsumerState<WritePage> {
   Future<void> _checkDraft() async {
     if (widget.draftId != null) {
       final draft = await DiaryViewModel().getDraftById(widget.draftId!);
-      if (draft != null && mounted) _restoreDraft(draft);
+      if (!mounted) return;
+      if (draft != null) {
+        _restoreDraft(draft);
+      } else {
+        ref.read(currentDraftIdProvider.notifier).state = null;
+      }
       return;
     }
 
@@ -132,9 +139,11 @@ class _WritePageState extends ConsumerState<WritePage> {
     _subjectController.text = draft.subject;
     final notifier = ref.read(diaryProvider.notifier);
     notifier.setSubject(draft.subject);
+    notifier.setContent(draft.content);
     if (draft.emotion.isNotEmpty) notifier.setEmotion(draft.emotion);
 
     _draftId = draft.id;
+    ref.read(currentDraftIdProvider.notifier).state = draft.id;
     setState(() {});
   }
 
@@ -171,6 +180,7 @@ class _WritePageState extends ConsumerState<WritePage> {
         diary.copyWith(content: content, isDraft: true, id: _draftId),
         ref,
       );
+      ref.read(currentDraftIdProvider.notifier).state = _draftId;
       _isDirty = false;
       if (mounted) {
         setState(() => _lastSavedAt = DateTime.now());
