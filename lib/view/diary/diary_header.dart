@@ -7,7 +7,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(children: [
       Text(
-        "보관함",
+        "일기",
         style: AppTextStyle.h4Semi,
       ),
     ]);

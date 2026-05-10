@@ -29,10 +29,6 @@ mixin _$DiaryPostModel {
   @JsonKey(includeToJson: false)
   bool get isDraft => throw _privateConstructorUsedError;
   @JsonKey(includeToJson: false)
-  DateTime? get lockedAt => throw _privateConstructorUsedError;
-  @JsonKey(includeToJson: false)
-  DateTime? get deletedAt => throw _privateConstructorUsedError;
-  @JsonKey(includeToJson: false)
   DateTime? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(includeToJson: false)
   DateTime? get updatedAt => throw _privateConstructorUsedError;
@@ -60,8 +56,6 @@ abstract class $DiaryPostModelCopyWith<$Res> {
       String content,
       String emotion,
       @JsonKey(includeToJson: false) bool isDraft,
-      @JsonKey(includeToJson: false) DateTime? lockedAt,
-      @JsonKey(includeToJson: false) DateTime? deletedAt,
       @JsonKey(includeToJson: false) DateTime? createdAt,
       @JsonKey(includeToJson: false) DateTime? updatedAt});
 }
@@ -87,8 +81,6 @@ class _$DiaryPostModelCopyWithImpl<$Res, $Val extends DiaryPostModel>
     Object? content = null,
     Object? emotion = null,
     Object? isDraft = null,
-    Object? lockedAt = freezed,
-    Object? deletedAt = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -117,14 +109,6 @@ class _$DiaryPostModelCopyWithImpl<$Res, $Val extends DiaryPostModel>
           ? _value.isDraft
           : isDraft // ignore: cast_nullable_to_non_nullable
               as bool,
-      lockedAt: freezed == lockedAt
-          ? _value.lockedAt
-          : lockedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      deletedAt: freezed == deletedAt
-          ? _value.deletedAt
-          : deletedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -152,8 +136,6 @@ abstract class _$$DiaryPostModelImplCopyWith<$Res>
       String content,
       String emotion,
       @JsonKey(includeToJson: false) bool isDraft,
-      @JsonKey(includeToJson: false) DateTime? lockedAt,
-      @JsonKey(includeToJson: false) DateTime? deletedAt,
       @JsonKey(includeToJson: false) DateTime? createdAt,
       @JsonKey(includeToJson: false) DateTime? updatedAt});
 }
@@ -177,8 +159,6 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
     Object? content = null,
     Object? emotion = null,
     Object? isDraft = null,
-    Object? lockedAt = freezed,
-    Object? deletedAt = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -207,14 +187,6 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
           ? _value.isDraft
           : isDraft // ignore: cast_nullable_to_non_nullable
               as bool,
-      lockedAt: freezed == lockedAt
-          ? _value.lockedAt
-          : lockedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      deletedAt: freezed == deletedAt
-          ? _value.deletedAt
-          : deletedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -237,8 +209,6 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
       required this.content,
       required this.emotion,
       @JsonKey(includeToJson: false) this.isDraft = false,
-      @JsonKey(includeToJson: false) this.lockedAt,
-      @JsonKey(includeToJson: false) this.deletedAt,
       @JsonKey(includeToJson: false) this.createdAt,
       @JsonKey(includeToJson: false) this.updatedAt});
 
@@ -261,12 +231,6 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
   final bool isDraft;
   @override
   @JsonKey(includeToJson: false)
-  final DateTime? lockedAt;
-  @override
-  @JsonKey(includeToJson: false)
-  final DateTime? deletedAt;
-  @override
-  @JsonKey(includeToJson: false)
   final DateTime? createdAt;
   @override
   @JsonKey(includeToJson: false)
@@ -274,7 +238,7 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
 
   @override
   String toString() {
-    return 'DiaryPostModel(id: $id, userId: $userId, subject: $subject, content: $content, emotion: $emotion, isDraft: $isDraft, lockedAt: $lockedAt, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'DiaryPostModel(id: $id, userId: $userId, subject: $subject, content: $content, emotion: $emotion, isDraft: $isDraft, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -288,10 +252,6 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
             (identical(other.content, content) || other.content == content) &&
             (identical(other.emotion, emotion) || other.emotion == emotion) &&
             (identical(other.isDraft, isDraft) || other.isDraft == isDraft) &&
-            (identical(other.lockedAt, lockedAt) ||
-                other.lockedAt == lockedAt) &&
-            (identical(other.deletedAt, deletedAt) ||
-                other.deletedAt == deletedAt) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -301,7 +261,7 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, userId, subject, content,
-      emotion, isDraft, lockedAt, deletedAt, createdAt, updatedAt);
+      emotion, isDraft, createdAt, updatedAt);
 
   /// Create a copy of DiaryPostModel
   /// with the given fields replaced by the non-null parameter values.
@@ -328,8 +288,6 @@ abstract class _DiaryPostModel implements DiaryPostModel {
           required final String content,
           required final String emotion,
           @JsonKey(includeToJson: false) final bool isDraft,
-          @JsonKey(includeToJson: false) final DateTime? lockedAt,
-          @JsonKey(includeToJson: false) final DateTime? deletedAt,
           @JsonKey(includeToJson: false) final DateTime? createdAt,
           @JsonKey(includeToJson: false) final DateTime? updatedAt}) =
       _$DiaryPostModelImpl;
@@ -351,12 +309,6 @@ abstract class _DiaryPostModel implements DiaryPostModel {
   @override
   @JsonKey(includeToJson: false)
   bool get isDraft;
-  @override
-  @JsonKey(includeToJson: false)
-  DateTime? get lockedAt;
-  @override
-  @JsonKey(includeToJson: false)
-  DateTime? get deletedAt;
   @override
   @JsonKey(includeToJson: false)
   DateTime? get createdAt;

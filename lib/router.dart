@@ -7,9 +7,6 @@ import 'package:trade_diary/view/systemSetting/system_setting_page.dart';
 import 'package:trade_diary/view/components/bottom_navigation_bar.dart';
 import 'package:trade_diary/view/deleteId/delete_id_page.dart';
 import 'package:trade_diary/view/diary/diary_page.dart';
-import 'package:trade_diary/view/groups/group_detail_page.dart';
-import 'package:trade_diary/view/groups/groups_page.dart';
-import 'package:trade_diary/view/groups/share_entry_page.dart';
 import 'package:trade_diary/view/write/write_selecting_emotion.dart';
 import 'package:trade_diary/view/diary/diary_view.dart';
 import 'package:trade_diary/view/home/home_page.dart';
@@ -87,16 +84,6 @@ class PageRouter {
           return DiaryView(posts: posts, day: day);
         },
       ),
-      GoRoute(
-        path: '/share/:entryId',
-        builder: (context, state) =>
-            ShareEntryPage(entryId: state.pathParameters['entryId']!),
-      ),
-      GoRoute(
-        path: '/groups/:groupId',
-        builder: (context, state) =>
-            GroupDetailPage(groupId: state.pathParameters['groupId']!),
-      ),
       ShellRoute(
         navigatorKey: GlobalKey<NavigatorState>(),
         builder: (context, state, child) => BottomBar(child: child),
@@ -107,17 +94,6 @@ class PageRouter {
                   const NoTransitionPage(child: HomePage())),
           GoRoute(
               path: '/diary',
-              redirect: (context, state) => '/archive',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                    child: DiaryPage(),
-                  )),
-          GoRoute(
-              path: '/groups',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                    child: GroupsPage(),
-                  )),
-          GoRoute(
-              path: '/archive',
               pageBuilder: (context, state) => const NoTransitionPage(
                     child: DiaryPage(),
                   )),

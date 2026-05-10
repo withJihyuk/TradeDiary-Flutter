@@ -5,6 +5,7 @@ import 'package:trade_diary/provider/diary_list.dart';
 import 'package:trade_diary/provider/profile_provider.dart';
 import 'package:trade_diary/dataSource/diary_post.dart';
 import 'package:trade_diary/util/app_exception.dart';
+import 'package:trade_diary/util/diary_post_date_util.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DiaryViewModel {
@@ -19,14 +20,24 @@ class DiaryViewModel {
     return user.id;
   }
 
-  Future<String> addDiaryPost(DiaryPostModel model, WidgetRef ref) async {
+  Future<void> addDiaryPost(DiaryPostModel model, WidgetRef ref) async {
     try {
+      final existing = await _dataSource.getDiary();
+      final today = DateTime.now();
+      final todayOnly = DateTime(today.year, today.month, today.day);
+      final hasTodayDiary = existing.any((d) {
+        final dd = diaryDateOnly(d);
+        return dd == todayOnly;
+      });
+      if (hasTodayDiary) {
+        throw DatabaseException('오늘은 이미 일기를 작성했어요');
+      }
+
       final value = model.copyWith(userId: userId, isDraft: false);
-      final entryId = await _dataSource.createDiaryPost(value);
+      await _dataSource.createDiaryPost(value);
       ref.read(diaryRefreshProvider.notifier).state =
           !ref.read(diaryRefreshProvider);
       ref.read(profileProvider.notifier).refresh();
-      return entryId;
     } catch (e) {
       if (e is AppException) rethrow;
       throw DatabaseException('일기 작성 중 오류가 발생했습니다', originalError: e);
@@ -92,17 +103,16 @@ class DiaryViewModel {
   }
 
   /// 드래프트를 완성된 일기로 전환
-  Future<String> finalizeDraft(
+  Future<void> finalizeDraft(
       String id, DiaryPostModel model, WidgetRef ref) async {
     try {
-      final entryId = await _dataSource.finalizeDraft(
+      await _dataSource.finalizeDraft(
         id,
         model.copyWith(userId: userId, isDraft: false),
       );
       ref.read(diaryRefreshProvider.notifier).state =
           !ref.read(diaryRefreshProvider);
       ref.read(profileProvider.notifier).refresh();
-      return entryId;
     } catch (e) {
       if (e is AppException) rethrow;
       throw DatabaseException('일기 저장 중 오류가 발생했습니다', originalError: e);

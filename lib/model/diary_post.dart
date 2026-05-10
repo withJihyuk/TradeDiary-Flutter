@@ -13,8 +13,6 @@ class DiaryPostModel with _$DiaryPostModel {
     required String content,
     required String emotion,
     @JsonKey(includeToJson: false) @Default(false) bool isDraft,
-    @JsonKey(includeToJson: false) DateTime? lockedAt,
-    @JsonKey(includeToJson: false) DateTime? deletedAt,
     @JsonKey(includeToJson: false) DateTime? createdAt,
     @JsonKey(includeToJson: false) DateTime? updatedAt,
   }) = _DiaryPostModel;

@@ -10,7 +10,6 @@ class DiaryHomeContentRead extends StatelessWidget {
     required this.contentPreview,
     required this.contentEmotion,
     required this.onTap,
-    this.onShare,
     this.onLongPressStart,
     this.isDraft = false,
   });
@@ -20,7 +19,6 @@ class DiaryHomeContentRead extends StatelessWidget {
   final String contentPreview;
   final String contentEmotion;
   final VoidCallback onTap;
-  final VoidCallback? onShare;
   final GestureLongPressStartCallback? onLongPressStart;
   final bool isDraft;
 
@@ -98,12 +96,6 @@ class DiaryHomeContentRead extends StatelessWidget {
                 ],
               ),
             ),
-            if (onShare != null)
-              IconButton(
-                tooltip: '그룹에 공유',
-                onPressed: onShare,
-                icon: const Icon(Icons.ios_share),
-              ),
           ],
         ));
   }
