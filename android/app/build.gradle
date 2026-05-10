@@ -34,27 +34,20 @@ android {
         versionName = flutter.versionName
     }
 
-    def keystorePropertiesFile = file("keystore.properties")
-    def hasReleaseKeystore = keystorePropertiesFile.exists()
-
     signingConfigs {
         release {
-            if (hasReleaseKeystore) {
-                def properties = new Properties()
-                properties.load(new FileInputStream(keystorePropertiesFile))
-                storeFile file(properties["key.store.file"])
-                storePassword properties["key.store.password"]
-                keyAlias properties["key.alias.name"]
-                keyPassword properties["key.alias.password"]
-            }
+            def properties = new Properties()
+            properties.load(new FileInputStream(file("keystore.properties")))
+            storeFile file(properties["key.store.file"])
+            storePassword properties["key.store.password"]
+            keyAlias properties["key.alias.name"]
+            keyPassword properties["key.alias.password"]
         }
     }
 
     buildTypes {
         release {
-            if (hasReleaseKeystore) {
-                signingConfig = signingConfigs.release
-            }
+            signingConfig = signingConfigs.release
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
