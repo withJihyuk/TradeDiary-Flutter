@@ -232,6 +232,10 @@ class ListDiary extends StatelessWidget {
                                   );
                                 }
                               },
+                              onShare: !diary.isDraft && diary.id != null
+                                  ? () => PageRouter.router
+                                      .push('/share/${diary.id}')
+                                  : null,
                             ),
                             const SizedBox(height: 24),
                             if (index < monthDiaries.length - 1)

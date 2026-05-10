@@ -224,6 +224,7 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                               String? draftId = widget.draftId ??
                                   ref.read(currentDraftIdProvider);
 
+                              late final String entryId;
                               if (draftId != null) {
                                 draftId = await viewModel.saveDraft(
                                   value.copyWith(
@@ -238,8 +239,10 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                                   value,
                                   ref,
                                 );
+                                entryId = draftId;
                               } else {
-                                await viewModel.addDiaryPost(value, ref);
+                                entryId = await viewModel.addDiaryPost(
+                                    value.copyWith(content: contentJson), ref);
                               }
 
                               ref.read(currentDraftIdProvider.notifier).state =
@@ -262,7 +265,7 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                               } catch (_) {}
 
                               if (!mounted) return;
-                              PageRouter.router.go("/diary");
+                              PageRouter.router.go("/share/$entryId");
                             } catch (e) {
                               if (!mounted) return;
                               setState(() => _isSaving = false);

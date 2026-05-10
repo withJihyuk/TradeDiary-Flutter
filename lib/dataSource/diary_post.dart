@@ -10,12 +10,14 @@ import 'dart:convert';
 class DiaryPostDataSource {
   final supabase = Supabase.instance.client;
 
-  Future<void> createDiaryPost(DiaryPostModel data) async {
+  Future<String> createDiaryPost(DiaryPostModel data) async {
     try {
       final json = data.toJson();
       json['isDraft'] = false;
       json['updatedAt'] = DateTime.now().toIso8601String();
-      await supabase.from("diary").insert(json);
+      final response =
+          await supabase.from("diary").insert(json).select('id').single();
+      return response['id'] as String;
     } catch (e) {
       throw DatabaseException('글을 작성하는데 실패했어요', originalError: e);
     }
@@ -55,7 +57,7 @@ class DiaryPostDataSource {
   }
 
   /// 드래프트를 완성된 일기로 전환
-  Future<void> finalizeDraft(String id, DiaryPostModel data) async {
+  Future<String> finalizeDraft(String id, DiaryPostModel data) async {
     try {
       final json = data.toJson();
       json['isDraft'] = false;
@@ -63,6 +65,7 @@ class DiaryPostDataSource {
       json.remove('id');
       json.remove('createdAt');
       await supabase.from("diary").update(json).eq('id', id);
+      return id;
     } catch (e) {
       if (e is AppException) rethrow;
       throw DatabaseException('일기 저장에 실패했어요', originalError: e);
@@ -121,7 +124,11 @@ class DiaryPostDataSource {
     String? query,
   }) async {
     try {
-      var request = supabase.from("diary").select();
+      var request = supabase
+          .from("diary")
+          .select()
+          .eq('isDraft', false)
+          .isFilter('deletedAt', null);
 
       if (query != null && query.isNotEmpty) {
         request = request.or('subject.ilike.%$query%,content.ilike.%$query%');
