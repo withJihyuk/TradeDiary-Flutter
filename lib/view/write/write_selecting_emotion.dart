@@ -35,9 +35,9 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
     var selectedEmotion = ref.watch(diaryProvider).emotion;
 
     return ScaffoldMessenger(
-        key: _scaffoldKey,
-        child: Scaffold(
-            body: SafeArea(
+      key: _scaffoldKey,
+      child: Scaffold(
+        body: SafeArea(
           child: Stack(
             children: [
               Padding(
@@ -54,8 +54,9 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                             SizedBox(height: 40.h),
                             Text(
                               "감정선택",
-                              style: AppTextStyle.m3Regular
-                                  .copyWith(color: DiaryMainGrey.grey800),
+                              style: AppTextStyle.m3Regular.copyWith(
+                                color: DiaryMainGrey.grey800,
+                              ),
                             ),
                             SizedBox(height: 12.h),
                             GridView.builder(
@@ -64,13 +65,13 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                               itemCount: Emotion.emotionMap.keys.length,
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 30,
-                                crossAxisSpacing: 30,
-                              ),
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 30,
+                                    crossAxisSpacing: 30,
+                                  ),
                               itemBuilder: (BuildContext context, int index) {
-                                final emotionName =
-                                    Emotion.emotionMap.keys.elementAt(index);
+                                final emotionName = Emotion.emotionMap.keys
+                                    .elementAt(index);
                                 final emotionImage =
                                     Emotion.emotionMap[emotionName]!;
 
@@ -87,18 +88,25 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                                     decoration: (selectedEmotion == emotionName)
                                         ? BoxDecoration(
                                             color: const Color(0xFFF5E0CE),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
                                             border: Border.all(
-                                                color:
-                                                    DiaryColor.globalMainColor,
-                                                width: 2))
+                                              color: DiaryColor.globalMainColor,
+                                              width: 2,
+                                            ),
+                                          )
                                         : BoxDecoration(
                                             color: DiaryMainGrey.grey50,
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                    child: Image.asset(emotionImage,
-                                        width: 100.w, height: 100.h),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                    child: Image.asset(
+                                      emotionImage,
+                                      width: 100.w,
+                                      height: 100.h,
+                                    ),
                                   ),
                                 );
                               },
@@ -172,10 +180,12 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
 
                             try {
                               // Delta → JSON 직렬화 + 500자 검증
-                              final quillController =
-                                  ref.read(quillControllerProvider);
-                              final plainText =
-                                  quillController.document.toPlainText().trim();
+                              final quillController = ref.read(
+                                quillControllerProvider,
+                              );
+                              final plainText = quillController.document
+                                  .toPlainText()
+                                  .trim();
 
                               if (plainText.isEmpty) {
                                 setState(() => _isSaving = false);
@@ -202,26 +212,31 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                               // 인라인 이미지 추출 → 업로드 → CDN URL 치환
                               final localPaths =
                                   QuillContentUtil.extractLocalImagePaths(
-                                      quillController.document);
+                                    quillController.document,
+                                  );
                               List<String> cdnUrls = [];
                               if (localPaths.isNotEmpty) {
-                                cdnUrls =
-                                    await viewModel.uploadImage(localPaths);
+                                cdnUrls = await viewModel.uploadImage(
+                                  localPaths,
+                                );
                               }
 
                               final contentJson = localPaths.isNotEmpty
                                   ? QuillContentUtil.replaceImagePaths(
                                       quillController.document,
                                       localPaths,
-                                      cdnUrls)
+                                      cdnUrls,
+                                    )
                                   : QuillContentUtil.documentToContent(
-                                      quillController.document);
+                                      quillController.document,
+                                    );
                               ref
                                   .read(diaryProvider.notifier)
                                   .setContent(contentJson);
 
                               var value = ref.read(diaryProvider);
-                              String? draftId = widget.draftId ??
+                              String? draftId =
+                                  widget.draftId ??
                                   ref.read(currentDraftIdProvider);
 
                               if (draftId != null) {
@@ -250,8 +265,9 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                               ref.invalidate(paginatedDiaryProvider);
 
                               try {
-                                final diaries =
-                                    await ref.read(diaryListProvider.future);
+                                final diaries = await ref.read(
+                                  diaryListProvider.future,
+                                );
                                 final profile = ref.read(profileProvider).value;
                                 if (profile != null) {
                                   await StreakService.updateWidgetData(
@@ -270,7 +286,8 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                      '일기 작성 중 오류가 발생했습니다: ${e.toString()}'),
+                                    '일기 작성 중 오류가 발생했습니다: ${e.toString()}',
+                                  ),
                                   backgroundColor: Colors.red,
                                   duration: const Duration(seconds: 3),
                                 ),
@@ -283,6 +300,8 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
               ),
             ],
           ),
-        )));
+        ),
+      ),
+    );
   }
 }

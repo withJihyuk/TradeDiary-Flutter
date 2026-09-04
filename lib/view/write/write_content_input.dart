@@ -37,10 +37,7 @@ Style _inlineStyleOnly(Style style) {
 }
 
 Style _mergeInlinePreserveNull(Style base, Style overlay) {
-  final merged = <String, Attribute>{
-    ...base.attributes,
-    ...overlay.attributes,
-  };
+  final merged = <String, Attribute>{...base.attributes, ...overlay.attributes};
   return Style.attr(merged);
 }
 
@@ -55,23 +52,28 @@ void _rememberInlineIntent(
       !selection.isCollapsed ||
       selection.baseOffset < 0) {
     _imeStyleLogLazy(
-      () => 'rememberIntent skip attr(${attribute.key}:${attribute.value}) '
+      () =>
+          'rememberIntent skip attr(${attribute.key}:${attribute.value}) '
           '${_selectionLog(selection)}',
     );
     return;
   }
 
-  final caretIndex =
-      selection.baseOffset.clamp(0, controller.document.length - 1);
-  final base =
-      _inlineStyleOnly(controller.document.collectStyle(caretIndex, 0));
+  final caretIndex = selection.baseOffset.clamp(
+    0,
+    controller.document.length - 1,
+  );
+  final base = _inlineStyleOnly(
+    controller.document.collectStyle(caretIndex, 0),
+  );
   final overlay = _inlineStyleOnly(Style.attr({attribute.key: attribute}));
   final intentStyle = _mergeInlinePreserveNull(base, overlay);
 
   ref.read(inlineTypingStyleProvider.notifier).state = intentStyle;
   ref.read(inlineTypingOffsetProvider.notifier).state = selection.baseOffset;
   _imeStyleLogLazy(
-    () => 'rememberIntent attr(${attribute.key}:${attribute.value}) '
+    () =>
+        'rememberIntent attr(${attribute.key}:${attribute.value}) '
         '${_selectionLog(selection)} base:${_styleLog(base)} '
         'intent:${_styleLog(intentStyle)}',
   );
@@ -131,7 +133,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
   }) {
     if (reason.isNotEmpty) {
       _imeStyleLogLazy(
-        () => 'clearPending reason:$reason '
+        () =>
+            'clearPending reason:$reason '
             'pending:${_styleLog(_pendingInputStyle)} '
             'offset:$_pendingInputOffset',
       );
@@ -157,7 +160,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
 
     final toggledInline = _inlineOf(c.toggledStyle);
     _imeStyleLogLazy(
-      () => 'capture ${_selectionLog(sel)} '
+      () =>
+          'capture ${_selectionLog(sel)} '
           'hasFocus:${widget.editorFocusNode.hasFocus} '
           'toggled:${_styleLog(toggledInline)} '
           'pending:${_styleLog(_pendingInputStyle)} '
@@ -172,7 +176,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
       _pendingInputStyle = toggledInline;
       _pendingInputOffset = intentOffset;
       _imeStyleLogLazy(
-        () => 'capture setPending from toggled '
+        () =>
+            'capture setPending from toggled '
             'style:${_styleLog(toggledInline)} offset:$intentOffset',
       );
       return;
@@ -197,7 +202,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
     if (_pendingInputOffset != null) {
       if (sel.baseOffset < _pendingInputOffset!) {
         _imeStyleLogLazy(
-          () => 'capture ignore backward sync '
+          () =>
+              'capture ignore backward sync '
               'from:${_pendingInputOffset!} to:${sel.baseOffset}',
         );
         return;
@@ -218,7 +224,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
     final end = index + (len > 0 ? len : 0) + 1;
     final matched = p >= start && p <= end;
     _imeStyleLogLazy(
-      () => 'matchPending index:$index len:$len start:$start end:$end '
+      () =>
+          'matchPending index:$index len:$len start:$start end:$end '
           'pendingOffset:$p matched:$matched',
     );
     return matched;
@@ -235,13 +242,16 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
     final explicitPendingOffset = ref.read(inlineTypingOffsetProvider);
     final hasExplicitPending = explicitPendingStyle.isNotEmpty;
     final explicitAnchor = explicitPendingOffset;
-    final explicitTouchesRange = hasExplicitPending &&
+    final explicitTouchesRange =
+        hasExplicitPending &&
         (explicitAnchor == null || (index + data.length) > explicitAnchor);
-    final allowToggledInjection = !hasExplicitPending ||
+    final allowToggledInjection =
+        !hasExplicitPending ||
         explicitAnchor == null ||
         index >= explicitAnchor;
     _imeStyleLogLazy(
-      () => 'onBeforeReplace index:$index len:$len data:"$data" '
+      () =>
+          'onBeforeReplace index:$index len:$len data:"$data" '
           '${_selectionLog(c.selection)} '
           'toggled:${_styleLog(_inlineOf(c.toggledStyle))} '
           'pending:${_styleLog(_pendingInputStyle)} '
@@ -270,12 +280,14 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
             forcedStyle.isNotEmpty) {
           c.toggledStyle = forcedStyle;
           _imeStyleLogLazy(
-            () => 'onBeforeReplace apply forced '
+            () =>
+                'onBeforeReplace apply forced '
                 'toggled:${_styleLog(forcedStyle)}',
           );
         } else if (!allowToggledInjection) {
           _imeStyleLogLazy(
-            () => 'onBeforeReplace keep old style before anchor '
+            () =>
+                'onBeforeReplace keep old style before anchor '
                 'anchor:$explicitAnchor index:$index',
           );
         }
@@ -288,14 +300,16 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
         );
       } else {
         _imeStyleLogLazy(
-          () => 'onBeforeReplace explicit skip before anchor '
+          () =>
+              'onBeforeReplace explicit skip before anchor '
               'anchor:$explicitAnchor index:$index',
         );
       }
     }
 
     // 스타일 적용 직후 첫 입력에서 toggledStyle이 비어 있으면 의도 스타일 복원
-    final pendingMatch = explicitTouchesRange ||
+    final pendingMatch =
+        explicitTouchesRange ||
         (!hasExplicitPending && _matchesPendingRange(index, len));
     _imeStyleLogLazy(() => 'onBeforeReplace pendingMatch:$pendingMatch');
     if (pendingMatch) {
@@ -309,12 +323,14 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
           pendingMerged.isNotEmpty) {
         c.toggledStyle = pendingMerged;
         _imeStyleLogLazy(
-          () => 'onBeforeReplace restore pending '
+          () =>
+              'onBeforeReplace restore pending '
               'toggled:${_styleLog(pendingMerged)}',
         );
       } else if (!allowToggledInjection) {
         _imeStyleLogLazy(
-          () => 'onBeforeReplace skip pending toggled before anchor '
+          () =>
+              'onBeforeReplace skip pending toggled before anchor '
               'anchor:$explicitAnchor index:$index',
         );
       }
@@ -343,8 +359,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
 
     final inlineStyle =
         (forcedIntentStyle != null && forcedIntentStyle.isNotEmpty)
-            ? forcedIntentStyle
-            : _resolveInlineStyle(c, index, len);
+        ? forcedIntentStyle
+        : _resolveInlineStyle(c, index, len);
     if (inlineStyle.isEmpty) {
       _imeStyleLog('onBeforeReplace inlineStyle empty -> pass');
       return true;
@@ -359,7 +375,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
       _imeStyleLog('onBeforeReplace set toggled from inlineStyle');
     } else if (!allowToggledInjection) {
       _imeStyleLogLazy(
-        () => 'onBeforeReplace keep toggled untouched before anchor '
+        () =>
+            'onBeforeReplace keep toggled untouched before anchor '
             'anchor:$explicitAnchor index:$index',
       );
     }
@@ -385,7 +402,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
           if (shift > 0) {
             if (shift >= formatLen) {
               _imeStyleLogLazy(
-                () => 'postFrame skip before anchor '
+                () =>
+                    'postFrame skip before anchor '
                     'anchor:$explicitAnchor index:$index applyLen:$applyLen',
               );
               return;
@@ -395,10 +413,12 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
           }
         }
 
-        final currentInline =
-            _inlineOf(c.document.collectStyle(formatIndex, formatLen));
+        final currentInline = _inlineOf(
+          c.document.collectStyle(formatIndex, formatLen),
+        );
         _imeStyleLogLazy(
-          () => 'postFrame index:$formatIndex applyLen:$formatLen '
+          () =>
+              'postFrame index:$formatIndex applyLen:$formatLen '
               'current:${_styleLog(currentInline)} '
               'target:${_styleLog(inlineStyle)}',
         );
@@ -406,7 +426,8 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
           final current = currentInline.attributes[attr.key]?.value;
           if (current != attr.value) {
             _imeStyleLogLazy(
-              () => 'postFrame formatText key:${attr.key} '
+              () =>
+                  'postFrame formatText key:${attr.key} '
                   'current:$current -> ${attr.value}',
             );
             c.formatText(formatIndex, formatLen, attr);
@@ -430,8 +451,9 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
     final caretStyle = _inlineAtCursor(c, index);
     Style base = caretStyle;
     if (len > 0) {
-      final replacedIntersection =
-          _inlineOf(c.document.collectStyle(index, len));
+      final replacedIntersection = _inlineOf(
+        c.document.collectStyle(index, len),
+      );
       if (replacedIntersection.isNotEmpty) {
         base = replacedIntersection;
       } else {
@@ -517,10 +539,7 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
           }
           return const TextStyle();
         },
-        embedBuilders: [
-          DiaryImageEmbedBuilder(),
-          DividerEmbedBuilder(),
-        ],
+        embedBuilders: [DiaryImageEmbedBuilder(), DividerEmbedBuilder()],
       ),
     );
   }

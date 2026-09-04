@@ -10,7 +10,8 @@ class NavigationService {
   static String? pendingWidgetRoute;
 
   static StreamSubscription<AuthState> handleAuthStateChange(
-      BuildContext context) {
+    BuildContext context,
+  ) {
     final supabase = Supabase.instance.client;
     return supabase.auth.onAuthStateChange.listen(
       (data) async {

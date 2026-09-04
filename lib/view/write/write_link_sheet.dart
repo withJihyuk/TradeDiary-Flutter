@@ -76,74 +76,96 @@ class _LinkSheetState extends State<_LinkSheet> {
           const SizedBox(height: 16),
           Text(
             '표시 텍스트',
-            style: AppTextStyle.labelRegular
-                .copyWith(color: DiaryMainGrey.grey500),
+            style: AppTextStyle.labelRegular.copyWith(
+              color: DiaryMainGrey.grey500,
+            ),
           ),
           const SizedBox(height: 6),
           TextField(
             controller: _textController,
-            style:
-                AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey900),
+            style: AppTextStyle.m3Regular.copyWith(
+              color: DiaryMainGrey.grey900,
+            ),
             decoration: InputDecoration(
               hintText: '링크에 표시될 텍스트',
-              hintStyle:
-                  AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey400),
+              hintStyle: AppTextStyle.m3Regular.copyWith(
+                color: DiaryMainGrey.grey400,
+              ),
               filled: true,
               fillColor: Colors.white,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 12,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide:
-                    const BorderSide(color: DiaryMainGrey.grey200, width: 1),
+                borderSide: const BorderSide(
+                  color: DiaryMainGrey.grey200,
+                  width: 1,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide:
-                    const BorderSide(color: DiaryMainGrey.grey200, width: 1),
+                borderSide: const BorderSide(
+                  color: DiaryMainGrey.grey200,
+                  width: 1,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(
-                    color: DiaryColor.globalMainColor, width: 1),
+                  color: DiaryColor.globalMainColor,
+                  width: 1,
+                ),
               ),
             ),
           ),
           const SizedBox(height: 14),
           Text(
             'URL',
-            style: AppTextStyle.labelRegular
-                .copyWith(color: DiaryMainGrey.grey500),
+            style: AppTextStyle.labelRegular.copyWith(
+              color: DiaryMainGrey.grey500,
+            ),
           ),
           const SizedBox(height: 6),
           TextField(
             controller: _linkController,
             keyboardType: TextInputType.url,
             autocorrect: false,
-            style:
-                AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey900),
+            style: AppTextStyle.m3Regular.copyWith(
+              color: DiaryMainGrey.grey900,
+            ),
             decoration: InputDecoration(
               hintText: 'https://',
-              hintStyle:
-                  AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey400),
+              hintStyle: AppTextStyle.m3Regular.copyWith(
+                color: DiaryMainGrey.grey400,
+              ),
               filled: true,
               fillColor: Colors.white,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 12,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide:
-                    const BorderSide(color: DiaryMainGrey.grey200, width: 1),
+                borderSide: const BorderSide(
+                  color: DiaryMainGrey.grey200,
+                  width: 1,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide:
-                    const BorderSide(color: DiaryMainGrey.grey200, width: 1),
+                borderSide: const BorderSide(
+                  color: DiaryMainGrey.grey200,
+                  width: 1,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(
-                    color: DiaryColor.globalMainColor, width: 1),
+                  color: DiaryColor.globalMainColor,
+                  width: 1,
+                ),
               ),
             ),
           ),

@@ -19,11 +19,12 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return _Scaffold(
-        logo: Image.asset(
-          "assets/images/icons/logo.png",
-          width: 300.w,
-          height: 300.h,
-        ),
-        loginButton: const _LoginButtonList());
+      logo: Image.asset(
+        "assets/images/icons/logo.png",
+        width: 300.w,
+        height: 300.h,
+      ),
+      loginButton: const _LoginButtonList(),
+    );
   }
 }

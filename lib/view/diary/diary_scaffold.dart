@@ -42,28 +42,31 @@ class _ScaffoldState extends ConsumerState<_Scaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                controller: _scrollController,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-                  child: Column(
-                    children: [
-                      widget.header,
-                      const SizedBox(height: 18),
-                      widget.searchBox,
-                      const SizedBox(height: 20),
-                      widget.diaryList
-                    ],
-                  ),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              controller: _scrollController,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 28,
+                ),
+                child: Column(
+                  children: [
+                    widget.header,
+                    const SizedBox(height: 18),
+                    widget.searchBox,
+                    const SizedBox(height: 20),
+                    widget.diaryList,
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        floatingActionButton: widget.floatingActionButton);
+      ),
+      floatingActionButton: widget.floatingActionButton,
+    );
   }
 }

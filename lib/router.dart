@@ -39,14 +39,8 @@ class PageRouter {
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const SplashPage(),
-      ),
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginPage(),
-      ),
+      GoRoute(path: '/', builder: (context, state) => const SplashPage()),
+      GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
       GoRoute(
         path: '/write',
         builder: (context, state) {
@@ -89,19 +83,20 @@ class PageRouter {
         builder: (context, state, child) => BottomBar(child: child),
         routes: [
           GoRoute(
-              path: '/home',
-              pageBuilder: (context, state) =>
-                  const NoTransitionPage(child: HomePage())),
+            path: '/home',
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: HomePage()),
+          ),
           GoRoute(
-              path: '/diary',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                    child: DiaryPage(),
-                  )),
+            path: '/diary',
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: DiaryPage()),
+          ),
           GoRoute(
-              path: '/my',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                    child: MyPage(),
-                  )),
+            path: '/my',
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: MyPage()),
+          ),
         ],
       ),
     ],

@@ -5,29 +5,30 @@ import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 
 class TextSettingMenu extends StatelessWidget {
-  const TextSettingMenu(
-      {super.key, required this.menuName, required this.onPressed});
+  const TextSettingMenu({
+    super.key,
+    required this.menuName,
+    required this.onPressed,
+  });
   final String menuName;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              menuName,
-              style: AppTextStyle.m3Regular,
-            ),
-            SvgPicture.asset(
-              "assets/images/icons/arrow-right.svg",
-              width: 24.w,
-              height: 24.h,
-            )
-          ],
-        ));
+      onTap: onPressed,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(menuName, style: AppTextStyle.m3Regular),
+          SvgPicture.asset(
+            "assets/images/icons/arrow-right.svg",
+            width: 24.w,
+            height: 24.h,
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -63,10 +64,7 @@ class _BoolSettingMenuState extends State<BoolSettingMenu> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            widget.menuName,
-            style: AppTextStyle.m3Regular,
-          ),
+          Text(widget.menuName, style: AppTextStyle.m3Regular),
           CupertinoSwitch(
             value: isSwitchChecked,
             activeTrackColor: DiaryColor.globalMainColor,

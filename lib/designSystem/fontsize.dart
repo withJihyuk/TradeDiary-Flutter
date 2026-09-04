@@ -2,21 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract class AppTextStyle {
-  static TextStyle pretendardStyle(double size, double? height) => TextStyle(
-        fontFamily: 'Pretendard',
-        fontSize: size,
-        height: height,
-      );
+  static TextStyle pretendardStyle(double size, double? height) =>
+      TextStyle(fontFamily: 'Pretendard', fontSize: size, height: height);
 
   static TextStyle pretendardRegularStyle(double size, double? height) =>
-      pretendardStyle(size, height).copyWith(
-        fontWeight: FontWeight.w400,
-      );
+      pretendardStyle(size, height).copyWith(fontWeight: FontWeight.w400);
 
   static TextStyle pretendardSemiBoldStyle(double size, double? height) =>
-      pretendardStyle(size, height).copyWith(
-        fontWeight: FontWeight.w600,
-      );
+      pretendardStyle(size, height).copyWith(fontWeight: FontWeight.w600);
 
   static final TextStyle labelRegular = pretendardRegularStyle(14.sp, 1.5.h);
   static final TextStyle labelSemi = pretendardSemiBoldStyle(14.sp, 1.5.h);

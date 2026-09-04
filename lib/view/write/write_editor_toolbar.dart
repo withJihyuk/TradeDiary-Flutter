@@ -23,8 +23,8 @@ class _EditorToolbar extends ConsumerWidget {
             child: panel == ToolbarPanel.add
                 ? const _AddPanel()
                 : panel == ToolbarPanel.text
-                    ? const _TextPanel()
-                    : const SizedBox.shrink(),
+                ? const _TextPanel()
+                : const SizedBox.shrink(),
           ),
           // 메인 툴바
           _MainToolbar(editorFocusNode: editorFocusNode),
@@ -61,10 +61,11 @@ class _MainToolbar extends ConsumerWidget {
             icon: Icons.add,
             isActive: panel == ToolbarPanel.add,
             onTap: () {
-              ref.read(toolbarPanelProvider.notifier).state =
-                  panel == ToolbarPanel.add
-                      ? ToolbarPanel.none
-                      : ToolbarPanel.add;
+              ref
+                  .read(toolbarPanelProvider.notifier)
+                  .state = panel == ToolbarPanel.add
+                  ? ToolbarPanel.none
+                  : ToolbarPanel.add;
             },
           ),
           // 텍스트
@@ -72,10 +73,11 @@ class _MainToolbar extends ConsumerWidget {
             icon: Icons.text_fields_outlined,
             isActive: panel == ToolbarPanel.text,
             onTap: () {
-              ref.read(toolbarPanelProvider.notifier).state =
-                  panel == ToolbarPanel.text
-                      ? ToolbarPanel.none
-                      : ToolbarPanel.text;
+              ref
+                  .read(toolbarPanelProvider.notifier)
+                  .state = panel == ToolbarPanel.text
+                  ? ToolbarPanel.none
+                  : ToolbarPanel.text;
             },
           ),
           // 이미지
@@ -85,15 +87,9 @@ class _MainToolbar extends ConsumerWidget {
           ),
           const _ToolbarDivider(),
           // Undo
-          _ToolbarButton(
-            icon: Icons.undo,
-            onTap: () => controller.undo(),
-          ),
+          _ToolbarButton(icon: Icons.undo, onTap: () => controller.undo()),
           // Redo
-          _ToolbarButton(
-            icon: Icons.redo,
-            onTap: () => controller.redo(),
-          ),
+          _ToolbarButton(icon: Icons.redo, onTap: () => controller.redo()),
           const Spacer(),
           // 닫기
           _ToolbarButton(
@@ -159,14 +155,19 @@ class _AddPanel extends ConsumerWidget {
             onTap: () async {
               final controller = ref.read(quillControllerProvider);
               ref.read(toolbarPanelProvider.notifier).state = ToolbarPanel.none;
-              final pickedFiles =
-                  await ImagePicker().pickMultiImage(imageQuality: 50);
+              final pickedFiles = await ImagePicker().pickMultiImage(
+                imageQuality: 50,
+              );
               if (pickedFiles.isEmpty) return;
               for (final file in pickedFiles) {
                 final index = controller.selection.baseOffset;
                 final length = controller.selection.extentOffset - index;
                 controller.replaceText(
-                    index, length, BlockEmbed.image(file.path), null);
+                  index,
+                  length,
+                  BlockEmbed.image(file.path),
+                  null,
+                );
                 final newIndex = index + 1;
                 controller.replaceText(newIndex, 0, '\n', null);
                 controller.updateSelection(
@@ -184,7 +185,11 @@ class _AddPanel extends ConsumerWidget {
               final index = controller.selection.baseOffset;
               final length = controller.selection.extentOffset - index;
               controller.replaceText(
-                  index, length, const BlockEmbed('divider', 'hr'), null);
+                index,
+                length,
+                const BlockEmbed('divider', 'hr'),
+                null,
+              );
               controller.replaceText(index + 1, 0, '\n', null);
               controller.updateSelection(
                 TextSelection.collapsed(offset: index + 2),
@@ -241,8 +246,10 @@ class _AddPanelItem extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               label,
-              style: AppTextStyle.labelRegular
-                  .copyWith(color: DiaryMainGrey.grey700, fontSize: 12),
+              style: AppTextStyle.labelRegular.copyWith(
+                color: DiaryMainGrey.grey700,
+                fontSize: 12,
+              ),
             ),
           ],
         ),

@@ -157,10 +157,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           top: 0,
           left: 0,
           right: 0,
-          child: Image.asset(
-            characterImagePath,
-            height: 164.h,
-          ),
+          child: Image.asset(characterImagePath, height: 164.h),
         ),
       ],
     );
@@ -209,9 +206,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   child: Center(child: CircularProgressIndicator()),
                 ),
                 error: (error, stackTrace) => const Expanded(
-                  child: Center(
-                    child: Text('오류가 발생했거나 연결에 문제가 있어요.'),
-                  ),
+                  child: Center(child: Text('오류가 발생했거나 연결에 문제가 있어요.')),
                 ),
               ),
             ],

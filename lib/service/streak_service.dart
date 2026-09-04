@@ -54,7 +54,9 @@ class StreakService {
       await Future.wait([
         HomeWidget.saveWidgetData<String>('nickname', profile.nickname),
         HomeWidget.saveWidgetData<String>(
-            'weekly_emotions', getWeeklyEmotions(diaries)),
+          'weekly_emotions',
+          getWeeklyEmotions(diaries),
+        ),
       ]);
 
       final prefs = await SharedPreferences.getInstance();

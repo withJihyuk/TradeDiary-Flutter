@@ -7,12 +7,7 @@ class _MyHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          "마이",
-          style: AppTextStyle.h4Semi,
-        ),
-      ],
+      children: [Text("마이", style: AppTextStyle.h4Semi)],
     );
   }
 }
