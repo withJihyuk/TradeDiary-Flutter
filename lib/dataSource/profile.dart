@@ -23,10 +23,20 @@ class ProfileDataSource {
     try {
       await supabase
           .from("profile")
-          .update({"nickname": nickname})
-          .eq('id', userId);
+          .update({"nickname": nickname}).eq('id', userId);
     } catch (e) {
       throw DatabaseException('닉네임을 변경하는데 실패했어요', originalError: e);
+    }
+  }
+
+  Future<void> addExp(int exp, String userId) async {
+    try {
+      final currentProfile = await getInfo(userId);
+      await supabase
+          .from("profile")
+          .update({"point": currentProfile.exp + exp}).eq('id', userId);
+    } catch (e) {
+      throw DatabaseException('포인트를 추가하는데 실패했어요', originalError: e);
     }
   }
 }

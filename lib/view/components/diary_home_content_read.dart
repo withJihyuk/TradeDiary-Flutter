@@ -10,6 +10,8 @@ class DiaryHomeContentRead extends StatelessWidget {
     required this.contentPreview,
     required this.contentEmotion,
     required this.onTap,
+    this.onLongPressStart,
+    this.isDraft = false,
   });
 
   final String contentName;
@@ -17,11 +19,15 @@ class DiaryHomeContentRead extends StatelessWidget {
   final String contentPreview;
   final String contentEmotion;
   final VoidCallback onTap;
+  final GestureLongPressStartCallback? onLongPressStart;
+  final bool isDraft;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: onTap,
+        onLongPressStart: onLongPressStart,
+        behavior: HitTestBehavior.opaque,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -37,6 +43,25 @@ class DiaryHomeContentRead extends StatelessWidget {
                               style: AppTextStyle.m3Semi,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis)),
+                      if (isDraft) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: DiaryColor.globalMainColor.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            '임시저장',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: DiaryColor.globalMainColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                       const SizedBox(width: 4),
                       Container(
                         width: 2,

@@ -70,7 +70,7 @@ class _SystemSettingPageState extends State<SystemSettingPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                       
+
                             Text(
                               '일기 작성 알림',
                               style: AppTextStyle.m3Regular,
@@ -101,6 +101,7 @@ class _SystemSettingPageState extends State<SystemSettingPage> {
                         onPressed: () async {
                           await NotificationService().showTestNotification();
                           if (mounted) {
+                            // ignore: use_build_context_synchronously
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('테스트 알림을 전송했습니다. 알림이 오는지 확인해주세요.'),

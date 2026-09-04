@@ -8,13 +8,18 @@ part of 'diary_post.dart';
 
 _$DiaryPostModelImpl _$$DiaryPostModelImplFromJson(Map<String, dynamic> json) =>
     _$DiaryPostModelImpl(
+      id: json['id'] as String?,
       userId: json['userId'] as String,
       subject: json['subject'] as String,
       content: json['content'] as String,
-      date: DateTime.parse(json['date'] as String),
-      image: (json['image'] as List<dynamic>).map((e) => e as String).toList(),
       emotion: json['emotion'] as String,
-      isPrivate: json['isPrivate'] as bool,
+      isDraft: json['isDraft'] as bool? ?? false,
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$$DiaryPostModelImplToJson(
@@ -23,8 +28,5 @@ Map<String, dynamic> _$$DiaryPostModelImplToJson(
       'userId': instance.userId,
       'subject': instance.subject,
       'content': instance.content,
-      'date': instance.date.toIso8601String(),
-      'image': instance.image,
       'emotion': instance.emotion,
-      'isPrivate': instance.isPrivate,
     };

@@ -1,22 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/model/profile.dart';
 import 'package:trade_diary/provider/profile_provider.dart';
 import 'package:trade_diary/util/level.dart';
+import 'package:trade_diary/provider/widget_update_provider.dart';
+import 'package:trade_diary/view/components/welcome_dialog.dart';
 
-class HomePage extends ConsumerWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
-  Widget _buildHeaderImages() {
+  @override
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    _checkFirstLogin();
+  }
+
+  Future<void> _checkFirstLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('has_seen_welcome') == true) return;
+
+    await prefs.setBool('has_seen_welcome', true);
+
+    if (!mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const WelcomeDialog(),
+    );
+  }
+
+  Widget _buildHeaderImages(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 38.h),
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 66.h, left: 213.w),
+            padding: EdgeInsets.only(left: 213.w),
             child: Image.asset(
               "assets/images/character/sun.png",
               width: 132.w,
@@ -42,7 +70,7 @@ class HomePage extends ConsumerWidget {
     final nextLevelExp = levelSystem.expToNextLevel(profile.exp);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(32.w, 220.h, 32.w, 38.h),
+      padding: EdgeInsets.fromLTRB(32.w, 280.h, 32.w, 28.h),
       child: Column(
         children: [
           Row(
@@ -139,8 +167,9 @@ class HomePage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final profileState = ref.watch(profileProvider);
+    ref.watch(widgetUpdateProvider);
 
     return Scaffold(
       body: Container(
@@ -159,7 +188,7 @@ class HomePage extends ConsumerWidget {
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeaderImages(),
+              _buildHeaderImages(context),
               profileState.when(
                 data: (profile) {
                   final levelSystem = LevelSystem();

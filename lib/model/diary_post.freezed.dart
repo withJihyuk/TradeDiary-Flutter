@@ -20,13 +20,18 @@ DiaryPostModel _$DiaryPostModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$DiaryPostModel {
+  @JsonKey(includeToJson: false)
+  String? get id => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
   String get subject => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
-  DateTime get date => throw _privateConstructorUsedError;
-  List<String> get image => throw _privateConstructorUsedError;
   String get emotion => throw _privateConstructorUsedError;
-  bool get isPrivate => throw _privateConstructorUsedError;
+  @JsonKey(includeToJson: false)
+  bool get isDraft => throw _privateConstructorUsedError;
+  @JsonKey(includeToJson: false)
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(includeToJson: false)
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this DiaryPostModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,13 +50,14 @@ abstract class $DiaryPostModelCopyWith<$Res> {
       _$DiaryPostModelCopyWithImpl<$Res, DiaryPostModel>;
   @useResult
   $Res call(
-      {String userId,
+      {@JsonKey(includeToJson: false) String? id,
+      String userId,
       String subject,
       String content,
-      DateTime date,
-      List<String> image,
       String emotion,
-      bool isPrivate});
+      @JsonKey(includeToJson: false) bool isDraft,
+      @JsonKey(includeToJson: false) DateTime? createdAt,
+      @JsonKey(includeToJson: false) DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -69,15 +75,20 @@ class _$DiaryPostModelCopyWithImpl<$Res, $Val extends DiaryPostModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? userId = null,
     Object? subject = null,
     Object? content = null,
-    Object? date = null,
-    Object? image = null,
     Object? emotion = null,
-    Object? isPrivate = null,
+    Object? isDraft = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -90,22 +101,22 @@ class _$DiaryPostModelCopyWithImpl<$Res, $Val extends DiaryPostModel>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      image: null == image
-          ? _value.image
-          : image // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       emotion: null == emotion
           ? _value.emotion
           : emotion // ignore: cast_nullable_to_non_nullable
               as String,
-      isPrivate: null == isPrivate
-          ? _value.isPrivate
-          : isPrivate // ignore: cast_nullable_to_non_nullable
+      isDraft: null == isDraft
+          ? _value.isDraft
+          : isDraft // ignore: cast_nullable_to_non_nullable
               as bool,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -119,13 +130,14 @@ abstract class _$$DiaryPostModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String userId,
+      {@JsonKey(includeToJson: false) String? id,
+      String userId,
       String subject,
       String content,
-      DateTime date,
-      List<String> image,
       String emotion,
-      bool isPrivate});
+      @JsonKey(includeToJson: false) bool isDraft,
+      @JsonKey(includeToJson: false) DateTime? createdAt,
+      @JsonKey(includeToJson: false) DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -141,15 +153,20 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? userId = null,
     Object? subject = null,
     Object? content = null,
-    Object? date = null,
-    Object? image = null,
     Object? emotion = null,
-    Object? isPrivate = null,
+    Object? isDraft = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_$DiaryPostModelImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -162,22 +179,22 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      image: null == image
-          ? _value._image
-          : image // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       emotion: null == emotion
           ? _value.emotion
           : emotion // ignore: cast_nullable_to_non_nullable
               as String,
-      isPrivate: null == isPrivate
-          ? _value.isPrivate
-          : isPrivate // ignore: cast_nullable_to_non_nullable
+      isDraft: null == isDraft
+          ? _value.isDraft
+          : isDraft // ignore: cast_nullable_to_non_nullable
               as bool,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -186,18 +203,21 @@ class __$$DiaryPostModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DiaryPostModelImpl implements _DiaryPostModel {
   _$DiaryPostModelImpl(
-      {required this.userId,
+      {@JsonKey(includeToJson: false) this.id,
+      required this.userId,
       required this.subject,
       required this.content,
-      required this.date,
-      required final List<String> image,
       required this.emotion,
-      required this.isPrivate})
-      : _image = image;
+      @JsonKey(includeToJson: false) this.isDraft = false,
+      @JsonKey(includeToJson: false) this.createdAt,
+      @JsonKey(includeToJson: false) this.updatedAt});
 
   factory _$DiaryPostModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$DiaryPostModelImplFromJson(json);
 
+  @override
+  @JsonKey(includeToJson: false)
+  final String? id;
   @override
   final String userId;
   @override
@@ -205,23 +225,20 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
   @override
   final String content;
   @override
-  final DateTime date;
-  final List<String> _image;
-  @override
-  List<String> get image {
-    if (_image is EqualUnmodifiableListView) return _image;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_image);
-  }
-
-  @override
   final String emotion;
   @override
-  final bool isPrivate;
+  @JsonKey(includeToJson: false)
+  final bool isDraft;
+  @override
+  @JsonKey(includeToJson: false)
+  final DateTime? createdAt;
+  @override
+  @JsonKey(includeToJson: false)
+  final DateTime? updatedAt;
 
   @override
   String toString() {
-    return 'DiaryPostModel(userId: $userId, subject: $subject, content: $content, date: $date, image: $image, emotion: $emotion, isPrivate: $isPrivate)';
+    return 'DiaryPostModel(id: $id, userId: $userId, subject: $subject, content: $content, emotion: $emotion, isDraft: $isDraft, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -229,20 +246,22 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DiaryPostModelImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.subject, subject) || other.subject == subject) &&
             (identical(other.content, content) || other.content == content) &&
-            (identical(other.date, date) || other.date == date) &&
-            const DeepCollectionEquality().equals(other._image, _image) &&
             (identical(other.emotion, emotion) || other.emotion == emotion) &&
-            (identical(other.isPrivate, isPrivate) ||
-                other.isPrivate == isPrivate));
+            (identical(other.isDraft, isDraft) || other.isDraft == isDraft) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, userId, subject, content, date,
-      const DeepCollectionEquality().hash(_image), emotion, isPrivate);
+  int get hashCode => Object.hash(runtimeType, id, userId, subject, content,
+      emotion, isDraft, createdAt, updatedAt);
 
   /// Create a copy of DiaryPostModel
   /// with the given fields replaced by the non-null parameter values.
@@ -263,17 +282,22 @@ class _$DiaryPostModelImpl implements _DiaryPostModel {
 
 abstract class _DiaryPostModel implements DiaryPostModel {
   factory _DiaryPostModel(
-      {required final String userId,
-      required final String subject,
-      required final String content,
-      required final DateTime date,
-      required final List<String> image,
-      required final String emotion,
-      required final bool isPrivate}) = _$DiaryPostModelImpl;
+          {@JsonKey(includeToJson: false) final String? id,
+          required final String userId,
+          required final String subject,
+          required final String content,
+          required final String emotion,
+          @JsonKey(includeToJson: false) final bool isDraft,
+          @JsonKey(includeToJson: false) final DateTime? createdAt,
+          @JsonKey(includeToJson: false) final DateTime? updatedAt}) =
+      _$DiaryPostModelImpl;
 
   factory _DiaryPostModel.fromJson(Map<String, dynamic> json) =
       _$DiaryPostModelImpl.fromJson;
 
+  @override
+  @JsonKey(includeToJson: false)
+  String? get id;
   @override
   String get userId;
   @override
@@ -281,13 +305,16 @@ abstract class _DiaryPostModel implements DiaryPostModel {
   @override
   String get content;
   @override
-  DateTime get date;
-  @override
-  List<String> get image;
-  @override
   String get emotion;
   @override
-  bool get isPrivate;
+  @JsonKey(includeToJson: false)
+  bool get isDraft;
+  @override
+  @JsonKey(includeToJson: false)
+  DateTime? get createdAt;
+  @override
+  @JsonKey(includeToJson: false)
+  DateTime? get updatedAt;
 
   /// Create a copy of DiaryPostModel
   /// with the given fields replaced by the non-null parameter values.

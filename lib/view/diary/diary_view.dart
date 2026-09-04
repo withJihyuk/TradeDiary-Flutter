@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/model/diary_post.dart';
+import 'package:trade_diary/util/diary_post_date_util.dart';
 import 'package:trade_diary/util/emotion.dart';
+import 'package:trade_diary/util/diary_image_embed_builder.dart';
+import 'package:trade_diary/util/quill_content_util.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 
 class DiaryView extends StatelessWidget {
@@ -14,6 +18,8 @@ class DiaryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final diaryDate = diaryEffectiveDateTime(posts[day]);
+
     return Scaffold(
         body: SafeArea(
             child: Padding(
@@ -24,8 +30,7 @@ class DiaryView extends StatelessWidget {
                   const SizedBox(height: 40),
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Text(
-                        "${posts[day].date.month}월 ${posts[day].date.day}일",
+                    child: Text("${diaryDate.month}월 ${diaryDate.day}일",
                         style: AppTextStyle.h3Semi
                             .copyWith(color: DiaryColor.globalMainColor)),
                   ),
@@ -51,28 +56,21 @@ class DiaryView extends StatelessWidget {
                           posts[day].subject,
                           style: AppTextStyle.m1Semi,
                         ),
-                        Text(
-                          posts[day].content,
-                          style: AppTextStyle.m3Regular,
-                        ),
-                        if (posts[day].image.isNotEmpty) ...[
-                          const SizedBox(height: 80),
-                          Column(
-                            children: [
-                              ...posts[day].image.map((imageUrl) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.network(
-                                        imageUrl,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ))
+                        QuillEditor.basic(
+                          controller: QuillController(
+                            document: QuillContentUtil.contentToDocument(
+                                posts[day].content),
+                            selection: const TextSelection.collapsed(offset: 0),
+                            readOnly: true,
+                          ),
+                          config: QuillEditorConfig(
+                            showCursor: false,
+                            embedBuilders: [
+                              DiaryImageEmbedBuilder(),
+                              DividerEmbedBuilder(),
                             ],
                           ),
-                        ],
+                        ),
                       ],
                     ),
                   )

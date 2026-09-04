@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/model/diary_post.dart';
-import 'package:trade_diary/view/game/swipe_game.dart';
+import 'package:trade_diary/util/navigation_service.dart';
 import 'package:trade_diary/view/systemSetting/system_setting_page.dart';
 import 'package:trade_diary/view/components/bottom_navigation_bar.dart';
 import 'package:trade_diary/view/deleteId/delete_id_page.dart';
@@ -16,54 +17,72 @@ import 'package:trade_diary/view/splash/splash_page.dart';
 import 'package:trade_diary/view/write/write_page.dart';
 
 class PageRouter {
-  static const _splashPage = "/";
-  static const _writePage = "/write";
-  static const _selectEmotionPage = "/select";
-  static const _loginPage = "/login";
-  static const _nicknamePage = "/nickname";
-  static const _systemSettingPage = "/systemSetting";
-  static const _deleteIdPage = "/deleteId";
-  static const _readPage = "/read/:id";
-  static const _swipeGamePage = "/swipeGame";
-
   static final GoRouter router = GoRouter(
     debugLogDiagnostics: true,
+    initialLocation: '/',
+    redirect: (context, state) {
+      final location = state.matchedLocation;
+      final session = Supabase.instance.client.auth.currentSession;
+      final loggedIn = session != null;
+
+      // 스플래시에서만 리다이렉트
+      if (location == '/') {
+        if (!loggedIn) return '/login';
+        if (NavigationService.pendingWidgetRoute != null) {
+          final route = NavigationService.pendingWidgetRoute!;
+          NavigationService.pendingWidgetRoute = null;
+          return route;
+        }
+        return '/home';
+      }
+
+      return null;
+    },
     routes: [
       GoRoute(
-        path: _splashPage,
+        path: '/',
         builder: (context, state) => const SplashPage(),
-        routes: [
-          GoRoute(
-            path: _readPage,
-            builder: (context, state) {
-              List<DiaryPostModel> posts = [];
-              if (state.extra != null && state.extra is List<DiaryPostModel>) {
-                posts = state.extra as List<DiaryPostModel>;
-              }
-              int day = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
-              return DiaryView(posts: posts, day: day);
-            },
-          ),
-          GoRoute(
-              path: _writePage, builder: (context, state) => const WritePage()),
-          GoRoute(
-              path: _deleteIdPage,
-              builder: (context, state) => const DeleteIdPage()),
-          GoRoute(
-              path: _systemSettingPage,
-              builder: (context, state) => const SystemSettingPage()),
-          GoRoute(
-              path: _nicknamePage,
-              builder: (context, state) => const NicknamePage()),
-          GoRoute(
-              path: _swipeGamePage,
-              builder: (context, state) => const SwipeGame()),
-          GoRoute(
-              path: _selectEmotionPage,
-              builder: (context, state) => const WriteSelectingEmotion()),
-          GoRoute(
-              path: _loginPage, builder: (context, state) => const LoginPage()),
-        ],
+      ),
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/write',
+        builder: (context, state) {
+          final draftId = state.extra as String?;
+          return WritePage(draftId: draftId);
+        },
+      ),
+      GoRoute(
+        path: '/select',
+        builder: (context, state) {
+          final draftId = state.extra as String?;
+          return WriteSelectingEmotion(draftId: draftId);
+        },
+      ),
+      GoRoute(
+        path: '/nickname',
+        builder: (context, state) => const NicknamePage(),
+      ),
+      GoRoute(
+        path: '/systemSetting',
+        builder: (context, state) => const SystemSettingPage(),
+      ),
+      GoRoute(
+        path: '/deleteId',
+        builder: (context, state) => const DeleteIdPage(),
+      ),
+      GoRoute(
+        path: '/read/:id',
+        builder: (context, state) {
+          List<DiaryPostModel> posts = [];
+          if (state.extra != null && state.extra is List<DiaryPostModel>) {
+            posts = state.extra as List<DiaryPostModel>;
+          }
+          int day = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+          return DiaryView(posts: posts, day: day);
+        },
       ),
       ShellRoute(
         navigatorKey: GlobalKey<NavigatorState>(),

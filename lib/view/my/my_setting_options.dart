@@ -1,8 +1,7 @@
 part of 'my_page.dart';
 
 class _MySettingOptions extends StatelessWidget {
-  // ignore: unused_element
-  const _MySettingOptions({super.key});
+  const _MySettingOptions();
 
   @override
   Widget build(BuildContext context) {
@@ -11,12 +10,6 @@ class _MySettingOptions extends StatelessWidget {
         TextSettingMenu(
             menuName: "감자 이름 변경",
             onPressed: () => PageRouter.router.push("/nickname")),
-        // SizedBox(height: 32.h),
-        // BoolSettingMenu(
-        //   ischecked: false,
-        //   menuName: "알림",
-        //   onPressed: () {},
-        // ),
         SizedBox(height: 32.h),
         Container(
           decoration: const BoxDecoration(

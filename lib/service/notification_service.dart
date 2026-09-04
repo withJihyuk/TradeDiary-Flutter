@@ -10,15 +10,16 @@ class NotificationService {
   factory NotificationService() => _instance;
   NotificationService._();
 
-  final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _notifications =
+      FlutterLocalNotificationsPlugin();
   static const String notificationEnabledKey = 'notification_enabled';
 
   Future<void> init() async {
     tz.initializeTimeZones();
 
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings(
-      // iOS에서는 초기화 시점에 권한 요청하지 않도록 설정
       requestAlertPermission: false,
       requestBadgePermission: false,
       requestSoundPermission: false,
@@ -39,16 +40,19 @@ class NotificationService {
 
   Future<void> _requestPermissions() async {
     if (Platform.isIOS) {
-      await _notifications.resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+      await _notifications
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
     } else if (Platform.isAndroid) {
-      final androidImplementation = _notifications.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
-      
+      final androidImplementation =
+          _notifications.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+
       if (androidImplementation != null) {
         await androidImplementation.requestNotificationsPermission();
         await androidImplementation.requestExactAlarmsPermission();
@@ -59,23 +63,29 @@ class NotificationService {
   Future<bool> checkPermissions() async {
     try {
       if (Platform.isIOS) {
-        final bool? result = await _notifications.resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+        final bool? result = await _notifications
+            .resolvePlatformSpecificImplementation<
+                IOSFlutterLocalNotificationsPlugin>()
+            ?.requestPermissions(
+              alert: true,
+              badge: true,
+              sound: true,
+            );
         debugPrint('알림 권한 확인: $result');
         return result ?? false;
       } else if (Platform.isAndroid) {
-        final androidImplementation = _notifications.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
-            
+        final androidImplementation =
+            _notifications.resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin>();
+
         if (androidImplementation != null) {
-          final areNotificationsEnabled = await androidImplementation.areNotificationsEnabled();
-          final hasExactAlarmPermission = await androidImplementation.canScheduleExactNotifications();
-          
-          return (areNotificationsEnabled ?? false) && (hasExactAlarmPermission ?? false);
+          final areNotificationsEnabled =
+              await androidImplementation.areNotificationsEnabled();
+          final hasExactAlarmPermission =
+              await androidImplementation.canScheduleExactNotifications();
+
+          return (areNotificationsEnabled ?? false) &&
+              (hasExactAlarmPermission ?? false);
         }
       }
       return false;
@@ -98,7 +108,7 @@ class NotificationService {
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(notificationEnabledKey, enabled);
-      
+
       if (enabled) {
         await scheduleDailyNotification();
       } else {
@@ -113,7 +123,7 @@ class NotificationService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final prefEnabled = prefs.getBool(notificationEnabledKey) ?? false;
-      
+
       if (prefEnabled) {
         return await checkPermissions();
       }
@@ -125,19 +135,6 @@ class NotificationService {
   }
 
   Future<void> scheduleDailyNotification() async {
-    // 알림 채널 생성
-    const androidDetails = AndroidNotificationDetails(
-      'diary_reminder',
-      '일기 작성 알림',
-      channelDescription: '매일 오후 8시에 일기 작성을 알려드립니다.',
-      importance: Importance.high,
-      priority: Priority.high,
-      enableLights: true,
-      enableVibration: true,
-      playSound: true,
-      category: AndroidNotificationCategory.reminder,
-    );
-
     const iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
@@ -146,9 +143,10 @@ class NotificationService {
     );
 
     const notificationDetails = NotificationDetails(
-      android: androidDetails,
       iOS: iosDetails,
     );
+
+    tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
 
     final now = tz.TZDateTime.now(tz.local);
     var scheduledDate = tz.TZDateTime(
@@ -156,11 +154,10 @@ class NotificationService {
       now.year,
       now.month,
       now.day,
-      20, // 오후 8시
+      20,
       0,
     );
 
-    // 이미 오후 8시가 지났다면 다음 날로 설정
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
@@ -183,25 +180,11 @@ class NotificationService {
   }
 
   Future<void> showTestNotification() async {
-    // 권한 확인
     final hasPermission = await checkPermissions();
     if (!hasPermission) {
       debugPrint('알림 권한이 없습니다.');
       return;
     }
-
-    const androidDetails = AndroidNotificationDetails(
-      'diary_test',
-      '테스트 알림',
-      channelDescription: '알림 테스트를 위한 채널입니다.',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: true,
-      enableLights: true,
-      enableVibration: true,
-      playSound: true,
-      category: AndroidNotificationCategory.message,
-    );
 
     const iosDetails = DarwinNotificationDetails(
       presentAlert: true,
@@ -211,7 +194,6 @@ class NotificationService {
     );
 
     const notificationDetails = NotificationDetails(
-      android: androidDetails,
       iOS: iosDetails,
     );
 
@@ -222,4 +204,4 @@ class NotificationService {
       notificationDetails,
     );
   }
-} 
+}

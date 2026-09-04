@@ -2,7 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/model/profile.dart';
 import 'package:trade_diary/viewModel/profile_model.dart';
 
-final profileProvider = StateNotifierProvider<ProfileNotifier, AsyncValue<ProfileModel>>((ref) {
+final profileProvider =
+    StateNotifierProvider<ProfileNotifier, AsyncValue<ProfileModel>>((ref) {
   return ProfileNotifier();
 });
 
@@ -26,4 +27,4 @@ class ProfileNotifier extends StateNotifier<AsyncValue<ProfileModel>> {
   Future<void> refresh() async {
     await loadProfile();
   }
-} 
+}

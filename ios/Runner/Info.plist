@@ -18,10 +18,8 @@
 	<string>trade_diary</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>이 앱은 이미지를 업로드하기 위해 사진 라이브러리에 접근해야 합니다.</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.4</string>
+	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -37,18 +35,26 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>28</string>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FlutterDeepLinkingEnabled</key>
-	<true/>
-	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-  		<string>sms</string>
-  		<string>tel</string>
+		<string>sms</string>
+		<string>tel</string>
 	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>이 앱은 이미지를 업로드하기 위해 사진 라이브러리에 접근해야 합니다.</string>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>매일 오후 8시에 일기 작성 알림을 보내드립니다.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -68,16 +74,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSUserNotificationUsageDescription</key>
-	<string>매일 오후 8시에 일기 작성 알림을 보내드립니다.</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>remote-notification</string>
-	</array>
-	<key>UNNotificationExtensionDefaultContentHidden</key>
-	<false/>
 	<key>UNNotificationExtensionCategory</key>
 	<string>diary_reminder</string>
+	<key>UNNotificationExtensionDefaultContentHidden</key>
+	<false/>
 	<key>UNNotificationExtensionInitialContentSizeRatio</key>
 	<real>1</real>
 </dict>
