@@ -6,8 +6,8 @@ part of 'diary_post.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DiaryPostModelImpl _$$DiaryPostModelImplFromJson(Map<String, dynamic> json) =>
-    _$DiaryPostModelImpl(
+_DiaryPostModel _$DiaryPostModelFromJson(Map<String, dynamic> json) =>
+    _DiaryPostModel(
       id: json['id'] as String?,
       userId: json['userId'] as String,
       subject: json['subject'] as String,
@@ -22,8 +22,7 @@ _$DiaryPostModelImpl _$$DiaryPostModelImplFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['updatedAt'] as String),
     );
 
-Map<String, dynamic> _$$DiaryPostModelImplToJson(
-        _$DiaryPostModelImpl instance) =>
+Map<String, dynamic> _$DiaryPostModelToJson(_DiaryPostModel instance) =>
     <String, dynamic>{
       'userId': instance.userId,
       'subject': instance.subject,

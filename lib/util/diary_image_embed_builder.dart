@@ -23,16 +23,17 @@ class DiaryImageEmbedBuilder extends EmbedBuilder {
         imageUrl,
         width: double.infinity,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _errorPlaceholder(),
+        errorBuilder: (_, _, _) => _errorPlaceholder(),
       );
     } else {
-      final path =
-          imageUrl.startsWith('file://') ? imageUrl.substring(7) : imageUrl;
+      final path = imageUrl.startsWith('file://')
+          ? imageUrl.substring(7)
+          : imageUrl;
       imageWidget = Image.file(
         File(path),
         width: double.infinity,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _errorPlaceholder(),
+        errorBuilder: (_, _, _) => _errorPlaceholder(),
       );
     }
 

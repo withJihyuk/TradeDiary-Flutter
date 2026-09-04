@@ -1,47 +1,230 @@
 name: flutter-ci
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [develop, master]
+  pull_request:
+    branches: [develop, master]
+
+permissions:
+  contents: read
 
 jobs:
-  analyze:
+  verify:
     runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.release.outputs.release }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v7.0.1
         with:
-          architecture: x64
-      - run: flutter pub get
-      - run: |
-          echo "DB_URL=$DB_URL" >> .env
-          echo "DB_KEY"=$DB_KEY >> .env
-          echo "REDIRECT_URI"=$REDIRECT_URI >> .env
-        env:
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_KEY: ${{ secrets.DB_KEY }}
-          REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
-      - run: flutter analyze
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v2
+          fetch-depth: 0
+      - uses: actions/setup-java@v6.0.0
         with:
-          architecture: x64
-      - run: flutter pub get
-      - run: |
-          echo "DB_URL=$DB_URL" >> .env
-          echo "DB_KEY"=$DB_KEY >> .env
-          echo "REDIRECT_URI"=$REDIRECT_URI >> .env
-        env:
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_KEY: ${{ secrets.DB_KEY }}
-          REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
-      - uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
+          distribution: zulu
           java-version: "17"
-      - run: flutter build apk
-      - uses: actions/upload-artifact@v4
+      - uses: subosito/flutter-action@v2.23.0
         with:
-          name: release-apk
-          path: build/app/outputs/apk/release/app-release.apk
+          flutter-version: 3.47.2
+          channel: stable
+          architecture: x64
+          cache: true
+      - name: Create test environment
+        run: cp .env.example .env
+      - run: flutter pub get
+      - run: dart run build_runner build
+      - name: Check generated files
+        run: git diff --exit-code
+      - run: dart format --output=none --set-exit-if-changed lib test
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build apk --debug
+      - name: Check Android target SDK
+        run: test "$("$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer" manifest target-sdk build/app/outputs/flutter-apk/app-debug.apk)" = "36"
+      - name: Detect store release
+        id: release
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          echo "release=false" >> "$GITHUB_OUTPUT"
+          if [[ "$EVENT_NAME" != "push" || "$REF_NAME" != "refs/heads/master" || "$BEFORE_SHA" =~ ^0+$ ]]; then
+            exit 0
+          fi
+
+          previous="$(git show "${BEFORE_SHA}:pubspec.yaml" | awk '$1 == "version:" { print $2 }')"
+          current="$(awk '$1 == "version:" { print $2 }' pubspec.yaml)"
+          if [[ "$previous" == "$current" ]]; then
+            exit 0
+          fi
+
+          previous_name="${previous%%+*}"
+          previous_build="${previous##*+}"
+          current_name="${current%%+*}"
+          current_build="${current##*+}"
+          highest_name="$(printf '%s\n%s\n' "$previous_name" "$current_name" | sort -V | tail -n 1)"
+
+          if [[ "$current_name" == "$previous_name" || "$highest_name" != "$current_name" || "$current_build" -le "$previous_build" ]]; then
+            echo "::error::Increase both the app version and build number: ${previous} -> ${current}"
+            exit 1
+          fi
+          if git diff --quiet "$BEFORE_SHA" "$GITHUB_SHA" -- fastlane/metadata/ko/release_notes.txt; then
+            echo "::error::Update fastlane/metadata/ko/release_notes.txt for ${current}."
+            exit 1
+          fi
+          if [[ ! -s fastlane/metadata/ko/release_notes.txt ]]; then
+            echo "::error::Release notes must not be empty."
+            exit 1
+          fi
+
+          echo "release=true" >> "$GITHUB_OUTPUT"
+
+  release-android:
+    needs: verify
+    if: needs.verify.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-java@v6.0.0
+        with:
+          distribution: zulu
+          java-version: "17"
+      - uses: subosito/flutter-action@v2.23.0
+        with:
+          flutter-version: 3.47.2
+          channel: stable
+          architecture: x64
+          cache: true
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.1
+          bundler-cache: true
+      - name: Create production environment
+        shell: bash
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_KEY: ${{ secrets.DB_KEY }}
+          API_URL: ${{ secrets.API_URL }}
+          CDN_URL: ${{ secrets.CDN_URL }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID }}
+          GOOGLE_IOS_CLIENT_ID: ${{ secrets.GOOGLE_IOS_CLIENT_ID }}
+        run: |
+          for name in DB_URL DB_KEY API_URL CDN_URL SENTRY_DSN GOOGLE_WEB_CLIENT_ID GOOGLE_IOS_CLIENT_ID; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "::error::production secret ${name} is missing"
+              exit 1
+            fi
+          done
+          {
+            printf 'DB_URL=%s\n' "$DB_URL"
+            printf 'DB_KEY=%s\n' "$DB_KEY"
+            printf 'API_URL=%s\n' "$API_URL"
+            printf 'CDN_URL=%s\n' "$CDN_URL"
+            printf 'SENTRY_DSN=%s\n' "$SENTRY_DSN"
+            printf 'GOOGLE_WEB_CLIENT_ID=%s\n' "$GOOGLE_WEB_CLIENT_ID"
+            printf 'GOOGLE_IOS_CLIENT_ID=%s\n' "$GOOGLE_IOS_CLIENT_ID"
+          } > .env
+      - name: Configure release signing
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          SUPPLY_JSON_KEY_DATA: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          for name in ANDROID_KEYSTORE_BASE64 ANDROID_STORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD SUPPLY_JSON_KEY_DATA; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "::error::production secret ${name} is missing"
+              exit 1
+            fi
+          done
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/upload-keystore.jks"
+          {
+            printf 'storeFile=%s\n' "$RUNNER_TEMP/upload-keystore.jks"
+            printf 'storePassword=%s\n' "$ANDROID_STORE_PASSWORD"
+            printf 'keyAlias=%s\n' "$ANDROID_KEY_ALIAS"
+            printf 'keyPassword=%s\n' "$ANDROID_KEY_PASSWORD"
+          } > android/key.properties
+      - run: flutter pub get
+      - run: flutter build appbundle --release
+      - name: Verify AAB signature
+        run: jarsigner -verify -strict build/app/outputs/bundle/release/app-release.aab
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          name: android-release-${{ github.sha }}
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 14
+      - name: Submit to Google Play
+        env:
+          SUPPLY_JSON_KEY_DATA: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: bundle exec fastlane android submit
+
+  release-ios:
+    needs: verify
+    if: needs.verify.outputs.release == 'true'
+    runs-on: macos-15
+    environment: production
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: subosito/flutter-action@v2.23.0
+        with:
+          flutter-version: 3.47.2
+          channel: stable
+          architecture: x64
+          cache: true
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.1
+          bundler-cache: true
+      - name: Create production environment
+        shell: bash
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_KEY: ${{ secrets.DB_KEY }}
+          API_URL: ${{ secrets.API_URL }}
+          CDN_URL: ${{ secrets.CDN_URL }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID }}
+          GOOGLE_IOS_CLIENT_ID: ${{ secrets.GOOGLE_IOS_CLIENT_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_KEY_BASE64 }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+        run: |
+          required=(DB_URL DB_KEY API_URL CDN_URL SENTRY_DSN GOOGLE_WEB_CLIENT_ID GOOGLE_IOS_CLIENT_ID APP_STORE_CONNECT_KEY_ID APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_KEY_BASE64 MATCH_PASSWORD MATCH_GIT_BASIC_AUTHORIZATION)
+          for name in "${required[@]}"; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "::error::production secret ${name} is missing"
+              exit 1
+            fi
+          done
+          {
+            printf 'DB_URL=%s\n' "$DB_URL"
+            printf 'DB_KEY=%s\n' "$DB_KEY"
+            printf 'API_URL=%s\n' "$API_URL"
+            printf 'CDN_URL=%s\n' "$CDN_URL"
+            printf 'SENTRY_DSN=%s\n' "$SENTRY_DSN"
+            printf 'GOOGLE_WEB_CLIENT_ID=%s\n' "$GOOGLE_WEB_CLIENT_ID"
+            printf 'GOOGLE_IOS_CLIENT_ID=%s\n' "$GOOGLE_IOS_CLIENT_ID"
+          } > .env
+      - run: flutter pub get
+      - name: Build and submit to App Store review
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_KEY_BASE64 }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+        run: bundle exec fastlane ios submit
+      - uses: actions/upload-artifact@v7.0.1
+        if: always()
+        with:
+          name: ios-release-${{ github.sha }}
+          path: build/ios/ipa/trade_diary.ipa
+          if-no-files-found: ignore
+          retention-days: 14

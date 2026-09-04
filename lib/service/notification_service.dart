@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/material.dart';
+
 import 'dart:io' show Platform;
 
 class NotificationService {
@@ -17,8 +18,9 @@ class NotificationService {
   Future<void> init() async {
     tz.initializeTimeZones();
 
-    const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
@@ -31,7 +33,7 @@ class NotificationService {
     );
 
     await _notifications.initialize(
-      initSettings,
+      settings: initSettings,
       onDidReceiveNotificationResponse: (details) {
         debugPrint('알림 응답 받음: ${details.payload}');
       },
@@ -42,20 +44,17 @@ class NotificationService {
     if (Platform.isIOS) {
       await _notifications
           .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
     } else if (Platform.isAndroid) {
-      final androidImplementation =
-          _notifications.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+      final androidImplementation = _notifications
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
 
       if (androidImplementation != null) {
         await androidImplementation.requestNotificationsPermission();
-        await androidImplementation.requestExactAlarmsPermission();
       }
     }
   }
@@ -65,27 +64,21 @@ class NotificationService {
       if (Platform.isIOS) {
         final bool? result = await _notifications
             .resolvePlatformSpecificImplementation<
-                IOSFlutterLocalNotificationsPlugin>()
-            ?.requestPermissions(
-              alert: true,
-              badge: true,
-              sound: true,
-            );
+              IOSFlutterLocalNotificationsPlugin
+            >()
+            ?.requestPermissions(alert: true, badge: true, sound: true);
         debugPrint('알림 권한 확인: $result');
         return result ?? false;
       } else if (Platform.isAndroid) {
-        final androidImplementation =
-            _notifications.resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin>();
+        final androidImplementation = _notifications
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
 
         if (androidImplementation != null) {
-          final areNotificationsEnabled =
-              await androidImplementation.areNotificationsEnabled();
-          final hasExactAlarmPermission =
-              await androidImplementation.canScheduleExactNotifications();
-
-          return (areNotificationsEnabled ?? false) &&
-              (hasExactAlarmPermission ?? false);
+          final areNotificationsEnabled = await androidImplementation
+              .areNotificationsEnabled();
+          return areNotificationsEnabled ?? false;
         }
       }
       return false;
@@ -135,6 +128,11 @@ class NotificationService {
   }
 
   Future<void> scheduleDailyNotification() async {
+    const androidDetails = AndroidNotificationDetails(
+      'daily_diary_reminder',
+      '일기 작성 알림',
+      channelDescription: '매일 오후 8시경 일기 작성을 알려드려요.',
+    );
     const iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
@@ -143,6 +141,7 @@ class NotificationService {
     );
 
     const notificationDetails = NotificationDetails(
+      android: androidDetails,
       iOS: iosDetails,
     );
 
@@ -163,14 +162,12 @@ class NotificationService {
     }
 
     await _notifications.zonedSchedule(
-      0,
-      '오늘의 일기를 작성해보세요! 📝',
-      '하루를 마무리하며 오늘 있었던 일을 기록해보세요.',
-      scheduledDate,
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+      id: 0,
+      title: '오늘의 일기를 작성해보세요! 📝',
+      body: '하루를 마무리하며 오늘 있었던 일을 기록해보세요.',
+      scheduledDate: scheduledDate,
+      notificationDetails: notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -186,6 +183,11 @@ class NotificationService {
       return;
     }
 
+    const androidDetails = AndroidNotificationDetails(
+      'daily_diary_reminder',
+      '일기 작성 알림',
+      channelDescription: '매일 오후 8시경 일기 작성을 알려드려요.',
+    );
     const iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
@@ -194,14 +196,15 @@ class NotificationService {
     );
 
     const notificationDetails = NotificationDetails(
+      android: androidDetails,
       iOS: iosDetails,
     );
 
     await _notifications.show(
-      999,
-      '테스트 알림입니다 📝',
-      '알림이 잘 작동하고 있습니다!',
-      notificationDetails,
+      id: 999,
+      title: '테스트 알림입니다 📝',
+      body: '알림이 잘 작동하고 있습니다!',
+      notificationDetails: notificationDetails,
     );
   }
 }

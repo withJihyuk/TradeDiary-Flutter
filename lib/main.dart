@@ -40,7 +40,7 @@ void main() async {
     await Supabase.initialize(
       debug: kDebugMode,
       url: EnvConfig.dbUrl,
-      anonKey: EnvConfig.dbKey,
+      publishableKey: EnvConfig.dbKey,
     );
 
     if (!kDebugMode && EnvConfig.sentryDsn.isEmpty) {
@@ -65,7 +65,9 @@ void main() async {
         // ignore: experimental_member_use
         options.profilesSampleRate = 1.0;
       },
-      appRunner: () => runApp(const ProviderScope(child: MyApp())),
+      appRunner: () => runApp(
+        const ProviderScope(retry: _disableProviderRetry, child: MyApp()),
+      ),
     );
 
     await NotificationService().init();
@@ -95,6 +97,8 @@ void main() async {
     rethrow;
   }
 }
+
+Duration? _disableProviderRetry(int retryCount, Object error) => null;
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

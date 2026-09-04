@@ -5,7 +5,7 @@ part 'diary_post.freezed.dart';
 part 'diary_post.g.dart';
 
 @freezed
-class DiaryPostModel with _$DiaryPostModel {
+abstract class DiaryPostModel with _$DiaryPostModel {
   factory DiaryPostModel({
     @JsonKey(includeToJson: false) String? id,
     required String userId,
