@@ -22,6 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const Size kDesignSize = Size(390, 844);
 
+/// Initializes application services and launches the Flutter app.
 void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
@@ -33,19 +34,11 @@ void main() async {
     await EnvConfig.initialize();
     await initializeDateFormatting();
 
-    if (EnvConfig.dbUrl.isEmpty || EnvConfig.dbKey.isEmpty) {
-      throw ValidationException('데이터베이스 설정이 올바르지 않습니다');
-    }
-
     await Supabase.initialize(
       debug: kDebugMode,
       url: EnvConfig.dbUrl,
       publishableKey: EnvConfig.dbKey,
     );
-
-    if (!kDebugMode && EnvConfig.sentryDsn.isEmpty) {
-      throw ValidationException('Sentry DSN이 설정되지 않았습니다');
-    }
 
     // 위젯에서 앱 실행 여부를 runApp 전에 동기적으로 확인
     await HomeWidget.setAppGroupId(StreakService.appGroupId);
