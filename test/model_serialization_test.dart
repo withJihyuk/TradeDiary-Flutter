@@ -5,6 +5,7 @@ import 'package:trade_diary/model/profile.dart';
 void main() {
   test('generated models serialize and copy values', () {
     final diary = DiaryPostModel(
+      id: 'post-id',
       userId: 'user',
       subject: 'subject',
       content: 'content',
@@ -12,7 +13,12 @@ void main() {
     );
     final copiedDiary = diary.copyWith(subject: 'updated');
 
-    expect(DiaryPostModel.fromJson(copiedDiary.toJson()), copiedDiary);
+    expect(copiedDiary.subject, 'updated');
+    expect(
+      DiaryPostModel.fromJson(copiedDiary.toJson()),
+      copiedDiary.copyWith(id: null),
+    );
+    expect(copiedDiary.toJson(), copiedDiary.copyWith(id: null).toJson());
     expect(copiedDiary.toJson(), isNot(contains('id')));
 
     final profile = ProfileModel(
