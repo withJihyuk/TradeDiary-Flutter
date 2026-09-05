@@ -1,10 +1,7 @@
 part of 'my_page.dart';
 
 class _Scaffold extends StatelessWidget {
-  const _Scaffold({
-    required this.header,
-    required this.settingOptions,
-  });
+  const _Scaffold({required this.header, required this.settingOptions});
 
   final Widget header;
   final Widget settingOptions;
@@ -20,8 +17,10 @@ class _Scaffold extends StatelessWidget {
           children: [
             SingleChildScrollView(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 24,
+                ),
                 child: Column(
                   children: [
                     header,

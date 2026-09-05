@@ -26,8 +26,7 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
     if (_widgetEnabled) {
       if (Platform.isAndroid) {
         await HomeWidget.requestPinWidget(
-          qualifiedAndroidName:
-              'com.jihyuk.potatodiary.PotatoDiaryWidget',
+          qualifiedAndroidName: 'com.jihyuk.potatodiary.PotatoDiaryWidget',
         );
       }
     }
@@ -52,8 +51,9 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
           Text(
             '더 편리하게 사용하기 위해\n아래 설정을 추천드려요.',
             textAlign: TextAlign.center,
-            style:
-                AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey700),
+            style: AppTextStyle.m3Regular.copyWith(
+              color: DiaryMainGrey.grey700,
+            ),
           ),
           SizedBox(height: 20.h),
           _buildCheckTile(
@@ -76,16 +76,14 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
               ),
               child: Text(
                 '홈 화면 길게 누르기 > 좌측 상단 + 버튼 > "감자일기" 검색',
-                style: AppTextStyle.labelRegular
-                    .copyWith(color: DiaryMainGrey.grey700),
+                style: AppTextStyle.labelRegular.copyWith(
+                  color: DiaryMainGrey.grey700,
+                ),
               ),
             ),
           ],
           SizedBox(height: 20.h),
-          DiaryButton(
-            onPressed: _onConfirm,
-            text: '시작하기',
-          ),
+          DiaryButton(onPressed: _onConfirm, text: '시작하기'),
         ],
       ),
     );
@@ -117,8 +115,9 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
             SizedBox(width: 8.w),
             Text(
               label,
-              style:
-                  AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey800),
+              style: AppTextStyle.m3Regular.copyWith(
+                color: DiaryMainGrey.grey800,
+              ),
             ),
           ],
         ),

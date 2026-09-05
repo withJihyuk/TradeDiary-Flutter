@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter_quill/flutter_quill.dart';
 
 class QuillContentUtil {

@@ -1,27 +1,31 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:trade_diary/dataSource/diary_post.dart';
 import 'package:trade_diary/model/diary_post.dart';
 import 'package:trade_diary/util/diary_post_date_util.dart';
 import 'package:trade_diary/viewModel/diary_model.dart';
 
 /// 전체 일기 목록 (위젯 업데이트, 오늘 체크용)
-final diaryListProvider =
-    FutureProvider.autoDispose<List<DiaryPostModel>>((ref) async {
+final diaryListProvider = FutureProvider.autoDispose<List<DiaryPostModel>>((
+  ref,
+) async {
   final viewModel = DiaryViewModel();
   return await viewModel.getDiary();
 });
 
 final todayDiaryProvider = Provider<DiaryPostModel?>((ref) {
   final diaryList = ref.watch(diaryListProvider);
-  return diaryList.whenOrNull(data: (diaries) {
-    final today = DateTime.now();
-    final todayOnly = DateTime(today.year, today.month, today.day);
-    for (final diary in diaries) {
-      final d = diaryDateOnly(diary);
-      if (d == todayOnly) return diary;
-    }
-    return null;
-  });
+  return diaryList.whenOrNull(
+    data: (diaries) {
+      final today = DateTime.now();
+      final todayOnly = DateTime(today.year, today.month, today.day);
+      for (final diary in diaries) {
+        final d = diaryDateOnly(diary);
+        if (d == todayOnly) return diary;
+      }
+      return null;
+    },
+  );
 });
 
 final diaryRefreshProvider = StateProvider<bool>((ref) => false);
@@ -124,5 +128,5 @@ class PaginatedDiaryNotifier extends StateNotifier<PaginatedDiaryState> {
 
 final paginatedDiaryProvider =
     StateNotifierProvider<PaginatedDiaryNotifier, PaginatedDiaryState>((ref) {
-  return PaginatedDiaryNotifier();
-});
+      return PaginatedDiaryNotifier();
+    });

@@ -8,20 +8,20 @@ class _MySettingOptions extends StatelessWidget {
     return Column(
       children: [
         TextSettingMenu(
-            menuName: "감자 이름 변경",
-            onPressed: () => PageRouter.router.push("/nickname")),
+          menuName: "감자 이름 변경",
+          onPressed: () => PageRouter.router.push("/nickname"),
+        ),
         SizedBox(height: 32.h),
         Container(
-          decoration: const BoxDecoration(
-            color: DiaryMainGrey.grey100,
-          ),
+          decoration: const BoxDecoration(color: DiaryMainGrey.grey100),
           width: double.infinity,
           height: 1,
         ),
         SizedBox(height: 32.h),
         TextSettingMenu(
-            menuName: "시스템",
-            onPressed: () => PageRouter.router.push("/systemSetting")),
+          menuName: "시스템",
+          onPressed: () => PageRouter.router.push("/systemSetting"),
+        ),
       ],
     );
   }

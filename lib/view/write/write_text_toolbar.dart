@@ -57,17 +57,19 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
     // 현재 텍스트 색상
     final currentColor =
         _parseHexColor(mergedStyle.attributes[Attribute.color.key]?.value) ??
-            Colors.black;
+        Colors.black;
 
     // 현재 배경 색상
-    final currentBgColor =
-        _parseHexColor(mergedStyle.attributes[Attribute.background.key]?.value);
+    final currentBgColor = _parseHexColor(
+      mergedStyle.attributes[Attribute.background.key]?.value,
+    );
 
     // 현재 폰트
     final currentFont =
         mergedStyle.attributes[Attribute.font.key]?.value as String? ??
-            'Pretendard';
-    final currentFontDisplay = enabledFonts.entries
+        'Pretendard';
+    final currentFontDisplay =
+        enabledFonts.entries
             .where((e) => e.value == currentFont)
             .firstOrNull
             ?.key ??
@@ -118,14 +120,14 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
                 decoration: BoxDecoration(
                   color: currentBgColor ?? DiaryMainGrey.grey100,
                   borderRadius: BorderRadius.circular(4),
-                  border: Border.all(
-                    color: DiaryMainGrey.grey300,
-                    width: 1,
-                  ),
+                  border: Border.all(color: DiaryMainGrey.grey300, width: 1),
                 ),
                 child: currentBgColor == null
-                    ? const Icon(Icons.format_color_fill_outlined,
-                        size: 14, color: DiaryMainGrey.grey500)
+                    ? const Icon(
+                        Icons.format_color_fill_outlined,
+                        size: 14,
+                        color: DiaryMainGrey.grey500,
+                      )
                     : null,
               ),
             ),
@@ -138,7 +140,9 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
                 final fontFamily = enabledFonts[display];
                 if (fontFamily != null) {
                   final attr = Attribute.fromKeyValue(
-                      'font', fontFamily == 'Pretendard' ? null : fontFamily);
+                    'font',
+                    fontFamily == 'Pretendard' ? null : fontFamily,
+                  );
                   if (attr != null) {
                     applyInline(attr);
                   }
@@ -151,8 +155,10 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
               value: currentSize,
               items: const ['12', '14', '16', '18', '20', '24', '28'],
               onSelected: (size) {
-                final attr =
-                    Attribute.fromKeyValue('size', size == '16' ? null : size);
+                final attr = Attribute.fromKeyValue(
+                  'size',
+                  size == '16' ? null : size,
+                );
                 if (attr != null) {
                   applyInline(attr);
                 }
@@ -168,14 +174,16 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
                     : Attribute.bold;
                 applyInline(attr);
               },
-              child: Text('B',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: isBold
-                        ? DiaryColor.globalMainColor
-                        : DiaryMainGrey.grey700,
-                  )),
+              child: Text(
+                'B',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: isBold
+                      ? DiaryColor.globalMainColor
+                      : DiaryMainGrey.grey700,
+                ),
+              ),
             ),
             // Italic
             _TextToggle(
@@ -186,14 +194,16 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
                     : Attribute.italic;
                 applyInline(attr);
               },
-              child: Text('I',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontStyle: FontStyle.italic,
-                    color: isItalic
-                        ? DiaryColor.globalMainColor
-                        : DiaryMainGrey.grey700,
-                  )),
+              child: Text(
+                'I',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  color: isItalic
+                      ? DiaryColor.globalMainColor
+                      : DiaryMainGrey.grey700,
+                ),
+              ),
             ),
             // Underline
             _TextToggle(
@@ -204,14 +214,16 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
                     : Attribute.underline;
                 applyInline(attr);
               },
-              child: Text('U',
-                  style: TextStyle(
-                    fontSize: 16,
-                    decoration: TextDecoration.underline,
-                    color: isUnderline
-                        ? DiaryColor.globalMainColor
-                        : DiaryMainGrey.grey700,
-                  )),
+              child: Text(
+                'U',
+                style: TextStyle(
+                  fontSize: 16,
+                  decoration: TextDecoration.underline,
+                  color: isUnderline
+                      ? DiaryColor.globalMainColor
+                      : DiaryMainGrey.grey700,
+                ),
+              ),
             ),
             // Strikethrough
             _TextToggle(
@@ -222,14 +234,16 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
                     : Attribute.strikeThrough;
                 applyInline(attr);
               },
-              child: Text('S',
-                  style: TextStyle(
-                    fontSize: 16,
-                    decoration: TextDecoration.lineThrough,
-                    color: isStrike
-                        ? DiaryColor.globalMainColor
-                        : DiaryMainGrey.grey700,
-                  )),
+              child: Text(
+                'S',
+                style: TextStyle(
+                  fontSize: 16,
+                  decoration: TextDecoration.lineThrough,
+                  color: isStrike
+                      ? DiaryColor.globalMainColor
+                      : DiaryMainGrey.grey700,
+                ),
+              ),
             ),
           ],
         ),
@@ -245,11 +259,7 @@ class _TextPanelDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Container(
-        width: 1,
-        height: 20,
-        color: DiaryMainGrey.grey200,
-      ),
+      child: Container(width: 1, height: 20, color: DiaryMainGrey.grey200),
     );
   }
 }
@@ -274,26 +284,34 @@ class _TextDropdown extends StatelessWidget {
       color: Colors.white,
       surfaceTintColor: Colors.transparent,
       itemBuilder: (_) => items
-          .map((item) => PopupMenuItem(
-                value: item,
-                child: Text(item,
-                    style: AppTextStyle.labelRegular.copyWith(
-                      color: item == value
-                          ? DiaryColor.globalMainColor
-                          : DiaryMainGrey.grey900,
-                    )),
-              ))
+          .map(
+            (item) => PopupMenuItem(
+              value: item,
+              child: Text(
+                item,
+                style: AppTextStyle.labelRegular.copyWith(
+                  color: item == value
+                      ? DiaryColor.globalMainColor
+                      : DiaryMainGrey.grey900,
+                ),
+              ),
+            ),
+          )
           .toList(),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             value,
-            style: AppTextStyle.labelRegular
-                .copyWith(color: DiaryMainGrey.grey700),
+            style: AppTextStyle.labelRegular.copyWith(
+              color: DiaryMainGrey.grey700,
+            ),
           ),
-          const Icon(Icons.arrow_drop_down,
-              size: 16, color: DiaryMainGrey.grey500),
+          const Icon(
+            Icons.arrow_drop_down,
+            size: 16,
+            color: DiaryMainGrey.grey500,
+          ),
         ],
       ),
     );

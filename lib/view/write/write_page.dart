@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -108,13 +109,17 @@ class _WritePageState extends ConsumerState<WritePage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('새로 작성',
-                style: TextStyle(color: DiaryColor.globalMainColor)),
+            child: const Text(
+              '새로 작성',
+              style: TextStyle(color: DiaryColor.globalMainColor),
+            ),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('이어쓰기',
-                style: TextStyle(color: DiaryColor.globalMainColor)),
+            child: const Text(
+              '이어쓰기',
+              style: TextStyle(color: DiaryColor.globalMainColor),
+            ),
           ),
         ],
       ),
@@ -172,8 +177,9 @@ class _WritePageState extends ConsumerState<WritePage> {
   Future<void> _doSaveDraft() async {
     try {
       final quillController = ref.read(quillControllerProvider);
-      final content =
-          QuillContentUtil.documentToContent(quillController.document);
+      final content = QuillContentUtil.documentToContent(
+        quillController.document,
+      );
       final diary = ref.read(diaryProvider);
 
       _draftId = await DiaryViewModel().saveDraft(
@@ -197,8 +203,10 @@ class _WritePageState extends ConsumerState<WritePage> {
               alignment: Alignment.centerRight,
               child: Text(
                 '임시저장됨 ${DateFormat('a h:mm', 'ko_KR').format(_lastSavedAt!)}',
-                style: AppTextStyle.labelRegular
-                    .copyWith(color: DiaryMainGrey.grey500, fontSize: 12),
+                style: AppTextStyle.labelRegular.copyWith(
+                  color: DiaryMainGrey.grey500,
+                  fontSize: 12,
+                ),
               ),
             )
           : null,

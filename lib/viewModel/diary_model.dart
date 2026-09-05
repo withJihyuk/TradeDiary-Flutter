@@ -35,8 +35,9 @@ class DiaryViewModel {
 
       final value = model.copyWith(userId: userId, isDraft: false);
       await _dataSource.createDiaryPost(value);
-      ref.read(diaryRefreshProvider.notifier).state =
-          !ref.read(diaryRefreshProvider);
+      ref.read(diaryRefreshProvider.notifier).state = !ref.read(
+        diaryRefreshProvider,
+      );
       ref.read(profileProvider.notifier).refresh();
     } catch (e) {
       if (e is AppException) rethrow;
@@ -104,14 +105,18 @@ class DiaryViewModel {
 
   /// 드래프트를 완성된 일기로 전환
   Future<void> finalizeDraft(
-      String id, DiaryPostModel model, WidgetRef ref) async {
+    String id,
+    DiaryPostModel model,
+    WidgetRef ref,
+  ) async {
     try {
       await _dataSource.finalizeDraft(
         id,
         model.copyWith(userId: userId, isDraft: false),
       );
-      ref.read(diaryRefreshProvider.notifier).state =
-          !ref.read(diaryRefreshProvider);
+      ref.read(diaryRefreshProvider.notifier).state = !ref.read(
+        diaryRefreshProvider,
+      );
       ref.read(profileProvider.notifier).refresh();
     } catch (e) {
       if (e is AppException) rethrow;

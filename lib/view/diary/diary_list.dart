@@ -4,7 +4,10 @@ class _DiaryList extends ConsumerWidget {
   const _DiaryList();
 
   Future<void> _deleteDraft(
-      BuildContext context, WidgetRef ref, String id) async {
+    BuildContext context,
+    WidgetRef ref,
+    String id,
+  ) async {
     try {
       await DiaryPostDataSource().deleteDraft(id);
       ref.invalidate(diaryListProvider);
@@ -12,10 +15,7 @@ class _DiaryList extends ConsumerWidget {
     } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
       );
     }
   }
@@ -60,8 +60,9 @@ class FaildToFetchDiary extends StatelessWidget {
         const SizedBox(height: 20),
         Text(
           "아직 일기가 없어요",
-          style:
-              AppTextStyle.h4Semi.copyWith(color: DiaryColor.globalMainColor),
+          style: AppTextStyle.h4Semi.copyWith(
+            color: DiaryColor.globalMainColor,
+          ),
         ),
         Text(
           "하단의 버튼을 눌러 일기를 작성해 보세요!",
@@ -86,7 +87,8 @@ class ListDiary extends StatelessWidget {
   final Future<void> Function(String id) onDeleteDraft;
 
   Map<String, List<DiaryPostModel>> _groupByMonth(
-      List<DiaryPostModel> diaries) {
+    List<DiaryPostModel> diaries,
+  ) {
     final Map<String, List<DiaryPostModel>> grouped = {};
 
     for (var diary in diaries) {
@@ -100,17 +102,26 @@ class ListDiary extends StatelessWidget {
 
     // 각 월별 그룹 내에서 날짜순으로 정렬
     for (var key in grouped.keys) {
-      grouped[key]!.sort((a, b) =>
-          diaryEffectiveDateTime(b).compareTo(diaryEffectiveDateTime(a)));
+      grouped[key]!.sort(
+        (a, b) =>
+            diaryEffectiveDateTime(b).compareTo(diaryEffectiveDateTime(a)),
+      );
     }
 
-    return Map.fromEntries(grouped.entries.toList()
-      ..sort((a, b) => diaryEffectiveDateTime(b.value.first)
-          .compareTo(diaryEffectiveDateTime(a.value.first))));
+    return Map.fromEntries(
+      grouped.entries.toList()..sort(
+        (a, b) =>
+            diaryEffectiveDateTime(b.value.first)
+                .compareTo(diaryEffectiveDateTime(a.value.first)),
+      ),
+    );
   }
 
   Future<void> _showDraftContextMenu(
-      BuildContext context, DiaryPostModel diary, Offset globalPosition) async {
+    BuildContext context,
+    DiaryPostModel diary,
+    Offset globalPosition,
+  ) async {
     final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     final local = overlay.globalToLocal(globalPosition);
 
@@ -134,12 +145,18 @@ class ListDiary extends StatelessWidget {
           value: 'edit',
           child: Row(
             children: [
-              const Icon(Icons.edit_outlined,
-                  size: 18, color: DiaryMainGrey.grey700),
+              const Icon(
+                Icons.edit_outlined,
+                size: 18,
+                color: DiaryMainGrey.grey700,
+              ),
               const SizedBox(width: 10),
-              Text('이어쓰기',
-                  style: AppTextStyle.m3Regular
-                      .copyWith(color: DiaryMainGrey.grey900)),
+              Text(
+                '이어쓰기',
+                style: AppTextStyle.m3Regular.copyWith(
+                  color: DiaryMainGrey.grey900,
+                ),
+              ),
             ],
           ),
         ),
@@ -150,8 +167,10 @@ class ListDiary extends StatelessWidget {
             children: [
               const Icon(Icons.delete_outline, size: 18, color: Colors.red),
               const SizedBox(width: 10),
-              Text('삭제',
-                  style: AppTextStyle.m3Regular.copyWith(color: Colors.red)),
+              Text(
+                '삭제',
+                style: AppTextStyle.m3Regular.copyWith(color: Colors.red),
+              ),
             ],
           ),
         ),
@@ -200,45 +219,52 @@ class ListDiary extends StatelessWidget {
                     final diary = monthDiaries[index];
                     final diaryDate = diaryEffectiveDateTime(diary);
                     return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Column(
-                          children: [
-                            DiaryHomeContentRead(
-                              contentName: diary.subject.isEmpty
-                                  ? '제목 없음'
-                                  : diary.subject,
-                              contentDate:
-                                  "${diaryDate.month}/${diaryDate.day}",
-                              contentPreview:
-                                  QuillContentUtil.contentToPlainText(
-                                      diary.content),
-                              contentEmotion: diary.emotion,
-                              isDraft: diary.isDraft,
-                              onLongPressStart: diary.isDraft
-                                  ? (details) => _showDraftContextMenu(
-                                      context, diary, details.globalPosition)
-                                  : null,
-                              onTap: () {
-                                if (diary.isDraft) {
-                                  PageRouter.router
-                                      .push("/write", extra: diary.id);
-                                } else {
-                                  final nonDraftList = diaryList
-                                      .where((d) => !d.isDraft)
-                                      .toList();
-                                  PageRouter.router.push(
-                                    "/read/${nonDraftList.indexOf(diary)}",
-                                    extra: nonDraftList,
-                                  );
-                                }
-                              },
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Column(
+                        children: [
+                          DiaryHomeContentRead(
+                            contentName: diary.subject.isEmpty
+                                ? '제목 없음'
+                                : diary.subject,
+                            contentDate: "${diaryDate.month}/${diaryDate.day}",
+                            contentPreview: QuillContentUtil.contentToPlainText(
+                              diary.content,
                             ),
-                            const SizedBox(height: 24),
-                            if (index < monthDiaries.length - 1)
-                              const Divider(
-                                  height: 1, color: DiaryMainGrey.grey50),
-                          ],
-                        ));
+                            contentEmotion: diary.emotion,
+                            isDraft: diary.isDraft,
+                            onLongPressStart: diary.isDraft
+                                ? (details) => _showDraftContextMenu(
+                                    context,
+                                    diary,
+                                    details.globalPosition,
+                                  )
+                                : null,
+                            onTap: () {
+                              if (diary.isDraft) {
+                                PageRouter.router.push(
+                                  "/write",
+                                  extra: diary.id,
+                                );
+                              } else {
+                                final nonDraftList = diaryList
+                                    .where((d) => !d.isDraft)
+                                    .toList();
+                                PageRouter.router.push(
+                                  "/read/${nonDraftList.indexOf(diary)}",
+                                  extra: nonDraftList,
+                                );
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          if (index < monthDiaries.length - 1)
+                            const Divider(
+                              height: 1,
+                              color: DiaryMainGrey.grey50,
+                            ),
+                        ],
+                      ),
+                    );
                   },
                 ),
               ],

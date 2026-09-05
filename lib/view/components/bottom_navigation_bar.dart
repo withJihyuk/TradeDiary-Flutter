@@ -34,55 +34,64 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: widget.child,
-        bottomNavigationBar: Container(
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                  top: BorderSide(color: DiaryMainGrey.grey100, width: 1))),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            onTap: onDestinationSelected,
-            enableFeedback: false,
-            unselectedLabelStyle: AppTextStyle.bottomLabelStyle.copyWith(
-              color: DiaryMainGrey.grey600,
-            ),
-            selectedLabelStyle: AppTextStyle.bottomLabelStyle.copyWith(
-              color: DiaryColor.globalMainColor,
-            ),
-            fixedColor: DiaryColor.globalMainColor,
-            currentIndex: selectedIndex,
-            elevation: 0,
-            items: [
-              BottomNavigationBarItem(
-                  icon: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: SvgPicture.asset(
-                        (selectedIndex == 0)
-                            ? "assets/images/icons/home-fill.svg"
-                            : "assets/images/icons/home-border.svg",
-                      )),
-                  label: '홈'),
-              BottomNavigationBarItem(
-                  icon: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: SvgPicture.asset(
-                        (selectedIndex == 1)
-                            ? "assets/images/icons/diary-fill.svg"
-                            : "assets/images/icons/diary-border.svg",
-                      )),
-                  label: '일기'),
-              BottomNavigationBarItem(
-                  icon: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: SvgPicture.asset(
-                        (selectedIndex == 2)
-                            ? "assets/images/icons/my-fill.svg"
-                            : "assets/images/icons/my-border.svg",
-                      )),
-                  label: '마이'),
-            ],
+      body: widget.child,
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(color: DiaryMainGrey.grey100, width: 1),
           ),
-        ));
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          onTap: onDestinationSelected,
+          enableFeedback: false,
+          unselectedLabelStyle: AppTextStyle.bottomLabelStyle.copyWith(
+            color: DiaryMainGrey.grey600,
+          ),
+          selectedLabelStyle: AppTextStyle.bottomLabelStyle.copyWith(
+            color: DiaryColor.globalMainColor,
+          ),
+          fixedColor: DiaryColor.globalMainColor,
+          currentIndex: selectedIndex,
+          elevation: 0,
+          items: [
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: SvgPicture.asset(
+                  (selectedIndex == 0)
+                      ? "assets/images/icons/home-fill.svg"
+                      : "assets/images/icons/home-border.svg",
+                ),
+              ),
+              label: '홈',
+            ),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: SvgPicture.asset(
+                  (selectedIndex == 1)
+                      ? "assets/images/icons/diary-fill.svg"
+                      : "assets/images/icons/diary-border.svg",
+                ),
+              ),
+              label: '일기',
+            ),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: SvgPicture.asset(
+                  (selectedIndex == 2)
+                      ? "assets/images/icons/my-fill.svg"
+                      : "assets/images/icons/my-border.svg",
+                ),
+              ),
+              label: '마이',
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -150,8 +150,8 @@ class FrequentColorsNotifier extends StateNotifier<List<Color>> {
   FrequentColorsNotifier({
     required this.storageKey,
     required List<Color> fallback,
-  })  : _fallback = List<Color>.from(fallback),
-        super(List<Color>.from(fallback)) {
+  }) : _fallback = List<Color>.from(fallback),
+       super(List<Color>.from(fallback)) {
     _restore();
   }
 
@@ -198,7 +198,7 @@ class RecentColorsNotifier extends StateNotifier<List<Color>> {
   void add(Color color) {
     final updated = [
       color,
-      ...state.where((c) => c.toARGB32() != color.toARGB32())
+      ...state.where((c) => c.toARGB32() != color.toARGB32()),
     ];
     state = updated.take(10).toList();
   }
@@ -206,29 +206,27 @@ class RecentColorsNotifier extends StateNotifier<List<Color>> {
 
 final recentColorsProvider =
     StateNotifierProvider<RecentColorsNotifier, List<Color>>((ref) {
-  return RecentColorsNotifier();
-});
+      return RecentColorsNotifier();
+    });
 
 final frequentTextColorsProvider =
     StateNotifierProvider<FrequentColorsNotifier, List<Color>>((ref) {
-  return FrequentColorsNotifier(
-    storageKey: _kFrequentTextColorsStorageKey,
-    fallback: _frequentColors,
-  );
-});
+      return FrequentColorsNotifier(
+        storageKey: _kFrequentTextColorsStorageKey,
+        fallback: _frequentColors,
+      );
+    });
 
 final frequentBackgroundColorsProvider =
     StateNotifierProvider<FrequentColorsNotifier, List<Color>>((ref) {
-  return FrequentColorsNotifier(
-    storageKey: _kFrequentBackgroundColorsStorageKey,
-    fallback: _bgColorActuals,
-  );
-});
+      return FrequentColorsNotifier(
+        storageKey: _kFrequentBackgroundColorsStorageKey,
+        fallback: _bgColorActuals,
+      );
+    });
 
 class _ColorPickerSheet extends ConsumerWidget {
-  const _ColorPickerSheet({
-    required this.isBackground,
-  });
+  const _ColorPickerSheet({required this.isBackground});
 
   final bool isBackground;
 
@@ -240,8 +238,8 @@ class _ColorPickerSheet extends ConsumerWidget {
         : ref.watch(frequentTextColorsProvider);
     final frequentDisplayColors = isBackground
         ? frequentColors
-            .map(_backgroundPreviewForActual)
-            .toList(growable: false)
+              .map(_backgroundPreviewForActual)
+              .toList(growable: false)
         : frequentColors;
 
     return Padding(
@@ -250,16 +248,14 @@ class _ColorPickerSheet extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            isBackground ? '배경 색상' : '글자 색상',
-            style: AppTextStyle.m2Semi,
-          ),
+          Text(isBackground ? '배경 색상' : '글자 색상', style: AppTextStyle.m2Semi),
           if (recentColors.isNotEmpty) ...[
             const SizedBox(height: 16),
             Text(
               '최근 사용한 색',
-              style: AppTextStyle.labelRegular
-                  .copyWith(color: DiaryMainGrey.grey500),
+              style: AppTextStyle.labelRegular.copyWith(
+                color: DiaryMainGrey.grey500,
+              ),
             ),
             const SizedBox(height: 8),
             _ColorGrid(
@@ -270,8 +266,9 @@ class _ColorPickerSheet extends ConsumerWidget {
           const SizedBox(height: 16),
           Text(
             '자주 쓰는 색',
-            style: AppTextStyle.labelRegular
-                .copyWith(color: DiaryMainGrey.grey500),
+            style: AppTextStyle.labelRegular.copyWith(
+              color: DiaryMainGrey.grey500,
+            ),
           ),
           const SizedBox(height: 8),
           _ColorGrid(
@@ -282,12 +279,14 @@ class _ColorPickerSheet extends ConsumerWidget {
           const SizedBox(height: 12),
           Center(
             child: TextButton(
-              onPressed: () => Navigator.of(context)
-                  .pop(isBackground ? Colors.transparent : Colors.black),
+              onPressed: () =>
+                  Navigator.of(context)
+                      .pop(isBackground ? Colors.transparent : Colors.black),
               child: Text(
                 isBackground ? '배경 없음' : '기본 색상으로',
-                style: AppTextStyle.labelRegular
-                    .copyWith(color: DiaryMainGrey.grey700),
+                style: AppTextStyle.labelRegular.copyWith(
+                  color: DiaryMainGrey.grey700,
+                ),
               ),
             ),
           ),

@@ -25,78 +25,86 @@ class DiaryHomeContentRead extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: onTap,
-        onLongPressStart: onLongPressStart,
-        behavior: HitTestBehavior.opaque,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                          child: Text(contentName,
-                              style: AppTextStyle.m3Semi,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis)),
-                      if (isDraft) ...[
-                        const SizedBox(width: 6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: DiaryColor.globalMainColor.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Text(
-                            '임시저장',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: DiaryColor.globalMainColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(width: 4),
-                      Container(
-                        width: 2,
-                        height: 2,
-                        decoration: const ShapeDecoration(
-                          color: DiaryMainGrey.grey500,
-                          shape: OvalBorder(),
-                        ),
+      onTap: onTap,
+      onLongPressStart: onLongPressStart,
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        contentName,
+                        style: AppTextStyle.m3Semi,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        contentDate,
-                        style: AppTextStyle.labelRegular.copyWith(
-                          color: DiaryMainGrey.grey500,
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Text(
-                      contentPreview,
-                      style: AppTextStyle.m3Regular.copyWith(
-                        color: DiaryMainGrey.grey900,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
+                    if (isDraft) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: DiaryColor.globalMainColor.withValues(
+                            alpha: 0.15,
+                          ),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Text(
+                          '임시저장',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: DiaryColor.globalMainColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(width: 4),
+                    Container(
+                      width: 2,
+                      height: 2,
+                      decoration: const ShapeDecoration(
+                        color: DiaryMainGrey.grey500,
+                        shape: OvalBorder(),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      contentDate,
+                      style: AppTextStyle.labelRegular.copyWith(
+                        color: DiaryMainGrey.grey500,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Text(
+                    contentPreview,
+                    style: AppTextStyle.m3Regular.copyWith(
+                      color: DiaryMainGrey.grey900,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }

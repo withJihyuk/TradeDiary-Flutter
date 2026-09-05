@@ -6,15 +6,15 @@ part of 'profile.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ProfileModelImpl _$$ProfileModelImplFromJson(Map<String, dynamic> json) =>
-    _$ProfileModelImpl(
+_ProfileModel _$ProfileModelFromJson(Map<String, dynamic> json) =>
+    _ProfileModel(
       id: json['id'] as String,
       nickname: json['nickname'] as String,
       level: (json['level'] as num).toInt(),
       exp: (json['exp'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$ProfileModelImplToJson(_$ProfileModelImpl instance) =>
+Map<String, dynamic> _$ProfileModelToJson(_ProfileModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'nickname': instance.nickname,

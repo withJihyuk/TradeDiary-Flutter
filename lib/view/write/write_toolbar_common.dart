@@ -37,11 +37,7 @@ class _ToolbarDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Container(
-        width: 1,
-        height: 20,
-        color: DiaryMainGrey.grey200,
-      ),
+      child: Container(width: 1, height: 20, color: DiaryMainGrey.grey200),
     );
   }
 }

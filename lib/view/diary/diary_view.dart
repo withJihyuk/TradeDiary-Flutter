@@ -21,59 +21,62 @@ class DiaryView extends StatelessWidget {
     final diaryDate = diaryEffectiveDateTime(posts[day]);
 
     return Scaffold(
-        body: SafeArea(
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 20.h),
-                child: SingleChildScrollView(
-                    child: Column(children: [
-                  const TopNavigationBar(title: "일기 읽기"),
-                  const SizedBox(height: 40),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text("${diaryDate.month}월 ${diaryDate.day}일",
-                        style: AppTextStyle.h3Semi
-                            .copyWith(color: DiaryColor.globalMainColor)),
-                  ),
-                  SizedBox(
-                    height: 30.h,
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Image.asset(
-                            Emotion.emotionMap[posts[day].emotion]!,
-                            width: 180.w,
-                            height: 180.h,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          posts[day].subject,
-                          style: AppTextStyle.m1Semi,
-                        ),
-                        QuillEditor.basic(
-                          controller: QuillController(
-                            document: QuillContentUtil.contentToDocument(
-                                posts[day].content),
-                            selection: const TextSelection.collapsed(offset: 0),
-                            readOnly: true,
-                          ),
-                          config: QuillEditorConfig(
-                            showCursor: false,
-                            embedBuilders: [
-                              DiaryImageEmbedBuilder(),
-                              DividerEmbedBuilder(),
-                            ],
-                          ),
-                        ),
-                      ],
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 20.h),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const TopNavigationBar(title: "일기 읽기"),
+                const SizedBox(height: 40),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "${diaryDate.month}월 ${diaryDate.day}일",
+                    style: AppTextStyle.h3Semi.copyWith(
+                      color: DiaryColor.globalMainColor,
                     ),
-                  )
-                ])))));
+                  ),
+                ),
+                SizedBox(height: 30.h),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Image.asset(
+                          Emotion.emotionMap[posts[day].emotion]!,
+                          width: 180.w,
+                          height: 180.h,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(posts[day].subject, style: AppTextStyle.m1Semi),
+                      QuillEditor.basic(
+                        controller: QuillController(
+                          document: QuillContentUtil.contentToDocument(
+                            posts[day].content,
+                          ),
+                          selection: const TextSelection.collapsed(offset: 0),
+                          readOnly: true,
+                        ),
+                        config: QuillEditorConfig(
+                          showCursor: false,
+                          embedBuilders: [
+                            DiaryImageEmbedBuilder(),
+                            DividerEmbedBuilder(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

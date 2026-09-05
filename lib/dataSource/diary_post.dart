@@ -5,6 +5,7 @@ import 'package:trade_diary/util/app_exception.dart';
 import 'package:trade_diary/util/image_compressor.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+
 import 'dart:convert';
 
 class DiaryPostDataSource {
@@ -44,8 +45,11 @@ class DiaryPostDataSource {
         await supabase.from("diary").update(json).eq('id', data.id!);
         return data.id!;
       } else {
-        final response =
-            await supabase.from("diary").insert(json).select('id').single();
+        final response = await supabase
+            .from("diary")
+            .insert(json)
+            .select('id')
+            .single();
         return response['id'] as String;
       }
     } catch (e) {
@@ -129,8 +133,9 @@ class DiaryPostDataSource {
 
       final from = page * pageSize;
       final to = from + pageSize - 1;
-      final response =
-          await request.order('createdAt', ascending: false).range(from, to);
+      final response = await request
+          .order('createdAt', ascending: false)
+          .range(from, to);
       return response.map((item) => DiaryPostModel.fromJson(item)).toList();
     } catch (e) {
       throw DatabaseException('글을 가져오는데 실패했어요', originalError: e);

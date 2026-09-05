@@ -1,0 +1,7 @@
+git_url("git@github.com:withJihyuk/TradeDiary-Match.git")
+storage_mode("git")
+type("appstore")
+app_identifier([
+  "com.example.tradeDiary",
+  "com.example.tradeDiary.PotatoDiaryWidget",
+])

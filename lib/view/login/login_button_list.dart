@@ -9,9 +9,10 @@ class _LoginButtonList extends StatelessWidget {
     return Column(
       children: [
         LoginButtonByPlatform(
-            platform: "Google",
-            iconPath: "assets/images/icons/google.svg",
-            onPressed: () => oauthViewModel.nativeGoogleLogin()),
+          platform: "Google",
+          iconPath: "assets/images/icons/google.svg",
+          onPressed: () => oauthViewModel.nativeGoogleLogin(),
+        ),
         SizedBox(height: 14.h),
         LoginButtonByPlatform(
           platform: "Apple",
@@ -24,11 +25,12 @@ class _LoginButtonList extends StatelessWidget {
 }
 
 class LoginButtonByPlatform extends StatelessWidget {
-  const LoginButtonByPlatform(
-      {super.key,
-      required this.platform,
-      required this.iconPath,
-      required this.onPressed});
+  const LoginButtonByPlatform({
+    super.key,
+    required this.platform,
+    required this.iconPath,
+    required this.onPressed,
+  });
   final String platform;
   final String iconPath;
   final VoidCallback onPressed;
@@ -36,27 +38,22 @@ class LoginButtonByPlatform extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: onPressed,
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 80.w),
-          decoration: BoxDecoration(
-            border: Border.all(color: DiaryMainGrey.grey100),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SvgPicture.asset(
-                iconPath,
-                width: 28,
-                height: 28,
-              ),
-              const SizedBox(
-                width: 12,
-              ),
-              Text("$platform로 계속하기", style: AppTextStyle.m2Semi)
-            ],
-          ),
-        ));
+      onTap: onPressed,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 80.w),
+        decoration: BoxDecoration(
+          border: Border.all(color: DiaryMainGrey.grey100),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SvgPicture.asset(iconPath, width: 28, height: 28),
+            const SizedBox(width: 12),
+            Text("$platform로 계속하기", style: AppTextStyle.m2Semi),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -4,7 +4,7 @@ part 'profile.freezed.dart';
 part 'profile.g.dart';
 
 @freezed
-class ProfileModel with _$ProfileModel {
+abstract class ProfileModel with _$ProfileModel {
   factory ProfileModel({
     required String id,
     required String nickname,

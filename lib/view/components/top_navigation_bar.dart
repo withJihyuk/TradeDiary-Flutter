@@ -13,18 +13,11 @@ class TopNavigationBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-            onTap: () => PageRouter.router.pop(),
-            child: SvgPicture.asset(
-              "assets/images/icons/arrow.svg",
-            )),
-        Text(
-          title,
-          style: AppTextStyle.m2Semi,
+          onTap: () => PageRouter.router.pop(),
+          child: SvgPicture.asset("assets/images/icons/arrow.svg"),
         ),
-        const SizedBox(
-          width: 24,
-          height: 24,
-        ),
+        Text(title, style: AppTextStyle.m2Semi),
+        const SizedBox(width: 24, height: 24),
       ],
     );
   }
