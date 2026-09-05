@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trade_diary/designSystem/color.dart';
@@ -13,12 +14,7 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
-  int selectedIndex = 0;
-
   void onDestinationSelected(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
     switch (index) {
       case 0:
         PageRouter.router.go('/home');
@@ -33,6 +29,12 @@ class _BottomBarState extends State<BottomBar> {
 
   @override
   Widget build(BuildContext context) {
+    final route = GoRouterState.of(context).uri.path;
+    final selectedIndex = route.startsWith('/diary')
+        ? 1
+        : route.startsWith('/my')
+        ? 2
+        : 0;
     return Scaffold(
       body: widget.child,
       bottomNavigationBar: Container(

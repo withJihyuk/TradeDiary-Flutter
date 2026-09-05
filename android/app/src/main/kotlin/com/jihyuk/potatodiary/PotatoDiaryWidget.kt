@@ -25,6 +25,15 @@ class PotatoDiaryWidget : HomeWidgetProvider() {
                 createSmallLayout(context, widgetData)
             }
 
+            if (!widgetData.getBoolean("logged_in", false)) {
+                views.setTextViewText(R.id.streak_text, "로그인하고 시작하세요")
+                if (minWidth >= 250) {
+                    views.setTextViewText(R.id.level_nickname_text, "감자일기")
+                    views.setTextViewText(R.id.emotion_text, "로그인이 필요해요")
+                    views.setTextViewText(R.id.exp_text, "")
+                } else { views.setTextViewText(R.id.level_text, "감자일기") }
+                views.setProgressBar(R.id.exp_progress, 100, 0, false)
+            }
             val pendingIntent = HomeWidgetLaunchIntent.getActivity(
                 context,
                 MainActivity::class.java,
@@ -51,8 +60,8 @@ class PotatoDiaryWidget : HomeWidgetProvider() {
         val potatoResId = getPotatoResId(context, currentLevel)
         views.setImageViewResource(R.id.potato_image, potatoResId)
 
-        val progress = if (nextLevelExp > 0) (currentExp * 100 / nextLevelExp) else 0
-        views.setProgressBar(R.id.exp_progress, 100, progress, false)
+        val progress = if (nextLevelExp > 0) (currentExp * 100 / nextLevelExp) else 100
+        views.setProgressBar(R.id.exp_progress, 100, progress.coerceIn(0, 100), false)
 
         return views
     }
@@ -65,7 +74,10 @@ class PotatoDiaryWidget : HomeWidgetProvider() {
         val currentExp = widgetData.getInt("current_exp", 0)
         val nextLevelExp = widgetData.getInt("next_level_exp", 15)
         val nickname = widgetData.getString("nickname", "") ?: ""
-        val todayEmotion = widgetData.getString("today_emotion", "") ?: ""
+        val formatter = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+        formatter.timeZone = java.util.TimeZone.getTimeZone("Asia/Seoul")
+        val sameDay = widgetData.getString("data_date", "") == formatter.format(java.util.Date())
+        val todayEmotion = if (sameDay) widgetData.getString("today_emotion", "") ?: "" else ""
 
         val streakText = if (streak > 0) "\uD83D\uDD25 ${streak}일 연속" else "오늘부터 시작!"
         views.setTextViewText(R.id.streak_text, streakText)
@@ -73,13 +85,13 @@ class PotatoDiaryWidget : HomeWidgetProvider() {
 
         val emotionText = if (todayEmotion.isNotEmpty()) "오늘: $todayEmotion" else "오늘 일기를 써봐요!"
         views.setTextViewText(R.id.emotion_text, emotionText)
-        views.setTextViewText(R.id.exp_text, "$currentExp/$nextLevelExp")
+        views.setTextViewText(R.id.exp_text, if (nextLevelExp == 0) "최고 레벨" else "$currentExp/$nextLevelExp")
 
         val potatoResId = getPotatoResId(context, currentLevel)
         views.setImageViewResource(R.id.potato_image, potatoResId)
 
-        val progress = if (nextLevelExp > 0) (currentExp * 100 / nextLevelExp) else 0
-        views.setProgressBar(R.id.exp_progress, 100, progress, false)
+        val progress = if (nextLevelExp > 0) (currentExp * 100 / nextLevelExp) else 100
+        views.setProgressBar(R.id.exp_progress, 100, progress.coerceIn(0, 100), false)
 
         return views
     }

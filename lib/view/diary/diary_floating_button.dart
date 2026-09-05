@@ -5,17 +5,9 @@ class _DiaryFloatingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final todayDiary = ref.watch(todayDiaryProvider);
-
     return FloatingActionButton(
-      onPressed: () {
-        if (todayDiary != null) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('오늘은 이미 일기를 작성했어요')));
-          return;
-        }
-        PageRouter.router.push("/write");
-      },
+      tooltip: '새 일기 작성',
+      onPressed: () => PageRouter.router.push('/write'),
       elevation: 0,
       shape: RoundedRectangleBorder(
         side: const BorderSide(width: 1, color: DiaryColor.buttonSpecificColor),
