@@ -1,4 +1,4 @@
-git_url("https://github.com/withJihyuk/TradeDiary-Match")
+git_url("git@github.com:withJihyuk/TradeDiary-Match.git")
 storage_mode("git")
 type("appstore")
 app_identifier([

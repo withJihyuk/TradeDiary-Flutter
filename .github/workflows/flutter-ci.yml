@@ -194,9 +194,9 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_KEY_BASE64 }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
         run: |
-          required=(DB_URL DB_KEY API_URL CDN_URL SENTRY_DSN GOOGLE_WEB_CLIENT_ID GOOGLE_IOS_CLIENT_ID APP_STORE_CONNECT_KEY_ID APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_KEY_BASE64 MATCH_PASSWORD MATCH_GIT_BASIC_AUTHORIZATION)
+          required=(DB_URL DB_KEY API_URL CDN_URL SENTRY_DSN GOOGLE_WEB_CLIENT_ID GOOGLE_IOS_CLIENT_ID APP_STORE_CONNECT_KEY_ID APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_KEY_BASE64 MATCH_PASSWORD MATCH_GIT_PRIVATE_KEY)
           for name in "${required[@]}"; do
             if [[ -z "${!name:-}" ]]; then
               echo "::error::production secret ${name} is missing"
@@ -219,7 +219,7 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_KEY_BASE64 }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
         run: bundle exec fastlane ios submit
       - uses: actions/upload-artifact@v7.0.1
         if: always()
