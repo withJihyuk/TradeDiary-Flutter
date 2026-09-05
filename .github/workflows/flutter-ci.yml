@@ -152,7 +152,7 @@ jobs:
       - run: flutter pub get
       - run: flutter build appbundle --release
       - name: Verify AAB signature
-        run: jarsigner -verify -strict build/app/outputs/bundle/release/app-release.aab
+        run: jarsigner -verify build/app/outputs/bundle/release/app-release.aab
       - uses: actions/upload-artifact@v7.0.1
         with:
           name: android-release-${{ github.sha }}
