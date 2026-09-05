@@ -15,23 +15,18 @@ class OauthViewModel {
   static final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   static Future<void>? _googleSignInInitialization;
 
+  /// Initializes the platform Google Sign-In client once.
   static Future<void> _initializeGoogleSignIn() {
     final iosClientId = EnvConfig.googleIosClientId;
     final webClientId = EnvConfig.googleWebClientId;
 
-    if (Platform.isIOS && iosClientId.isEmpty) {
-      throw AuthenticationException('iOS 구글 로그인 설정이 누락되었습니다');
-    }
-    if (Platform.isAndroid && webClientId.isEmpty) {
-      throw AuthenticationException('Android 구글 로그인 설정이 누락되었습니다');
-    }
-
     return _googleSignInInitialization ??= _googleSignIn.initialize(
       clientId: Platform.isIOS ? iosClientId : null,
-      serverClientId: webClientId.isEmpty ? null : webClientId,
+      serverClientId: webClientId,
     );
   }
 
+  /// Authenticates with Google and creates a Supabase session.
   Future<AuthResponse?> nativeGoogleLogin() async {
     if (Platform.isAndroid || Platform.isIOS) {
       try {
@@ -45,10 +40,16 @@ class OauthViewModel {
           throw AuthenticationException('구글 로그인 인증에 실패했습니다');
         }
 
+        final authorizationClient = googleUser.authorizationClient;
+        final authorization =
+            await authorizationClient.authorizationForScopes([]) ??
+            await authorizationClient.authorizeScopes([]);
+
         // ignore: experimental_member_use
         return await supabase.auth.signInWithIdToken(
           provider: OAuthProvider.google,
           idToken: idToken,
+          accessToken: authorization.accessToken,
         );
       } on GoogleSignInException catch (e) {
         if (e.code == GoogleSignInExceptionCode.canceled) {

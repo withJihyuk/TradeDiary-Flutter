@@ -1,3 +1,5 @@
+opt_out_usage
+
 platform :android do
   desc "Submit the signed AAB to Google Play production"
   lane :submit do

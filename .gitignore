@@ -123,3 +123,9 @@ app.*.map.json
 *.keystore
 *.mobileprovision
 *.p8
+
+# Removed Firebase configuration
+/google-services.json
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
+/lib/firebase_options.dart
