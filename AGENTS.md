@@ -105,7 +105,7 @@ bundle exec fastlane lanes
 ### Fastlane 동작
 
 - Android `submit`은 CI에서 미리 서명한 AAB를 Google Play `production` 트랙에 `completed` 상태로 올립니다. 단계적 출시가 아니라 전체 출시입니다.
-- iOS `submit`은 `setup_ci`, 읽기 전용 `match`, Xcode 26.3을 사용해 빌드하고 심사에 제출합니다. 자동 출시와 단계적 출시는 꺼져 있어 승인 후 수동 출시합니다.
+- iOS `submit`은 `setup_ci`, 읽기 전용 `match`, Xcode 26.3을 사용해 빌드하고 심사에 제출합니다. 심사 승인 후 자동 출시하며 단계적 출시는 사용하지 않습니다.
 - 로컬이나 `master`가 아닌 브랜치에서 `submit` lane을 실행하지 않습니다.
 
 ## 문제 해결
