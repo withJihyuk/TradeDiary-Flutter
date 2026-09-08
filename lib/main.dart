@@ -18,10 +18,14 @@ import 'package:trade_diary/util/navigation_service.dart';
 import 'package:trade_diary/service/notification_service.dart';
 import 'package:trade_diary/service/streak_service.dart';
 import 'package:home_widget/home_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trade_diary/provider/session.dart';
+import 'package:trade_diary/provider/diary_list.dart';
+import 'package:trade_diary/provider/widget_update_provider.dart';
+import 'package:trade_diary/service/draft_store.dart';
 
 const Size kDesignSize = Size(390, 844);
 
+/// Initializes application services and launches the Flutter app.
 void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
@@ -33,29 +37,17 @@ void main() async {
     await EnvConfig.initialize();
     await initializeDateFormatting();
 
-    if (EnvConfig.dbUrl.isEmpty || EnvConfig.dbKey.isEmpty) {
-      throw ValidationException('데이터베이스 설정이 올바르지 않습니다');
-    }
-
     await Supabase.initialize(
       debug: kDebugMode,
       url: EnvConfig.dbUrl,
       publishableKey: EnvConfig.dbKey,
     );
 
-    if (!kDebugMode && EnvConfig.sentryDsn.isEmpty) {
-      throw ValidationException('Sentry DSN이 설정되지 않았습니다');
-    }
-
     // 위젯에서 앱 실행 여부를 runApp 전에 동기적으로 확인
     await HomeWidget.setAppGroupId(StreakService.appGroupId);
     final initialUri = await HomeWidget.initiallyLaunchedFromHomeWidget();
-    if (initialUri != null) {
-      final prefs = await SharedPreferences.getInstance();
-      final hasTodayDiary = prefs.getBool('has_today_diary') ?? false;
-      if (!hasTodayDiary) {
-        NavigationService.pendingWidgetRoute = '/write';
-      }
+    if (NavigationService.isWidgetWriteUri(initialUri)) {
+      NavigationService.pendingWidgetRoute = '/write';
     }
 
     await SentryFlutter.init(
@@ -72,16 +64,16 @@ void main() async {
 
     await NotificationService().init();
 
-    HomeWidget.widgetClicked.listen((uri) async {
-      if (uri != null) {
-        final session = Supabase.instance.client.auth.currentSession;
-        if (session != null) {
-          final prefs = await SharedPreferences.getInstance();
-          final hasTodayDiary = prefs.getBool('has_today_diary') ?? false;
-          if (!hasTodayDiary) {
-            PageRouter.router.push('/write');
-          }
-        }
+    HomeWidget.widgetClicked.listen((uri) {
+      if (!NavigationService.isWidgetWriteUri(uri)) return;
+      if (Supabase.instance.client.auth.currentSession == null) {
+        NavigationService.pendingWidgetRoute = '/write';
+        PageRouter.router.go('/login');
+      } else if (![
+        '/write',
+        '/select',
+      ].contains(PageRouter.router.routeInformationProvider.value.uri.path)) {
+        PageRouter.router.push('/write');
       }
     });
   } catch (e, stackTrace) {
@@ -100,30 +92,47 @@ void main() async {
 
 Duration? _disableProviderRetry(int retryCount, Object error) => null;
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  ConsumerState<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   late final StreamSubscription<AuthState> _authSubscription;
 
   @override
   void initState() {
     super.initState();
-    _authSubscription = NavigationService.handleAuthStateChange(context);
+    WidgetsBinding.instance.addObserver(this);
+    if (ref.read(sessionUserProvider) == null) {
+      unawaited(StreakService.clearWidgetData());
+    }
+    _authSubscription = NavigationService.handleAuthStateChange(context, (id) {
+      ref.read(sessionUserProvider.notifier).state = id;
+    });
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _authSubscription.cancel();
     super.dispose();
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.invalidate(koreanDayProvider);
+      ref.invalidate(diaryListProvider);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ref.watch(widgetUpdateProvider);
+    ref.watch(draftStoreProvider);
     return ScreenUtilInit(
       designSize: kDesignSize,
       builder: (context, child) {

@@ -1,202 +1,166 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/config/env.dart';
 import 'package:trade_diary/model/diary_post.dart';
 import 'package:trade_diary/util/app_exception.dart';
-import 'package:trade_diary/util/image_compressor.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
-import 'dart:convert';
-
 class DiaryPostDataSource {
   final supabase = Supabase.instance.client;
-
-  Future<void> createDiaryPost(DiaryPostModel data) async {
-    try {
-      final json = data.toJson();
-      json['isDraft'] = false;
-      json['updatedAt'] = DateTime.now().toIso8601String();
-      await supabase.from("diary").insert(json);
-    } catch (e) {
-      throw DatabaseException('글을 작성하는데 실패했어요', originalError: e);
-    }
-  }
+  static const timeout = Duration(seconds: 30);
 
   Future<List<DiaryPostModel>> getDiary() async {
-    try {
-      final response = await supabase.from("diary").select();
-      return response
-          .map((item) => DiaryPostModel.fromJson(item))
-          .where((d) => !d.isDraft)
-          .toList();
-    } catch (e) {
-      throw DatabaseException('글을 가져오는데 실패했어요', originalError: e);
+    // Fetch every page: neither widget streaks nor historical dates may be truncated.
+    final result = <DiaryPostModel>[];
+    while (true) {
+      final page = await getDiaryPaginated(
+        page: result.length ~/ 100,
+        pageSize: 100,
+      );
+      result.addAll(page);
+      if (page.length < 100) return result;
     }
   }
 
-  /// 드래프트 저장 (upsert). 반환값은 드래프트 ID.
-  Future<String> upsertDraft(DiaryPostModel data) async {
-    try {
-      final json = data.toJson();
-      json['isDraft'] = true;
-      json['updatedAt'] = DateTime.now().toIso8601String();
-
-      if (data.id != null) {
-        await supabase.from("diary").update(json).eq('id', data.id!);
-        return data.id!;
-      } else {
-        final response = await supabase
-            .from("diary")
-            .insert(json)
-            .select('id')
-            .single();
-        return response['id'] as String;
-      }
-    } catch (e) {
-      if (e is AppException) rethrow;
-      throw DatabaseException('임시저장에 실패했어요', originalError: e);
-    }
-  }
-
-  /// 드래프트를 완성된 일기로 전환
-  Future<void> finalizeDraft(String id, DiaryPostModel data) async {
-    try {
-      final json = data.toJson();
-      json['isDraft'] = false;
-      json['updatedAt'] = DateTime.now().toIso8601String();
-      json.remove('id');
-      json.remove('createdAt');
-      await supabase.from("diary").update(json).eq('id', id);
-    } catch (e) {
-      if (e is AppException) rethrow;
-      throw DatabaseException('일기 저장에 실패했어요', originalError: e);
-    }
-  }
-
-  /// 사용자의 최신 드래프트 1개 조회 (없으면 null)
-  Future<DiaryPostModel?> getLatestDraft() async {
-    try {
-      final response = await supabase
-          .from("diary")
+  Future<List<DiaryPostModel>> getDrafts() async {
+    final rows = <DiaryPostModel>[];
+    while (true) {
+      final page = await supabase
+          .from('diary')
           .select()
           .eq('isDraft', true)
           .order('updatedAt', ascending: false)
-          .limit(1)
-          .maybeSingle();
-      if (response == null) return null;
-      return DiaryPostModel.fromJson(response);
-    } catch (e) {
-      if (e is AppException) rethrow;
-      throw DatabaseException('임시저장 조회에 실패했어요', originalError: e);
+          .order('id')
+          .range(rows.length, rows.length + 99)
+          .timeout(timeout);
+      rows.addAll(page.map(DiaryPostModel.fromJson));
+      if (page.length < 100) return rows;
     }
   }
 
-  /// 특정 드래프트 조회
-  Future<DiaryPostModel?> getDraftById(String id) async {
-    try {
-      final response = await supabase
-          .from("diary")
-          .select()
-          .eq('id', id)
-          .eq('isDraft', true)
-          .maybeSingle();
-      if (response == null) return null;
-      return DiaryPostModel.fromJson(response);
-    } catch (e) {
-      if (e is AppException) rethrow;
-      throw DatabaseException('임시저장 글을 불러오지 못했어요', originalError: e);
-    }
+  Future<DiaryPostModel?> getById(String id) async {
+    final row = await supabase
+        .from('diary')
+        .select()
+        .eq('id', id)
+        .maybeSingle()
+        .timeout(timeout);
+    return row == null ? null : DiaryPostModel.fromJson(row);
   }
 
-  /// 드래프트 삭제
-  Future<void> deleteDraft(String id) async {
-    try {
-      await supabase.from("diary").delete().eq('id', id);
-    } catch (e) {
-      if (e is AppException) rethrow;
-      throw DatabaseException('임시저장 글을 삭제하지 못했어요', originalError: e);
-    }
+  Future<Map<String, dynamic>> mutate(
+    String action,
+    DiaryPostModel diary,
+    String mutationId,
+  ) async {
+    final response = await supabase
+        .rpc(
+          action,
+          params: {
+            'p_id': diary.id,
+            'p_revision': diary.revision,
+            'p_mutation_id': mutationId,
+            if (action != 'delete_draft') ...{
+              'p_subject': diary.subject,
+              'p_content': diary.content,
+              'p_emotion': diary.emotion,
+            },
+          },
+        )
+        .timeout(timeout);
+    return Map<String, dynamic>.from(response as Map);
   }
 
-  /// 페이지네이션 + 서버 검색
   Future<List<DiaryPostModel>> getDiaryPaginated({
     int page = 0,
     int pageSize = 20,
     String? query,
   }) async {
-    try {
-      var request = supabase.from("diary").select();
+    final response = await supabase
+        .rpc(
+          'search_diaries',
+          params: {
+            'p_query': query ?? '',
+            'p_offset': page * pageSize,
+            'p_limit': pageSize,
+          },
+        )
+        .timeout(timeout);
+    return (response as List)
+        .map((row) => DiaryPostModel.fromJson(Map<String, dynamic>.from(row)))
+        .toList();
+  }
 
-      if (query != null && query.isNotEmpty) {
-        request = request.or('subject.ilike.%$query%,content.ilike.%$query%');
+  Future<List<String>> uploadImage(List<String> paths) async {
+    if (paths.isEmpty) return [];
+    if (paths.length > 10) throw NetworkException('사진은 최대 10장까지 추가할 수 있어요');
+    final token = supabase.auth.currentSession?.accessToken;
+    if (token == null) throw const AuthException('로그인이 필요합니다');
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse('${EnvConfig.apiUrl}/image'),
+    );
+    request.headers['Authorization'] = 'Bearer $token';
+    final ids = <String>[];
+    for (final path in paths) {
+      final bytes = await File(path).readAsBytes();
+      if (bytes.length > 16 * 1024 * 1024) {
+        throw NetworkException('사진 한 장의 크기는 16MB 이하여야 해요');
       }
-
-      final from = page * pageSize;
-      final to = from + pageSize - 1;
-      final response = await request
-          .order('createdAt', ascending: false)
-          .range(from, to);
-      return response.map((item) => DiaryPostModel.fromJson(item)).toList();
-    } catch (e) {
-      throw DatabaseException('글을 가져오는데 실패했어요', originalError: e);
+      final mime = imageMime(bytes);
+      final id = path.split('/').last.split('.').first;
+      ids.add(id);
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'files',
+          bytes,
+          filename: '$id.${mime.split('/').last}',
+          contentType: MediaType.parse(mime),
+        ),
+      );
+    }
+    request.fields['imageIds'] = jsonEncode(ids);
+    final client = http.Client();
+    try {
+      final response = await client
+          .send(request)
+          .timeout(const Duration(seconds: 60));
+      final body = await response.stream.bytesToString().timeout(
+        const Duration(seconds: 60),
+      );
+      if (response.statusCode != 200) {
+        throw NetworkException('사진을 동기화하지 못했어요. 다시 시도해 주세요');
+      }
+      final values = jsonDecode(body);
+      if (values is! List ||
+          values.length != ids.length ||
+          List.generate(
+            ids.length,
+            (i) => values[i] == ids[i],
+          ).contains(false)) {
+        throw NetworkException('사진 저장 응답을 확인하지 못했어요');
+      }
+      return ids.map((id) => '${EnvConfig.cdnUrl}/$id').toList();
+    } finally {
+      client.close();
     }
   }
 
-  Future<List<String>> uploadImage(List<String> imagePaths) async {
-    try {
-      final apiUrl = "${EnvConfig.apiUrl}/image";
-
-      var request = http.MultipartRequest("POST", Uri.parse(apiUrl));
-      final token = supabase.auth.currentSession?.accessToken;
-
-      if (token == null) {
-        throw const AuthException('로그인이 필요합니다');
-      }
-
-      request.headers['Authorization'] = "Bearer $token";
-
-      for (var path in imagePaths) {
-        final compressed = await ImageCompressor.compressToWebP(path);
-        if (compressed != null) {
-          request.files.add(
-            http.MultipartFile.fromBytes(
-              'files',
-              compressed,
-              filename: '${DateTime.now().millisecondsSinceEpoch}.webp',
-              contentType: MediaType('image', 'webp'),
-            ),
-          );
-        } else {
-          final extension = path.split('.').last.toLowerCase();
-          final mimeType = extension == 'jpg' ? 'jpeg' : extension;
-          request.files.add(
-            await http.MultipartFile.fromPath(
-              'files',
-              path,
-              contentType: MediaType('image', mimeType),
-            ),
-          );
-        }
-      }
-
-      var response = await request.send();
-      var responseData = await response.stream.bytesToString();
-
-      if (response.statusCode != 200) {
-        throw NetworkException(
-          '이미지 업로드에 실패했어요',
-          code: response.statusCode.toString(),
-          originalError: responseData,
-        );
-      }
-
-      List<dynamic> jsonResponse = json.decode(responseData);
-      return jsonResponse
-          .map<String>((uuid) => "${EnvConfig.cdnUrl}/$uuid")
-          .toList();
-    } catch (e) {
-      if (e is AppException) rethrow;
-      throw NetworkException('이미지 업로드 중 오류가 발생했어요', originalError: e);
+  static String imageMime(List<int> b) {
+    if (b.length >= 12 &&
+        ascii.decode(b.sublist(0, 4), allowInvalid: true) == 'RIFF' &&
+        ascii.decode(b.sublist(8, 12), allowInvalid: true) == 'WEBP') {
+      return 'image/webp';
     }
+    if (b.length >= 3 && b[0] == 255 && b[1] == 216 && b[2] == 255) {
+      return 'image/jpeg';
+    }
+    if (b.length >= 8 && b.take(8).join(',') == '137,80,78,71,13,10,26,10') {
+      return 'image/png';
+    }
+    throw NetworkException('지원하지 않는 사진 형식이에요');
   }
 }

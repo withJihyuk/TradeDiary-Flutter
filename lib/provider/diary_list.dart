@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:trade_diary/provider/session.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:trade_diary/dataSource/diary_post.dart';
@@ -9,16 +12,17 @@ import 'package:trade_diary/viewModel/diary_model.dart';
 final diaryListProvider = FutureProvider.autoDispose<List<DiaryPostModel>>((
   ref,
 ) async {
+  if (ref.watch(sessionUserProvider) == null) return [];
+  ref.watch(koreanDayProvider);
   final viewModel = DiaryViewModel();
   return await viewModel.getDiary();
 });
 
 final todayDiaryProvider = Provider<DiaryPostModel?>((ref) {
+  final todayOnly = ref.watch(koreanDayProvider);
   final diaryList = ref.watch(diaryListProvider);
   return diaryList.whenOrNull(
     data: (diaries) {
-      final today = DateTime.now();
-      final todayOnly = DateTime(today.year, today.month, today.day);
       for (final diary in diaries) {
         final d = diaryDateOnly(diary);
         if (d == todayOnly) return diary;
@@ -28,11 +32,12 @@ final todayDiaryProvider = Provider<DiaryPostModel?>((ref) {
   );
 });
 
-final diaryRefreshProvider = StateProvider<bool>((ref) => false);
-
-final diaryListControllerProvider = Provider((ref) {
-  ref.watch(diaryRefreshProvider);
-  ref.invalidate(diaryListProvider);
+final koreanDayProvider = Provider<DateTime>((ref) {
+  final now = seoulTime(DateTime.now());
+  final next = DateTime.utc(now.year, now.month, now.day + 1);
+  final timer = Timer(next.difference(now), ref.invalidateSelf);
+  ref.onDispose(timer.cancel);
+  return DateTime.utc(now.year, now.month, now.day);
 });
 
 // --- 페이지네이션 + 서버 검색 ---
@@ -76,9 +81,11 @@ class PaginatedDiaryNotifier extends StateNotifier<PaginatedDiaryState> {
 
   final _dataSource = DiaryPostDataSource();
   int _page = 0;
+  int _generation = 0;
   static const _pageSize = 20;
 
   Future<void> loadInitial() async {
+    final generation = ++_generation;
     _page = 0;
     state = PaginatedDiaryState(isLoading: true, query: state.query);
     try {
@@ -87,33 +94,38 @@ class PaginatedDiaryNotifier extends StateNotifier<PaginatedDiaryState> {
         pageSize: _pageSize,
         query: state.query.isEmpty ? null : state.query,
       );
+      if (!mounted || generation != _generation) return;
       state = PaginatedDiaryState(
         items: items,
         hasMore: items.length >= _pageSize,
         query: state.query,
       );
     } catch (e) {
+      if (!mounted || generation != _generation) return;
       state = PaginatedDiaryState(error: e, query: state.query);
     }
   }
 
   Future<void> loadMore() async {
     if (state.isLoading || !state.hasMore) return;
-    _page++;
+    final generation = _generation;
+    final page = _page + 1;
     state = state.copyWith(isLoading: true);
     try {
       final items = await _dataSource.getDiaryPaginated(
-        page: _page,
+        page: page,
         pageSize: _pageSize,
         query: state.query.isEmpty ? null : state.query,
       );
+      if (!mounted || generation != _generation) return;
+      _page = page;
       state = state.copyWith(
         items: [...state.items, ...items],
         hasMore: items.length >= _pageSize,
         isLoading: false,
       );
     } catch (e) {
-      _page--;
+      if (!mounted || generation != _generation) return;
       state = state.copyWith(isLoading: false, error: e);
     }
   }
@@ -128,5 +140,6 @@ class PaginatedDiaryNotifier extends StateNotifier<PaginatedDiaryState> {
 
 final paginatedDiaryProvider =
     StateNotifierProvider<PaginatedDiaryNotifier, PaginatedDiaryState>((ref) {
+      ref.watch(sessionUserProvider);
       return PaginatedDiaryNotifier();
     });

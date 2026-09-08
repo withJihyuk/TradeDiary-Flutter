@@ -14,6 +14,7 @@ class _EditorToolbar extends ConsumerWidget {
     // TextFieldTapRegion: 툴바 탭이 에디터 포커스를 빼앗지 않음
     return TextFieldTapRegion(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
           // 서브패널
@@ -55,9 +56,11 @@ class _MainToolbar extends ConsumerWidget {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // 추가
           _ToolbarButton(
+            label: '추가 메뉴',
             icon: Icons.add,
             isActive: panel == ToolbarPanel.add,
             onTap: () {
@@ -70,6 +73,7 @@ class _MainToolbar extends ConsumerWidget {
           ),
           // 텍스트
           _ToolbarButton(
+            label: '글자 서식',
             icon: Icons.text_fields_outlined,
             isActive: panel == ToolbarPanel.text,
             onTap: () {
@@ -82,17 +86,26 @@ class _MainToolbar extends ConsumerWidget {
           ),
           // 이미지
           _ToolbarButton(
+            label: '사진 추가',
             icon: Icons.image_outlined,
-            onTap: () => _pickAndInsertImage(ref),
+            onTap: () => _pickAndInsertImages(context, ref),
           ),
           const _ToolbarDivider(),
           // Undo
-          _ToolbarButton(icon: Icons.undo, onTap: () => controller.undo()),
+          _ToolbarButton(
+            label: '실행 취소',
+            icon: Icons.undo,
+            onTap: () => controller.undo(),
+          ),
           // Redo
-          _ToolbarButton(icon: Icons.redo, onTap: () => controller.redo()),
-          const Spacer(),
+          _ToolbarButton(
+            label: '다시 실행',
+            icon: Icons.redo,
+            onTap: () => controller.redo(),
+          ),
           // 닫기
           _ToolbarButton(
+            label: panel != ToolbarPanel.none ? '메뉴 닫기' : '키보드 닫기',
             icon: panel != ToolbarPanel.none
                 ? Icons.close
                 : Icons.keyboard_hide_outlined,
@@ -108,24 +121,6 @@ class _MainToolbar extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  Future<void> _pickAndInsertImage(WidgetRef ref) async {
-    final controller = ref.read(quillControllerProvider);
-    final pickedFiles = await ImagePicker().pickMultiImage(imageQuality: 50);
-    if (pickedFiles.isEmpty) return;
-
-    for (final file in pickedFiles) {
-      final index = controller.selection.baseOffset;
-      final length = controller.selection.extentOffset - index;
-      controller.replaceText(index, length, BlockEmbed.image(file.path), null);
-      final newIndex = index + 1;
-      controller.replaceText(newIndex, 0, '\n', null);
-      controller.updateSelection(
-        TextSelection.collapsed(offset: newIndex + 1),
-        ChangeSource.local,
-      );
-    }
   }
 }
 
@@ -152,30 +147,7 @@ class _AddPanel extends ConsumerWidget {
           _AddPanelItem(
             icon: Icons.image_outlined,
             label: '이미지',
-            onTap: () async {
-              final controller = ref.read(quillControllerProvider);
-              ref.read(toolbarPanelProvider.notifier).state = ToolbarPanel.none;
-              final pickedFiles = await ImagePicker().pickMultiImage(
-                imageQuality: 50,
-              );
-              if (pickedFiles.isEmpty) return;
-              for (final file in pickedFiles) {
-                final index = controller.selection.baseOffset;
-                final length = controller.selection.extentOffset - index;
-                controller.replaceText(
-                  index,
-                  length,
-                  BlockEmbed.image(file.path),
-                  null,
-                );
-                final newIndex = index + 1;
-                controller.replaceText(newIndex, 0, '\n', null);
-                controller.updateSelection(
-                  TextSelection.collapsed(offset: newIndex + 1),
-                  ChangeSource.local,
-                );
-              }
-            },
+            onTap: () => _pickAndInsertImages(context, ref),
           ),
           _AddPanelItem(
             icon: Icons.horizontal_rule_outlined,
@@ -255,5 +227,49 @@ class _AddPanelItem extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Future<void> _pickAndInsertImages(BuildContext context, WidgetRef ref) async {
+  final controller = ref.read(quillControllerProvider);
+  final store = ref.read(draftStoreProvider);
+  try {
+    final files = await ImagePicker().pickMultiImage(imageQuality: 50);
+    if (!context.mounted || files.isEmpty) return;
+    final existing = controller.document
+        .toDelta()
+        .toList()
+        .where(
+          (op) => op.value is Map && (op.value as Map).containsKey('image'),
+        )
+        .length;
+    if (existing + files.length > 10) {
+      throw StateError('사진은 최대 10장까지 추가할 수 있어요');
+    }
+    for (final file in files) {
+      final path = await store.importImage(file.path);
+      if (!context.mounted) return;
+      final selection = controller.selection;
+      final index = selection.start.clamp(0, controller.document.length - 1);
+      final end = selection.end.clamp(index, controller.document.length - 1);
+      controller.replaceText(index, end - index, BlockEmbed.image(path), null);
+      controller.replaceText(index + 1, 0, '\n', null);
+      controller.updateSelection(
+        TextSelection.collapsed(offset: index + 2),
+        ChangeSource.local,
+      );
+    }
+  } catch (e) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e is StateError
+                ? e.message.toString()
+                : '사진을 추가하지 못했어요. 다시 시도해 주세요',
+          ),
+        ),
+      );
+    }
   }
 }

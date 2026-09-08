@@ -15,6 +15,10 @@ abstract class DiaryPostModel with _$DiaryPostModel {
     @JsonKey(includeToJson: false) @Default(false) bool isDraft,
     @JsonKey(includeToJson: false) DateTime? createdAt,
     @JsonKey(includeToJson: false) DateTime? updatedAt,
+    @JsonKey(includeToJson: false) DateTime? completedAt,
+    @JsonKey(includeToJson: false) String? diaryDate,
+    @JsonKey(includeToJson: false) @Default(0) int revision,
+    @JsonKey(includeToJson: false) String? lastMutationId,
   }) = _DiaryPostModel;
 
   factory DiaryPostModel.fromJson(Map<String, dynamic> json) =>

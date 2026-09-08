@@ -20,6 +20,12 @@ _DiaryPostModel _$DiaryPostModelFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
+      completedAt: json['completedAt'] == null
+          ? null
+          : DateTime.parse(json['completedAt'] as String),
+      diaryDate: json['diaryDate'] as String?,
+      revision: (json['revision'] as num?)?.toInt() ?? 0,
+      lastMutationId: json['lastMutationId'] as String?,
     );
 
 Map<String, dynamic> _$DiaryPostModelToJson(_DiaryPostModel instance) =>

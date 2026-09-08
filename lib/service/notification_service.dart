@@ -62,13 +62,12 @@ class NotificationService {
   Future<bool> checkPermissions() async {
     try {
       if (Platform.isIOS) {
-        final bool? result = await _notifications
+        final result = await _notifications
             .resolvePlatformSpecificImplementation<
               IOSFlutterLocalNotificationsPlugin
             >()
-            ?.requestPermissions(alert: true, badge: true, sound: true);
-        debugPrint('알림 권한 확인: $result');
-        return result ?? false;
+            ?.checkPermissions();
+        return result?.isEnabled ?? false;
       } else if (Platform.isAndroid) {
         final androidImplementation = _notifications
             .resolvePlatformSpecificImplementation<
@@ -88,28 +87,17 @@ class NotificationService {
     }
   }
 
-  Future<void> setNotificationEnabled(bool enabled) async {
-    try {
-      if (enabled) {
-        await _requestPermissions();
-        final hasPermission = await checkPermissions();
-        if (!hasPermission) {
-          debugPrint('알림 권한이 없습니다.');
-          return;
-        }
-      }
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool(notificationEnabledKey, enabled);
-
-      if (enabled) {
-        await scheduleDailyNotification();
-      } else {
-        await cancelAllNotifications();
-      }
-    } catch (e) {
-      debugPrint('알림 설정 중 오류 발생: $e');
+  Future<bool> setNotificationEnabled(bool enabled) async {
+    if (enabled) {
+      await _requestPermissions();
+      if (!await checkPermissions()) return false;
+      await scheduleDailyNotification();
+    } else {
+      await cancelAllNotifications();
     }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(notificationEnabledKey, enabled);
+    return true;
   }
 
   Future<bool> isNotificationEnabled() async {
@@ -179,8 +167,7 @@ class NotificationService {
   Future<void> showTestNotification() async {
     final hasPermission = await checkPermissions();
     if (!hasPermission) {
-      debugPrint('알림 권한이 없습니다.');
-      return;
+      throw StateError('알림 권한을 먼저 허용해 주세요');
     }
 
     const androidDetails = AndroidNotificationDetails(

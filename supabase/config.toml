@@ -1,0 +1,4 @@
+project_id = "TradeDiary"
+
+[functions.delete-user]
+verify_jwt = true

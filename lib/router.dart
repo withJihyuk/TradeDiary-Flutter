@@ -7,6 +7,7 @@ import 'package:trade_diary/view/systemSetting/system_setting_page.dart';
 import 'package:trade_diary/view/components/bottom_navigation_bar.dart';
 import 'package:trade_diary/view/deleteId/delete_id_page.dart';
 import 'package:trade_diary/view/diary/diary_page.dart';
+import 'package:trade_diary/view/diary/draft_list_page.dart';
 import 'package:trade_diary/view/write/write_selecting_emotion.dart';
 import 'package:trade_diary/view/diary/diary_view.dart';
 import 'package:trade_diary/view/home/home_page.dart';
@@ -25,7 +26,15 @@ class PageRouter {
       final session = Supabase.instance.client.auth.currentSession;
       final loggedIn = session != null;
 
-      // 스플래시에서만 리다이렉트
+      if (!loggedIn && location != '/login' && location != '/') {
+        if (location == '/write') {
+          NavigationService.pendingWidgetRoute = '/write';
+        }
+        return '/login';
+      }
+      if (loggedIn && location == '/login') return '/home';
+      if (location == '/select' && state.extra is! String) return '/write';
+      // 초기 진입
       if (location == '/') {
         if (!loggedIn) return '/login';
         if (NavigationService.pendingWidgetRoute != null) {
@@ -40,6 +49,10 @@ class PageRouter {
     },
     routes: [
       GoRoute(path: '/', builder: (context, state) => const SplashPage()),
+      GoRoute(
+        path: '/drafts',
+        builder: (context, state) => const DraftListPage(),
+      ),
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
       GoRoute(
         path: '/write',
@@ -70,12 +83,12 @@ class PageRouter {
       GoRoute(
         path: '/read/:id',
         builder: (context, state) {
-          List<DiaryPostModel> posts = [];
-          if (state.extra != null && state.extra is List<DiaryPostModel>) {
-            posts = state.extra as List<DiaryPostModel>;
-          }
-          int day = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
-          return DiaryView(posts: posts, day: day);
+          return DiaryView(
+            id: state.pathParameters['id'] ?? '',
+            initial: state.extra is DiaryPostModel
+                ? state.extra as DiaryPostModel
+                : null,
+          );
         },
       ),
       ShellRoute(

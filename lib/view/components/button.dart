@@ -30,14 +30,15 @@ class DiaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isDisabled ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isDisabled ? DiaryMainGrey.grey300 : backgroundColor,
+          backgroundColor: backgroundColor,
+          disabledBackgroundColor: DiaryMainGrey.grey100,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           elevation: 0,
         ),
         child: Text(
           text,
           style: AppTextStyle.m2Semi.copyWith(
-            color: isDisabled ? DiaryMainGrey.grey500 : textColor,
+            color: isDisabled ? DiaryMainGrey.grey700 : textColor,
           ),
         ),
       ),

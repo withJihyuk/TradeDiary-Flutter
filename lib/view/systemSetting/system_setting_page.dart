@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trade_diary/service/draft_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,15 +13,17 @@ import 'package:trade_diary/viewModel/oauth_model.dart';
 import 'package:trade_diary/service/notification_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SystemSettingPage extends StatefulWidget {
+class SystemSettingPage extends ConsumerStatefulWidget {
   const SystemSettingPage({super.key});
 
   @override
-  State<SystemSettingPage> createState() => _SystemSettingPageState();
+  ConsumerState<SystemSettingPage> createState() => _SystemSettingPageState();
 }
 
-class _SystemSettingPageState extends State<SystemSettingPage> {
+class _SystemSettingPageState extends ConsumerState<SystemSettingPage> {
   bool _notificationEnabled = false;
+  bool _settingNotification = false;
+  bool _notificationChanged = false;
   final OauthViewModel oauthViewModel = OauthViewModel();
 
   @override
@@ -30,6 +34,7 @@ class _SystemSettingPageState extends State<SystemSettingPage> {
 
   Future<void> _loadNotificationSetting() async {
     final enabled = await NotificationService().isNotificationEnabled();
+    if (!mounted || _notificationChanged) return;
     setState(() {
       _notificationEnabled = enabled;
     });
@@ -74,20 +79,36 @@ class _SystemSettingPageState extends State<SystemSettingPage> {
                   CupertinoSwitch(
                     value: _notificationEnabled,
                     activeTrackColor: DiaryColor.globalMainColor,
-                    onChanged: (value) async {
-                      if (value) {
-                        final service = NotificationService();
-                        final hasPermission = await service.checkPermissions();
-                        if (!hasPermission) {
-                          _showPermissionDeniedDialog();
-                          return;
-                        }
-                      }
-                      await NotificationService().setNotificationEnabled(value);
-                      setState(() {
-                        _notificationEnabled = value;
-                      });
-                    },
+                    onChanged: _settingNotification
+                        ? null
+                        : (value) async {
+                            setState(() {
+                              _settingNotification = true;
+                              _notificationChanged = true;
+                            });
+                            try {
+                              final applied = await NotificationService()
+                                  .setNotificationEnabled(value);
+                              if (!mounted) return;
+                              if (applied) {
+                                setState(() => _notificationEnabled = value);
+                              } else {
+                                _showPermissionDeniedDialog();
+                              }
+                            } catch (_) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('알림 설정을 저장하지 못했어요'),
+                                  ),
+                                );
+                              }
+                            } finally {
+                              if (mounted) {
+                                setState(() => _settingNotification = false);
+                              }
+                            }
+                          },
                   ),
                 ],
               ),
@@ -95,15 +116,21 @@ class _SystemSettingPageState extends State<SystemSettingPage> {
                 SizedBox(height: 8.h),
                 TextButton(
                   onPressed: () async {
-                    await NotificationService().showTestNotification();
-                    if (mounted) {
-                      // ignore: use_build_context_synchronously
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('테스트 알림을 전송했습니다. 알림이 오는지 확인해주세요.'),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                    try {
+                      await NotificationService().showTestNotification();
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('테스트 알림을 전송했어요')),
+                        );
+                      }
+                    } catch (_) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('테스트 알림을 보내지 못했어요. 알림 권한을 확인해 주세요'),
+                          ),
+                        );
+                      }
                     }
                   },
                   child: Text(
@@ -139,13 +166,31 @@ class _SystemSettingPageState extends State<SystemSettingPage> {
               ),
               SizedBox(height: 32.h),
               GestureDetector(
-                onTap: () => oauthViewModel.logout(),
+                onTap: () async {
+                  try {
+                    await ref.read(draftStoreProvider).flush();
+                    await oauthViewModel.logout();
+                  } catch (_) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('로그아웃하지 못했어요. 저장 상태와 연결을 확인해 주세요'),
+                        ),
+                      );
+                    }
+                  }
+                },
                 child: Row(
                   children: [
-                    SvgPicture.asset(
-                      "assets/images/icons/logout.svg",
-                      width: 24.w,
-                      height: 24.h,
+                    SizedBox.square(
+                      dimension: 24.w,
+                      child: Center(
+                        child: SvgPicture.asset(
+                          "assets/images/icons/logout.svg",
+                          width: 20.w,
+                          height: 20.w,
+                        ),
+                      ),
                     ),
                     SizedBox(width: 12.w),
                     Text(
@@ -165,7 +210,7 @@ class _SystemSettingPageState extends State<SystemSettingPage> {
                     SvgPicture.asset(
                       "assets/images/icons/user-exit.svg",
                       width: 24.w,
-                      height: 24.h,
+                      height: 24.w,
                     ),
                     SizedBox(width: 12.w),
                     Text(
