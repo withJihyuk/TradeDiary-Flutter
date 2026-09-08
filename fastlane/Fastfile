@@ -57,6 +57,7 @@ platform :ios do
       metadata_path: File.join(project_root, "fastlane/metadata"),
       skip_screenshots: true,
       submit_for_review: true,
+      precheck_include_in_app_purchases: false,
       automatic_release: true,
       phased_release: false,
       force: true,
