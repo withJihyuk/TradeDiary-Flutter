@@ -6,8 +6,8 @@ import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/model/profile.dart';
 import 'package:trade_diary/provider/profile_provider.dart';
-import 'package:trade_diary/util/level.dart';
 import 'package:trade_diary/provider/widget_update_provider.dart';
+import 'package:trade_diary/util/level.dart';
 import 'package:trade_diary/view/components/welcome_dialog.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -38,7 +38,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  Widget _buildHeaderImages(BuildContext context) {
+  Widget _buildHeaderImages() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 38.h),
       child: Column(
@@ -64,11 +64,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  Widget _buildLevelInfo(ProfileModel profile) {
-    final levelSystem = LevelSystem();
-    final currentLevel = levelSystem.getLevel(profile.exp);
-    final nextLevelExp = levelSystem.expToNextLevel(profile.exp);
-
+  Widget _buildLevelInfo(String nickname, int level, int earned, int target) {
     return Padding(
       padding: EdgeInsets.fromLTRB(32.w, 280.h, 32.w, 28.h),
       child: Column(
@@ -79,12 +75,12 @@ class _HomePageState extends ConsumerState<HomePage> {
               Row(
                 children: [
                   Text(
-                    "LV.$currentLevel",
+                    "LV.$level",
                     style: AppTextStyle.m2Semi.copyWith(color: Colors.white),
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    profile.nickname,
+                    nickname,
                     style: AppTextStyle.m2Semi.copyWith(color: Colors.white),
                   ),
                 ],
@@ -92,23 +88,24 @@ class _HomePageState extends ConsumerState<HomePage> {
               Row(
                 children: [
                   Text(
-                    profile.exp.toString(),
+                    target == 0 ? 'MAX' : earned.toString(),
                     style: AppTextStyle.labelRegular.copyWith(
                       color: DiaryColor.globalMainColor,
                     ),
                   ),
-                  Text(
-                    '/$nextLevelExp',
-                    style: AppTextStyle.labelRegular.copyWith(
-                      color: DiaryMainGrey.grey200,
+                  if (target > 0)
+                    Text(
+                      '/$target',
+                      style: AppTextStyle.labelRegular.copyWith(
+                        color: DiaryMainGrey.grey200,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ],
           ),
           SizedBox(height: 8.h),
-          _buildExpProgressBar(profile, nextLevelExp),
+          _buildExpProgressBar(target == 0 ? 1 : earned / target),
           SizedBox(height: 8.h),
           Text(
             "일기와 도전과제를 설정하면 감자가 성장해요",
@@ -119,29 +116,33 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  Widget _buildExpProgressBar(ProfileModel profile, int nextLevelExp) {
+  Widget _buildExpProgressBar(double progress) {
     return SizedBox(
       width: double.infinity,
       height: 12.h,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: Row(
-          children: [
-            Flexible(
-              flex: profile.exp,
-              child: Container(color: DiaryColor.globalMainColor),
-            ),
-            Flexible(
-              flex: nextLevelExp - profile.exp,
-              child: Container(color: DiaryMainGrey.grey300),
-            ),
-          ],
+        child: ColoredBox(
+          color: DiaryMainGrey.grey300,
+          child: FractionallySizedBox(
+            alignment: Alignment.centerLeft,
+            widthFactor: progress.clamp(0.0, 1.0),
+            child: const ColoredBox(color: DiaryColor.globalMainColor),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildCharacterSection(String characterImagePath) {
+  Widget _buildCharacterSection(ProfileModel profile) {
+    final levels = LevelSystem();
+    final level = levels.getLevel(profile.exp);
+    final target = levels.expToNextLevel(profile.exp);
+    final earned = (profile.exp - levels.getCurrentLevelExp(level)).clamp(
+      0,
+      target,
+    );
+
     return Stack(
       children: [
         Positioned(
@@ -149,16 +150,18 @@ class _HomePageState extends ConsumerState<HomePage> {
           left: 0,
           right: 0,
           bottom: 0,
-          child: Container(
-            decoration: const BoxDecoration(color: Color(0xFF826A56)),
-          ),
+          child: const ColoredBox(color: Color(0xFF826A56)),
         ),
         Positioned(
           top: 0,
           left: 0,
           right: 0,
-          child: Image.asset(characterImagePath, height: 164.h),
+          child: Image.asset(
+            'assets/images/character/img-potato-${level}lv.png',
+            height: 164.h,
+          ),
         ),
+        _buildLevelInfo(profile.nickname, level, earned, target),
       ],
     );
   }
@@ -185,28 +188,14 @@ class _HomePageState extends ConsumerState<HomePage> {
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeaderImages(context),
-              profileState.when(
-                data: (profile) {
-                  final levelSystem = LevelSystem();
-                  final currentLevel = levelSystem.getLevel(profile.exp);
-                  final characterImagePath =
-                      "assets/images/character/img-potato-${currentLevel}lv.png";
-
-                  return Expanded(
-                    child: Stack(
-                      children: [
-                        _buildCharacterSection(characterImagePath),
-                        _buildLevelInfo(profile),
-                      ],
-                    ),
-                  );
-                },
-                loading: () => const Expanded(
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-                error: (error, stackTrace) => const Expanded(
-                  child: Center(child: Text('오류가 발생했거나 연결에 문제가 있어요.')),
+              _buildHeaderImages(),
+              Expanded(
+                child: profileState.when(
+                  data: _buildCharacterSection,
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (_, _) =>
+                      const Center(child: Text('오류가 발생했거나 연결에 문제가 있어요.')),
                 ),
               ),
             ],

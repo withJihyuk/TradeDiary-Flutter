@@ -32,12 +32,12 @@ final diaryProvider = StateNotifierProvider<WriteDiaryNotifier, DiaryPostModel>(
   },
 );
 
-final currentDraftIdProvider = StateProvider<String?>((ref) => null);
-
 final quillControllerProvider = StateProvider.autoDispose<QuillController>((
   ref,
 ) {
-  return QuillController.basic();
+  final controller = QuillController.basic();
+  ref.onDispose(controller.dispose);
+  return controller;
 });
 
 /// 쓰기 시작 시간

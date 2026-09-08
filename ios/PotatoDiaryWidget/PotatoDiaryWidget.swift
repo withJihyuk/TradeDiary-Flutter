@@ -1,6 +1,12 @@
 import WidgetKit
 import SwiftUI
 
+private var seoulCalendar: Calendar {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
+    return calendar
+}
+
 struct PotatoDiaryEntry: TimelineEntry {
     let date: Date
     let nickname: String
@@ -21,7 +27,7 @@ struct PotatoDiaryProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<PotatoDiaryEntry>) -> Void) {
         let entry = readEntry()
-        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 30, to: Date())!
+        let nextUpdate = seoulCalendar.date(byAdding: .minute, value: 30, to: Date())!
         let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
         completion(timeline)
     }
@@ -56,7 +62,7 @@ struct LoggedOutView: View {
                 .multilineTextAlignment(.center)
         }
         .padding(12)
-        .widgetURL(URL(string: "potatoDiary://write"))
+        .widgetURL(URL(string: "potatoDiary://write?homeWidget=true"))
     }
 }
 
@@ -79,7 +85,7 @@ struct MediumWidgetView: View {
     private let globalMainColor = Color(red: 0.85, green: 0.66, blue: 0.50)
 
     var body: some View {
-        let calendar = Calendar.current
+        let calendar = seoulCalendar
         let today = Date()
         let weekday = calendar.component(.weekday, from: today)
         // .weekday: 1=Sun, 2=Mon, ... 7=Sat → offset to Monday-based
@@ -129,11 +135,13 @@ struct MediumWidgetView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 12)
-        .widgetURL(URL(string: "potatoDiary://write"))
+        .widgetURL(URL(string: "potatoDiary://write?homeWidget=true"))
     }
 
     private static func dateKey(from date: Date) -> String {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: date)
     }

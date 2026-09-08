@@ -5,25 +5,37 @@ part of 'write_page.dart';
 class _ToolbarButton extends StatelessWidget {
   const _ToolbarButton({
     required this.icon,
+    required this.label,
     required this.onTap,
     this.isActive = false,
   });
 
   final IconData icon;
+  final String label;
   final VoidCallback onTap;
   final bool isActive;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Icon(
+    return Semantics(
+      selected: isActive,
+      child: IconButton(
+        tooltip: label,
+        style: IconButton.styleFrom(
+          backgroundColor: isActive
+              ? DiaryColor.globalMainColor.withValues(alpha: .22)
+              : Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        onPressed: onTap,
+        constraints: const BoxConstraints(minWidth: 44, minHeight: 48),
+        padding: const EdgeInsets.all(8),
+        icon: Icon(
           icon,
           size: 22,
-          color: isActive ? DiaryColor.globalMainColor : DiaryMainGrey.grey700,
+          color: isActive ? const Color(0xFF826A56) : DiaryMainGrey.grey800,
         ),
       ),
     );

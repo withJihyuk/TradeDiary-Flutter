@@ -28,11 +28,19 @@ class QuillContentUtil {
     try {
       final decoded = jsonDecode(content);
       if (decoded is List) {
-        return Document.fromJson(decoded).toPlainText().trim();
+        return documentToPlainText(Document.fromJson(decoded));
       }
     } catch (_) {}
     return content;
   }
+
+  static String documentToPlainText(Document document) => document
+      .toDelta()
+      .toList()
+      .where((op) => op.isInsert && op.value is String)
+      .map((op) => op.value as String)
+      .join()
+      .trim();
 
   /// Document Delta에서 로컬 이미지 파일 경로만 추출
   static List<String> extractLocalImagePaths(Document document) {

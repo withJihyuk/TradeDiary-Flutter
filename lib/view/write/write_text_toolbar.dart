@@ -93,9 +93,11 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
         child: Row(
           children: [
             // 텍스트 색상 (원)
-            GestureDetector(
-              onTap: () => _showColorPicker(context, ref, controller, false),
-              child: Container(
+            IconButton(
+              tooltip: '글자 색상',
+              onPressed: () =>
+                  _showColorPicker(context, ref, controller, false),
+              icon: Container(
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
@@ -112,9 +114,10 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
             ),
             const SizedBox(width: 12),
             // 배경 색상
-            GestureDetector(
-              onTap: () => _showColorPicker(context, ref, controller, true),
-              child: Container(
+            IconButton(
+              tooltip: '글자 배경 색상',
+              onPressed: () => _showColorPicker(context, ref, controller, true),
+              icon: Container(
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
@@ -167,6 +170,7 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
             const _TextPanelDivider(),
             // Bold
             _TextToggle(
+              label: '굵게',
               isActive: isBold,
               onTap: () {
                 final attr = isBold
@@ -187,6 +191,7 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
             ),
             // Italic
             _TextToggle(
+              label: '기울임',
               isActive: isItalic,
               onTap: () {
                 final attr = isItalic
@@ -207,6 +212,7 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
             ),
             // Underline
             _TextToggle(
+              label: '밑줄',
               isActive: isUnderline,
               onTap: () {
                 final attr = isUnderline
@@ -227,6 +233,7 @@ class _TextPanelState extends ConsumerState<_TextPanel> {
             ),
             // Strikethrough
             _TextToggle(
+              label: '취소선',
               isActive: isStrike,
               onTap: () {
                 final attr = isStrike
@@ -321,29 +328,32 @@ class _TextDropdown extends StatelessWidget {
 class _TextToggle extends StatelessWidget {
   const _TextToggle({
     required this.isActive,
+    required this.label,
     required this.onTap,
     required this.child,
   });
 
   final Widget child;
+  final String label;
   final bool isActive;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        decoration: BoxDecoration(
-          color: isActive
-              ? DiaryColor.globalMainColor.withValues(alpha: 0.12)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(6),
+    return Semantics(
+      selected: isActive,
+      child: Tooltip(
+        message: label,
+        child: TextButton(
+          onPressed: onTap,
+          style: TextButton.styleFrom(
+            minimumSize: const Size(48, 48),
+            backgroundColor: isActive
+                ? DiaryColor.globalMainColor.withValues(alpha: 0.12)
+                : null,
+          ),
+          child: child,
         ),
-        child: child,
       ),
     );
   }

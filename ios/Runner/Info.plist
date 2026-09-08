@@ -30,6 +30,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>tradediary</string>
+				<string>potatoDiary</string>
 				<string>com.googleusercontent.apps.758208968172-8q68eo2oh2j2v6b7hklu35qb6rgophik</string>
 			</array>
 		</dict>
@@ -37,7 +38,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FlutterDeepLinkingEnabled</key>
-	<true/>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>sms</string>

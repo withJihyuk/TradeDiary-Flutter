@@ -20,6 +20,10 @@ class ProfileDataSource {
   }
 
   Future<void> setNickname(String nickname, String userId) async {
+    nickname = nickname.trim();
+    if (nickname.isEmpty || nickname.length > 30) {
+      throw ValidationException('이름은 1자 이상 30자 이내로 입력해 주세요');
+    }
     try {
       await supabase
           .from("profile")
@@ -27,18 +31,6 @@ class ProfileDataSource {
           .eq('id', userId);
     } catch (e) {
       throw DatabaseException('닉네임을 변경하는데 실패했어요', originalError: e);
-    }
-  }
-
-  Future<void> addExp(int exp, String userId) async {
-    try {
-      final currentProfile = await getInfo(userId);
-      await supabase
-          .from("profile")
-          .update({"point": currentProfile.exp + exp})
-          .eq('id', userId);
-    } catch (e) {
-      throw DatabaseException('포인트를 추가하는데 실패했어요', originalError: e);
     }
   }
 }

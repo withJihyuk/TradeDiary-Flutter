@@ -53,7 +53,7 @@ class OauthViewModel {
         );
       } on GoogleSignInException catch (e) {
         if (e.code == GoogleSignInExceptionCode.canceled) {
-          throw AuthenticationException('구글 로그인이 취소되었습니다', originalError: e);
+          return null;
         }
         throw AuthenticationException('구글 로그인 중 오류가 발생했습니다', originalError: e);
       } catch (e) {
@@ -64,7 +64,7 @@ class OauthViewModel {
     return null;
   }
 
-  Future<AuthResponse> signInWithApple() async {
+  Future<AuthResponse?> signInWithApple() async {
     try {
       final rawNonce = supabase.auth.generateRawNonce();
       final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
@@ -88,6 +88,9 @@ class OauthViewModel {
         idToken: idToken,
         nonce: rawNonce,
       );
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) return null;
+      throw AuthenticationException('애플 로그인 중 오류가 발생했습니다', originalError: e);
     } catch (e) {
       if (e is AuthenticationException) rethrow;
       throw AuthenticationException('애플 로그인 중 오류가 발생했습니다', originalError: e);
@@ -123,16 +126,19 @@ class OauthViewModel {
 
   Future<void> deleteAccount() async {
     try {
-      final response = await http.get(
-        Uri.parse(EnvConfig.deleteUserUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer ${supabase.auth.currentSession?.accessToken}',
-        },
-      );
+      final response = await http
+          .post(
+            Uri.parse(EnvConfig.deleteUserUrl),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization':
+                  'Bearer ${supabase.auth.currentSession?.accessToken}',
+            },
+          )
+          .timeout(const Duration(seconds: 30));
 
-      if (response.statusCode != 200) {
+      if (response.statusCode != 200 ||
+          (jsonDecode(response.body) as Map)['deleted'] != true) {
         throw NetworkException(
           '계정 삭제에 실패했습니다',
           code: response.statusCode.toString(),

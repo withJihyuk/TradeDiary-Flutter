@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
@@ -15,8 +14,8 @@ import 'package:trade_diary/provider/write_diary.dart';
 import 'package:trade_diary/router.dart';
 import 'package:trade_diary/util/diary_image_embed_builder.dart';
 import 'package:trade_diary/util/quill_content_util.dart';
-import 'package:trade_diary/model/diary_post.dart';
-import 'package:trade_diary/viewModel/diary_model.dart';
+import 'package:trade_diary/service/draft_store.dart';
+import 'package:uuid/uuid.dart';
 import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 
@@ -31,200 +30,240 @@ part 'write_link_sheet.dart';
 
 class WritePage extends ConsumerStatefulWidget {
   const WritePage({super.key, this.draftId});
-
   final String? draftId;
-
   @override
   ConsumerState<WritePage> createState() => _WritePageState();
 }
 
 class _WritePageState extends ConsumerState<WritePage> {
-  Timer? _autoSaveTimer;
-  String? _draftId;
-  bool _isDirty = false;
-  DateTime? _lastSavedAt;
-  Future<void>? _savingFuture;
-  QuillController? _attachedQuillController;
   final FocusNode _editorFocusNode = FocusNode();
   final TextEditingController _subjectController = TextEditingController();
+  QuillController? _attached;
+  late final String _id = widget.draftId ?? const Uuid().v4();
+  late DraftStore _store;
+  bool _loading = true;
+  bool _storeBound = false;
+  bool _leaving = false;
+  bool _allowPop = false;
+  String? _loadError;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _load());
+  }
+
+  Future<void> _load() async {
+    if (!mounted) return;
+    setState(() {
+      _loading = true;
+      _loadError = null;
+    });
+    _store = ref.read(draftStoreProvider);
+    _storeBound = true;
+    try {
+      await _store.ready;
+      _store.activeId = _id;
+      final draft = widget.draftId == null ? null : await _store.open(_id);
       if (!mounted) return;
+      if (widget.draftId != null && draft == null) {
+        throw StateError('임시저장 글이 없거나 이미 완료되었어요');
+      }
       ref.read(diaryProvider.notifier).reset();
-      ref.read(currentDraftIdProvider.notifier).state = widget.draftId;
-      ref.read(writeStartTimeProvider.notifier).state = DateTime.now();
+      ref.read(writeStartTimeProvider.notifier).state =
+          draft?.createdAt ?? DateTime.now();
       ref.read(inlineTypingStyleProvider.notifier).state = const Style();
       ref.read(inlineTypingOffsetProvider.notifier).state = null;
       final controller = ref.read(quillControllerProvider);
-      _bindContentListener(controller);
-      _checkDraft();
-    });
-    _autoSaveTimer = Timer.periodic(const Duration(seconds: 30), (_) {
-      if (_isDirty) _saveDraft();
-    });
+      controller.document = QuillContentUtil.contentToDocument(
+        draft?.content ?? '',
+      );
+      controller.updateSelection(
+        TextSelection.collapsed(offset: controller.document.length - 1),
+        ChangeSource.local,
+      );
+      _subjectController.text = draft?.subject ?? '';
+      final notifier = ref.read(diaryProvider.notifier);
+      notifier.setSubject(draft?.subject ?? '');
+      notifier.setContent(draft?.content ?? '');
+      notifier.setEmotion(draft?.emotion ?? '배고픈감자');
+      _attached?.removeListener(_changed);
+      _subjectController.removeListener(_changed);
+      _attached = controller;
+      controller.addListener(_changed);
+      _subjectController.addListener(_changed);
+      setState(() => _loading = false);
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+          _loadError = '글을 불러오지 못했어요. 연결을 확인하고 다시 시도해 주세요';
+        });
+      }
+    }
+  }
+
+  Future<void> _save() async {
+    if (_loading || _loadError != null || _attached == null) return;
+    final content = QuillContentUtil.documentToContent(_attached!.document);
+    final diary = ref
+        .read(diaryProvider)
+        .copyWith(
+          id: _store.activeId ?? _id,
+          subject: _subjectController.text,
+          content: content,
+        );
+    await _store.update(diary);
+  }
+
+  void _changed() {
+    if (!mounted || _loading) return;
+    unawaited(
+      _save().catchError((Object _) {}),
+    ); // Store exposes local failure and blocks exit.
+  }
+
+  Future<void> _leave({bool next = false}) async {
+    if (_leaving) return;
+    setState(() => _leaving = true);
+    try {
+      await _save();
+      await _store.flush();
+      if (!mounted) return;
+      if (next) {
+        await PageRouter.router.push('/select', extra: _store.activeId ?? _id);
+      } else {
+        setState(() => _allowPop = true);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          if (PageRouter.router.canPop()) {
+            PageRouter.router.pop();
+          } else {
+            PageRouter.router.go('/home');
+          }
+        });
+      }
+    } catch (_) {
+      if (!mounted) return;
+      final discard = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('기기에 저장하지 못했어요'),
+          content: const Text(
+            '저장 공간을 확인하고 다시 시도해 주세요. 저장하지 않고 나가면 마지막 변경이 사라질 수 있어요.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('계속 작성'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('저장하지 않고 나가기'),
+            ),
+          ],
+        ),
+      );
+      if (discard == true && mounted) PageRouter.router.go('/diary');
+    } finally {
+      if (mounted) setState(() => _leaving = false);
+    }
   }
 
   @override
   void dispose() {
-    _attachedQuillController?.removeListener(_onContentChanged);
-    _attachedQuillController = null;
-    _autoSaveTimer?.cancel();
-    _editorFocusNode.dispose();
+    if (_storeBound) _store.activeId = null;
+    _attached?.removeListener(_changed);
     _subjectController.dispose();
+    _editorFocusNode.dispose();
     super.dispose();
-  }
-
-  void _bindContentListener(QuillController controller) {
-    if (_attachedQuillController == controller) return;
-    _attachedQuillController?.removeListener(_onContentChanged);
-    _attachedQuillController = controller;
-    controller.addListener(_onContentChanged);
-  }
-
-  Future<void> _checkDraft() async {
-    if (widget.draftId != null) {
-      final draft = await DiaryViewModel().getDraftById(widget.draftId!);
-      if (!mounted) return;
-      if (draft != null) {
-        _restoreDraft(draft);
-      } else {
-        ref.read(currentDraftIdProvider.notifier).state = null;
-      }
-      return;
-    }
-
-    final draft = await DiaryViewModel().getLatestDraft();
-    if (draft == null || !mounted) return;
-
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('작성 중인 글이 있습니다'),
-        content: Text(
-          '${_formatDraftDate(draft.updatedAt ?? draft.createdAt ?? DateTime.now())}에 작성중이던 내용이 있습니다.\n이어서 작성하시겠습니까?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text(
-              '새로 작성',
-              style: TextStyle(color: DiaryColor.globalMainColor),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text(
-              '이어쓰기',
-              style: TextStyle(color: DiaryColor.globalMainColor),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    if (!mounted) return;
-
-    if (confirmed == true) {
-      _restoreDraft(draft);
-    }
-  }
-
-  void _restoreDraft(DiaryPostModel draft) {
-    final doc = QuillContentUtil.contentToDocument(draft.content);
-    final restoredController = QuillController(
-      document: doc,
-      selection: const TextSelection.collapsed(offset: 0),
-    );
-    ref.read(quillControllerProvider.notifier).state = restoredController;
-    _bindContentListener(restoredController);
-
-    _subjectController.text = draft.subject;
-    final notifier = ref.read(diaryProvider.notifier);
-    notifier.setSubject(draft.subject);
-    notifier.setContent(draft.content);
-    if (draft.emotion.isNotEmpty) notifier.setEmotion(draft.emotion);
-
-    _draftId = draft.id;
-    ref.read(currentDraftIdProvider.notifier).state = draft.id;
-    setState(() {});
-  }
-
-  String _formatDraftDate(DateTime dt) {
-    final day = dt.day;
-    final hour = dt.hour;
-    final minute = dt.minute;
-    final period = hour < 12 ? '오전' : '오후';
-    final displayHour = hour <= 12 ? hour : hour - 12;
-    return '$day일 $period $displayHour시 $minute분';
-  }
-
-  void _onContentChanged() {
-    if (!mounted) return;
-    _isDirty = true;
-    ref.read(lastModifiedTimeProvider.notifier).state = DateTime.now();
-  }
-
-  Future<void> _saveDraft() async {
-    if (!mounted) return;
-    final future = _doSaveDraft();
-    _savingFuture = future;
-    await future;
-  }
-
-  Future<void> _doSaveDraft() async {
-    try {
-      final quillController = ref.read(quillControllerProvider);
-      final content = QuillContentUtil.documentToContent(
-        quillController.document,
-      );
-      final diary = ref.read(diaryProvider);
-
-      _draftId = await DiaryViewModel().saveDraft(
-        diary.copyWith(content: content, isDraft: true, id: _draftId),
-        ref,
-      );
-      ref.read(currentDraftIdProvider.notifier).state = _draftId;
-      _isDirty = false;
-      if (mounted) {
-        setState(() => _lastSavedAt = DateTime.now());
-      }
-    } catch (_) {}
   }
 
   @override
   Widget build(BuildContext context) {
-    return _Scaffold(
-      header: const TopNavigationBar(title: "일기"),
-      autoSaveStatus: _lastSavedAt != null
-          ? Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                '임시저장됨 ${DateFormat('a h:mm', 'ko_KR').format(_lastSavedAt!)}',
-                style: AppTextStyle.labelRegular.copyWith(
-                  color: DiaryMainGrey.grey500,
-                  fontSize: 12,
+    final store = ref.watch(draftStoreProvider);
+    final status = store.status(store.activeId ?? _id);
+    final saveFailed = store.localError != null || store.error != null;
+    if (_loading || _loadError != null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('일기')),
+        body: Center(
+          child: _loading
+              ? const CircularProgressIndicator()
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(_loadError!),
+                    TextButton(onPressed: _load, child: const Text('다시 시도')),
+                  ],
+                ),
+        ),
+      );
+    }
+    return PopScope(
+      canPop: _allowPop,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _leave();
+      },
+      child: _Scaffold(
+        header: TopNavigationBar(title: '일기', onBack: () => _leave()),
+        autoSaveStatus: Container(
+          width: double.infinity,
+          color: saveFailed ? const Color(0xFFFFF5EC) : Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+          child: Row(
+            children: [
+              Icon(
+                store.localError != null
+                    ? Icons.error_outline_rounded
+                    : store.error != null
+                    ? Icons.cloud_off_outlined
+                    : status == '저장 중' || status == '동기화 중'
+                    ? Icons.sync_rounded
+                    : status == '자동 저장됨'
+                    ? Icons.cloud_done_outlined
+                    : Icons.save_outlined,
+                size: 15,
+                color: DiaryMainGrey.grey700,
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  status,
+                  style: AppTextStyle.labelRegular.copyWith(
+                    fontSize: 12,
+                    color: DiaryMainGrey.grey800,
+                  ),
                 ),
               ),
-            )
-          : null,
-      subjectInput: _WriteSubjectInput(
-        editorFocusNode: _editorFocusNode,
-        controller: _subjectController,
-      ),
-      editor: _WriteContentInput(editorFocusNode: _editorFocusNode),
-      toolbar: _EditorToolbar(editorFocusNode: _editorFocusNode),
-      submitButton: DiaryButton(
-        onPressed: () async {
-          _autoSaveTimer?.cancel();
-          if (_savingFuture != null) await _savingFuture;
-          if (_draftId == null && _isDirty) await _saveDraft();
-          if (!mounted) return;
-          PageRouter.router.push("/select", extra: _draftId);
-        },
-        text: "다음",
+              if (saveFailed)
+                TextButton(
+                  onPressed: () async {
+                    try {
+                      await _save();
+                      await store.flush();
+                      await store.sync();
+                    } catch (_) {}
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: DiaryMainGrey.grey900,
+                    textStyle: AppTextStyle.labelRegular.copyWith(fontSize: 12),
+                  ),
+                  child: const Text('다시 시도'),
+                ),
+            ],
+          ),
+        ),
+        subjectInput: _WriteSubjectInput(
+          editorFocusNode: _editorFocusNode,
+          controller: _subjectController,
+        ),
+        editor: _WriteContentInput(editorFocusNode: _editorFocusNode),
+        toolbar: _EditorToolbar(editorFocusNode: _editorFocusNode),
+        submitButton: DiaryButton(
+          onPressed: () => _leave(next: true),
+          text: _leaving ? '저장 중' : '다음',
+        ),
       ),
     );
   }
