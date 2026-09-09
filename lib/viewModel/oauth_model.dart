@@ -41,9 +41,10 @@ class OauthViewModel {
         }
 
         final authorizationClient = googleUser.authorizationClient;
+        const scopes = ['email'];
         final authorization =
-            await authorizationClient.authorizationForScopes([]) ??
-            await authorizationClient.authorizeScopes([]);
+            await authorizationClient.authorizationForScopes(scopes) ??
+            await authorizationClient.authorizeScopes(scopes);
 
         // ignore: experimental_member_use
         return await supabase.auth.signInWithIdToken(
