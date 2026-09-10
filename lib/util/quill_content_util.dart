@@ -10,6 +10,15 @@ class QuillContentUtil {
     try {
       final decoded = jsonDecode(content);
       if (decoded is List) {
+        // 제거된 일기체는 기본 글꼴로 표시한다.
+        for (final op in decoded) {
+          if (op is Map && op['attributes'] is Map) {
+            final attributes = op['attributes'] as Map;
+            if (attributes['font'] == 'EF_Diary') {
+              attributes.remove('font');
+            }
+          }
+        }
         return Document.fromJson(decoded);
       }
     } catch (_) {}
