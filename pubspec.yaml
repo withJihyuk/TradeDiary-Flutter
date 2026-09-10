@@ -65,11 +65,13 @@ flutter:
   assets:
     - assets/images/icons/
     - assets/images/character/
+    - assets/fonts/GowunDodum/OFL.txt
     - .env
   fonts:
-    - family: EF_Diary
+    - family: GowunDodum
       fonts:
-        - asset: assets/fonts/EF_Diary/EF_Diary.ttf
+        - asset: assets/fonts/GowunDodum/GowunDodum-Regular.ttf
+          weight: 400
     - family: Pretendard
       fonts:
         - asset: assets/fonts/Pretendard/Pretendard-Regular.ttf
