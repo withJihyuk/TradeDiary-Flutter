@@ -3,7 +3,7 @@ description: "감자랑 함께 일기를 써봐요 :)"
 
 publish_to: "none"
 
-version: 1.0.15+33
+version: 1.0.16+34
 
 environment:
   sdk: ">=3.13.0 <4.0.0"
@@ -65,11 +65,13 @@ flutter:
   assets:
     - assets/images/icons/
     - assets/images/character/
+    - assets/fonts/GowunDodum/OFL.txt
     - .env
   fonts:
-    - family: EF_Diary
+    - family: GowunDodum
       fonts:
-        - asset: assets/fonts/EF_Diary/EF_Diary.ttf
+        - asset: assets/fonts/GowunDodum/GowunDodum-Regular.ttf
+          weight: 400
     - family: Pretendard
       fonts:
         - asset: assets/fonts/Pretendard/Pretendard-Regular.ttf
