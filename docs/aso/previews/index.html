@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>감자일기 스토어 미리보기</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff8ee; color: #49372b; font: 16px/1.6 system-ui, sans-serif; }
+  main { max-width: 1440px; margin: auto; padding: 40px 24px 64px; }
+  h1 { margin: 0; font-size: clamp(26px, 4vw, 40px); line-height: 1.2; }
+  h2 { margin: 48px 0 16px; font-size: 24px; }
+  p { max-width: 72ch; }
+  a { color: inherit; text-underline-offset: 4px; }
+  a:focus-visible { outline: 3px solid #826a56; outline-offset: 5px; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  figure { margin: 0; }
+  img { display: block; width: 100%; height: auto; border-radius: 12px; outline: 1px solid #00000012; }
+  figcaption { padding: 12px 0; font-size: 14px; }
+  @media (max-width: 800px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
+  @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
+</style>
+<main>
+  <h1>감자일기 스토어 미리보기</h1>
+  <p>제작일 2026-10-19 · 기존 앱 화면과 전용 시뮬레이터의 예시 데이터로 제작했습니다. 이미지를 선택하면 업로드용 PNG 원본을 엽니다. 스토어 게시 전 검토용 갤러리입니다.</p>
+  <p><a href="../README.md">등록·제작 안내</a> · <a href="ios-overview.png">iOS 모아보기</a> · <a href="android-overview.png">Android 모아보기</a></p>
+  <h2>App Store · 1320 × 2868</h2>
+  <div class="grid">
+    <figure><a href="ios/01-growth.png"><img src="ios/01-growth.png" alt="일기를 쓰면 감자도 자라요. 성장 단계 그림과 실제 홈 화면." width="1320" height="2868"></a><figcaption>01 · 감자 성장</figcaption></figure>
+    <figure><a href="ios/02-emotion.png"><img src="ios/02-emotion.png" alt="오늘의 기분을 감자 표정으로. 실제 감정 선택 화면." width="1320" height="2868"></a><figcaption>02 · 감정 선택</figcaption></figure>
+    <figure><a href="ios/03-photo.png"><img src="ios/03-photo.png" alt="사진 한 장에 오늘 이야기를 더해요. 노을 사진이 담긴 일기." width="1320" height="2868"></a><figcaption>03 · 사진 일기</figcaption></figure>
+    <figure><a href="ios/04-widget.png"><img src="ios/04-widget.png" alt="홈 화면에서도 감자와 함께. iOS의 실제 주간 감정 위젯." width="1320" height="2868"></a><figcaption>04 · iOS 홈 위젯</figcaption></figure>
+    <figure><a href="ios/05-search.png"><img src="ios/05-search.png" alt="다시 보고 싶은 날을 쉽게 찾아요. 노을을 검색한 결과." width="1320" height="2868"></a><figcaption>05 · 일기 검색</figcaption></figure>
+    <figure><a href="ios/06-drafts.png"><img src="ios/06-drafts.png" alt="쓰다 만 이야기는 이어서 써요. 임시저장 목록과 이어쓰기 화면." width="1320" height="2868"></a><figcaption>06 · 임시저장·이어쓰기</figcaption></figure>
+  </div>
+  <h2>Google Play · 1080 × 1920</h2>
+  <div class="grid">
+    <figure><a href="android/01-growth.png"><img src="android/01-growth.png" alt="감자 성장 단계와 Android 앱의 실제 홈 화면." width="1080" height="1920"></a><figcaption>01 · 감자 성장</figcaption></figure>
+    <figure><a href="android/02-emotion.png"><img src="android/02-emotion.png" alt="Android 앱의 실제 감정 선택 화면." width="1080" height="1920"></a><figcaption>02 · 감정 선택</figcaption></figure>
+    <figure><a href="android/03-photo.png"><img src="android/03-photo.png" alt="노을 사진과 글을 함께 남긴 Android 일기 화면." width="1080" height="1920"></a><figcaption>03 · 사진 일기</figcaption></figure>
+    <figure><a href="android/04-widget.png"><img src="android/04-widget.png" alt="감자의 성장과 연속 기록을 보여주는 실제 Android 홈 위젯." width="1080" height="1920"></a><figcaption>04 · Android 홈 위젯</figcaption></figure>
+    <figure><a href="android/05-search.png"><img src="android/05-search.png" alt="Android 앱에서 제목과 본문의 노을을 검색한 결과." width="1080" height="1920"></a><figcaption>05 · 일기 검색</figcaption></figure>
+    <figure><a href="android/06-drafts.png"><img src="android/06-drafts.png" alt="Android의 임시저장 목록과 이어쓰기 화면." width="1080" height="1920"></a><figcaption>06 · 임시저장·이어쓰기</figcaption></figure>
+  </div>
+</main>
+</html>

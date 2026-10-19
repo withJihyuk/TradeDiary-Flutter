@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:trade_diary/designSystem/color.dart';
+import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/provider/diary_list.dart';
 import 'package:trade_diary/provider/profile_provider.dart';
 import 'package:trade_diary/provider/write_diary.dart';
@@ -9,6 +12,7 @@ import 'package:trade_diary/router.dart';
 import 'package:trade_diary/service/draft_store.dart';
 import 'package:trade_diary/util/emotion.dart';
 import 'package:trade_diary/util/quill_content_util.dart';
+import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
 
 class WriteSelectingEmotion extends ConsumerStatefulWidget {
@@ -89,68 +93,113 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
       canPop: !_saving,
       child: Scaffold(
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                IgnorePointer(
-                  ignoring: _saving,
-                  child: const TopNavigationBar(title: '감정 선택'),
-                ),
-                Expanded(
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    children: Emotion.emotionMap.entries
-                        .map(
-                          (entry) => Semantics(
-                            selected: selected == entry.key,
-                            button: true,
-                            label: entry.key,
-                            child: OutlinedButton(
-                              onPressed: _saving
-                                  ? null
-                                  : () {
-                                      unawaited(
-                                        _saveEmotion(entry.key)
-                                            .catchError((Object _) {}),
-                                      );
-                                    },
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: selected == entry.key
-                                    ? const Color(0xFFF5E0CE)
-                                    : null,
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 20.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IgnorePointer(
+                      ignoring: _saving,
+                      child: const TopNavigationBar(title: '감정 선택'),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 40.h),
+                            Text(
+                              '감정선택',
+                              style: AppTextStyle.m3Regular.copyWith(
+                                color: DiaryMainGrey.grey800,
                               ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Flexible(
+                            ),
+                            SizedBox(height: 12.h),
+                            GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: Emotion.emotionMap.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 30,
+                                    crossAxisSpacing: 30,
+                                  ),
+                              itemBuilder: (context, index) {
+                                final entry = Emotion.emotionMap.entries
+                                    .elementAt(index);
+                                final isSelected = selected == entry.key;
+                                return Semantics(
+                                  selected: isSelected,
+                                  button: true,
+                                  label: entry.key,
+                                  child: OutlinedButton(
+                                    onPressed: _saving
+                                        ? null
+                                        : () {
+                                            unawaited(
+                                              _saveEmotion(entry.key)
+                                                  .catchError((Object _) {}),
+                                            );
+                                          },
+                                    style: OutlinedButton.styleFrom(
+                                      padding: const EdgeInsets.all(30),
+                                      backgroundColor: isSelected
+                                          ? const Color(0xFFF5E0CE)
+                                          : DiaryMainGrey.grey50,
+                                      side: isSelected
+                                          ? const BorderSide(
+                                              color: DiaryColor.globalMainColor,
+                                              width: 2,
+                                            )
+                                          : BorderSide.none,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
                                     child: Image.asset(
                                       entry.value,
-                                      height: 100,
+                                      width: 100.w,
+                                      height: 100.h,
                                       excludeFromSemantics: true,
                                     ),
                                   ),
-                                  Text(entry.key),
-                                ],
-                              ),
+                                );
+                              },
                             ),
-                          ),
-                        )
-                        .toList(),
+                            SizedBox(height: 100.h),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                bottom: 20.h,
+                left: 20.h,
+                right: 20.h,
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 20,
+                        offset: const Offset(0, -2),
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                  child: DiaryButton(
+                    onPressed: _complete,
+                    isDisabled: _saving,
+                    text: _saving ? '저장 중…' : '완료하기',
                   ),
                 ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: _saving ? null : _complete,
-                    child: Text(_saving ? '저장 중…' : '완료하기'),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
