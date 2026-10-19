@@ -102,31 +102,60 @@ class _DiaryViewState extends State<DiaryView> {
                 ),
                 SizedBox(height: 30.h),
                 Align(
-                  alignment: Alignment.topLeft,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Image.asset(
-                          Emotion.emotionMap[diary.emotion] ??
-                              Emotion.emotionMap.values.first,
-                          width: 180.w,
-                          height: 180.h,
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 640),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Image.asset(
+                            Emotion.emotionMap[diary.emotion] ??
+                                Emotion.emotionMap.values.first,
+                            width: 180.w,
+                            height: 180.h,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(diary.subject, style: AppTextStyle.m1Semi),
-                      QuillEditor.basic(
-                        controller: _controller!,
-                        config: QuillEditorConfig(
-                          showCursor: false,
-                          embedBuilders: [
-                            DiaryImageEmbedBuilder(),
-                            DividerEmbedBuilder(),
-                          ],
+                        const SizedBox(height: 20),
+                        Text(
+                          diary.subject,
+                          style: AppTextStyle.m1Semi.copyWith(
+                            color: DiaryMainGrey.grey900,
+                            height: 1.45,
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        QuillEditor.basic(
+                          controller: _controller!,
+                          config: QuillEditorConfig(
+                            showCursor: false,
+                            scrollable: false,
+                            customStyles: const DefaultStyles(
+                              paragraph: DefaultTextBlockStyle(
+                                TextStyle(
+                                  fontFamily: 'Pretendard',
+                                  fontSize: 16,
+                                  height: 1.7,
+                                  leadingDistribution:
+                                      TextLeadingDistribution.even,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  color: DiaryMainGrey.grey900,
+                                ),
+                                HorizontalSpacing.zero,
+                                VerticalSpacing(0, 8),
+                                VerticalSpacing.zero,
+                                null,
+                              ),
+                            ),
+                            embedBuilders: [
+                              DiaryImageEmbedBuilder(),
+                              DividerEmbedBuilder(),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
                   ),
                 ),
               ],

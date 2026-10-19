@@ -3,7 +3,7 @@ description: "감자랑 함께 일기를 써봐요 :)"
 
 publish_to: "none"
 
-version: 1.0.16+34
+version: 1.0.17+35
 
 environment:
   sdk: ">=3.13.0 <4.0.0"

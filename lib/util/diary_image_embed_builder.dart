@@ -38,7 +38,7 @@ class DiaryImageEmbedBuilder extends EmbedBuilder {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: embedContext.readOnly ? 14 : 8),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: imageWidget,
