@@ -169,7 +169,7 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                                 );
                               },
                             ),
-                            SizedBox(height: 100.h),
+                            SizedBox(height: 52 + 40.h),
                           ],
                         ),
                       ),

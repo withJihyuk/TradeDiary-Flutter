@@ -50,8 +50,10 @@ for platform in platforms {
     try save(sheet.makeImage()!, root.appendingPathComponent(platform + "-overview.png"))
 }
 let feature = root.appendingPathComponent("featureGraphic.png")
-let image = try load(feature)
-let opaque = context(image.width, image.height)
-opaque.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
-try save(opaque.makeImage()!, feature)
+if platforms.contains("android"), FileManager.default.fileExists(atPath: feature.path) {
+    let image = try load(feature)
+    let opaque = context(image.width, image.height)
+    opaque.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+    try save(opaque.makeImage()!, feature)
+}
 print("Encoded opaque PNGs and generated overview sheets for: \(platforms.joined(separator: ", "))")
