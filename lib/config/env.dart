@@ -21,8 +21,6 @@ class EnvConfig {
   static String get sentryDsn => dotenv.get('SENTRY_DSN');
   static String get googleWebClientId => dotenv.get('GOOGLE_WEB_CLIENT_ID');
   static String get googleIosClientId => dotenv.get('GOOGLE_IOS_CLIENT_ID');
-  static String get authCallbackUrl => '$dbUrl/auth/v1/callback';
-  static String get deleteUserUrl => '$dbUrl/functions/v1/delete-user';
 
   /// Loads and validates all application environment variables at startup.
   static Future<void> initialize() async {

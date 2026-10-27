@@ -25,11 +25,16 @@ class ProfileDataSource {
       throw ValidationException('이름은 1자 이상 30자 이내로 입력해 주세요');
     }
     try {
-      await supabase
+      final updated = await supabase
           .from("profile")
           .update({"nickname": nickname})
-          .eq('id', userId);
+          .eq('id', userId)
+          .select('id');
+      if (updated.isEmpty) {
+        throw DatabaseException('닉네임을 변경하는데 실패했어요');
+      }
     } catch (e) {
+      if (e is AppException) rethrow;
       throw DatabaseException('닉네임을 변경하는데 실패했어요', originalError: e);
     }
   }
