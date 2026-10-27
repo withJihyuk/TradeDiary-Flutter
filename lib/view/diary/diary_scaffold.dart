@@ -35,7 +35,17 @@ class _ScaffoldState extends ConsumerState<_Scaffold> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
+      if (ref.read(paginatedDiaryProvider).error != null) return;
       ref.read(paginatedDiaryProvider.notifier).loadMore();
+    }
+  }
+
+  Future<void> _onRefresh() async {
+    final messenger = ScaffoldMessenger.of(context);
+    await ref.read(paginatedDiaryProvider.notifier).loadInitial();
+    if (!mounted) return;
+    if (ref.read(paginatedDiaryProvider).error != null) {
+      messenger.showSnackBar(const SnackBar(content: Text('글을 새로 가져오지 못했어요')));
     }
   }
 
@@ -43,22 +53,30 @@ class _ScaffoldState extends ConsumerState<_Scaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            SingleChildScrollView(
-              controller: _scrollController,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 28,
-                ),
-                child: Column(
-                  children: [
-                    widget.header,
-                    const SizedBox(height: 18),
-                    widget.searchBox,
-                    const SizedBox(height: 20),
-                    widget.diaryList,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 28, 20, 20),
+              child: Column(
+                children: [
+                  widget.header,
+                  const SizedBox(height: 18),
+                  widget.searchBox,
+                ],
+              ),
+            ),
+            Expanded(
+              child: RefreshIndicator(
+                color: DiaryColor.buttonSpecificColor,
+                onRefresh: _onRefresh,
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+                      sliver: widget.diaryList,
+                    ),
                   ],
                 ),
               ),

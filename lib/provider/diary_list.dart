@@ -87,7 +87,7 @@ class PaginatedDiaryNotifier extends StateNotifier<PaginatedDiaryState> {
   Future<void> loadInitial() async {
     final generation = ++_generation;
     _page = 0;
-    state = PaginatedDiaryState(isLoading: true, query: state.query);
+    state = state.copyWith(isLoading: true);
     try {
       final items = await _dataSource.getDiaryPaginated(
         page: 0,
@@ -102,7 +102,7 @@ class PaginatedDiaryNotifier extends StateNotifier<PaginatedDiaryState> {
       );
     } catch (e) {
       if (!mounted || generation != _generation) return;
-      state = PaginatedDiaryState(error: e, query: state.query);
+      state = state.copyWith(isLoading: false, error: e);
     }
   }
 
@@ -131,7 +131,7 @@ class PaginatedDiaryNotifier extends StateNotifier<PaginatedDiaryState> {
   }
 
   void setQuery(String query) {
-    state = state.copyWith(query: query);
+    state = state.copyWith(query: query, items: const [], hasMore: true);
     loadInitial();
   }
 

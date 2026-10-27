@@ -28,14 +28,13 @@ class _HomePageState extends ConsumerState<HomePage> {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('has_seen_welcome') == true) return;
 
-    await prefs.setBool('has_seen_welcome', true);
-
     if (!mounted) return;
-    showDialog(
+    await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => const WelcomeDialog(),
     );
+    await prefs.setBool('has_seen_welcome', true);
   }
 
   Widget _buildHeaderImages() {
@@ -108,7 +107,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           _buildExpProgressBar(target == 0 ? 1 : earned / target),
           SizedBox(height: 8.h),
           Text(
-            "일기와 도전과제를 설정하면 감자가 성장해요",
+            "일기를 쓰면 감자가 성장해요",
             style: AppTextStyle.labelRegular.copyWith(color: Colors.white),
           ),
         ],
@@ -138,10 +137,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final levels = LevelSystem();
     final level = levels.getLevel(profile.exp);
     final target = levels.expToNextLevel(profile.exp);
-    final earned = (profile.exp - levels.getCurrentLevelExp(level)).clamp(
-      0,
-      target,
-    );
+    final earned = levels.getEarnedExp(profile.exp);
 
     return Stack(
       children: [
