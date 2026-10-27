@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -19,7 +20,7 @@ import 'package:trade_diary/view/write/write_page.dart';
 
 class PageRouter {
   static final GoRouter router = GoRouter(
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: kDebugMode,
     initialLocation: '/',
     redirect: (context, state) {
       final location = state.matchedLocation;

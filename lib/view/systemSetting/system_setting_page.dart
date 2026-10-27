@@ -22,6 +22,7 @@ class SystemSettingPage extends ConsumerStatefulWidget {
 
 class _SystemSettingPageState extends ConsumerState<SystemSettingPage> {
   bool _notificationEnabled = false;
+  TimeOfDay? _notificationTime;
   bool _settingNotification = false;
   bool _notificationChanged = false;
   final OauthViewModel oauthViewModel = OauthViewModel();
@@ -34,10 +35,35 @@ class _SystemSettingPageState extends ConsumerState<SystemSettingPage> {
 
   Future<void> _loadNotificationSetting() async {
     final enabled = await NotificationService().isNotificationEnabled();
-    if (!mounted || _notificationChanged) return;
+    final time = await NotificationService().getNotificationTime();
+    if (!mounted) return;
     setState(() {
-      _notificationEnabled = enabled;
+      _notificationTime = time;
+      if (!_notificationChanged) _notificationEnabled = enabled;
     });
+  }
+
+  String _formatTime(TimeOfDay time) {
+    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
+    final period = time.period == DayPeriod.am ? '오전' : '오후';
+    return '$period $hour:${time.minute.toString().padLeft(2, '0')}';
+  }
+
+  Future<void> _pickNotificationTime() async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _notificationTime ?? const TimeOfDay(hour: 20, minute: 0),
+    );
+    if (picked == null || !mounted) return;
+    try {
+      await NotificationService().setNotificationTime(picked);
+      if (mounted) setState(() => _notificationTime = picked);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('알림 시간을 저장하지 못했어요')));
+      }
+    }
   }
 
   void _showPermissionDeniedDialog() {
@@ -113,6 +139,25 @@ class _SystemSettingPageState extends ConsumerState<SystemSettingPage> {
                 ],
               ),
               if (_notificationEnabled) ...[
+                SizedBox(height: 20.h),
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _pickNotificationTime,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('알림 시간', style: AppTextStyle.m3Regular),
+                      Text(
+                        _notificationTime == null
+                            ? ''
+                            : _formatTime(_notificationTime!),
+                        style: AppTextStyle.m3Regular.copyWith(
+                          color: DiaryColor.globalMainColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: 8.h),
                 TextButton(
                   onPressed: () async {
@@ -167,6 +212,23 @@ class _SystemSettingPageState extends ConsumerState<SystemSettingPage> {
               SizedBox(height: 32.h),
               GestureDetector(
                 onTap: () async {
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('로그아웃할까요?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('취소'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('로그아웃'),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirmed != true) return;
                   try {
                     await ref.read(draftStoreProvider).flush();
                     await oauthViewModel.logout();
@@ -196,7 +258,7 @@ class _SystemSettingPageState extends ConsumerState<SystemSettingPage> {
                     Text(
                       "로그아웃",
                       style: AppTextStyle.m3Regular.copyWith(
-                        color: const Color(0xffCB1111),
+                        color: DiaryColor.errorColor,
                       ),
                     ),
                   ],
@@ -216,7 +278,7 @@ class _SystemSettingPageState extends ConsumerState<SystemSettingPage> {
                     Text(
                       "회원탈퇴",
                       style: AppTextStyle.m3Regular.copyWith(
-                        color: const Color(0xffCB1111),
+                        color: DiaryColor.errorColor,
                       ),
                     ),
                   ],

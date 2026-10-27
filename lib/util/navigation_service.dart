@@ -11,6 +11,19 @@ class NavigationService {
       uri != null &&
       ['potatodiary', 'tradediary'].contains(uri.scheme.toLowerCase()) &&
       (uri.host.toLowerCase() == 'write' || uri.path == '/write');
+
+  static void openWrite() {
+    if (Supabase.instance.client.auth.currentSession == null) {
+      pendingWidgetRoute = '/write';
+      PageRouter.router.go('/login');
+    } else if (![
+      '/write',
+      '/select',
+    ].contains(PageRouter.router.routeInformationProvider.value.uri.path)) {
+      PageRouter.router.push('/write');
+    }
+  }
+
   static StreamSubscription<AuthState> handleAuthStateChange(
     BuildContext context,
     void Function(String?) onUserChanged,
@@ -19,7 +32,9 @@ class NavigationService {
     String? previous = auth.currentUser?.id;
     return auth.onAuthStateChange.listen((data) {
       final current = data.session?.user.id;
-      if (current == previous) return;
+      if (current == previous && data.event != AuthChangeEvent.signedOut) {
+        return;
+      }
       previous = current;
       onUserChanged(current);
       unawaited(StreakService.clearWidgetData());
