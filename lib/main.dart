@@ -29,7 +29,7 @@ const Size kDesignSize = Size(390, 844);
 /// Initializes application services and launches the Flutter app.
 void main() async {
   try {
-    WidgetsFlutterBinding.ensureInitialized();
+    SentryWidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
