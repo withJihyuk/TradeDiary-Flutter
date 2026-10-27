@@ -13,6 +13,8 @@ import 'package:trade_diary/provider/session.dart';
 import 'package:trade_diary/util/image_compressor.dart';
 import 'package:trade_diary/util/quill_content_util.dart';
 
+const _brokenImage = '사진 파일을 찾을 수 없어요. 해당 사진을 지워 주세요';
+
 final draftStoreProvider = ChangeNotifierProvider<DraftStore>(
   (ref) => DraftStore(ref.watch(sessionUserProvider)),
 );
@@ -81,6 +83,8 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
   Future<void> _writes = Future.value();
   Future<void>? _syncing;
   Timer? _timer;
+  Timer? _persistTimer;
+  bool _unsaved = false;
   bool _disposed = false;
   bool _active = true;
   bool completing = false;
@@ -106,8 +110,9 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
   String status(String id) {
     if (localError != null) return localError!;
     if (!_drafts.containsKey(id)) return '내용을 입력하면 자동 저장돼요';
-    if (_pendingWrites > 0) return '저장 중';
+    if (_pendingWrites > 0 || _unsaved) return '저장 중';
     if (_syncing != null) return '동기화 중';
+    if (error == _brokenImage) return _brokenImage;
     if (error != null) return '이 기기에 보관 중 · 연결을 확인해 주세요';
     return _drafts[id]?.dirty == true ? '이 기기에 보관됨' : '자동 저장됨';
   }
@@ -124,10 +129,22 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
     await _directory!.create(recursive: true);
     final file = File('${_directory!.path}/drafts.json');
     if (await file.exists()) {
-      final entries = jsonDecode(await file.readAsString()) as List;
-      for (final entry in entries) {
-        final draft = LocalDraft.fromJson(Map<String, dynamic>.from(entry));
-        if (draft.diary.userId == userId) _drafts[draft.diary.id!] = draft;
+      try {
+        final entries = jsonDecode(await file.readAsString()) as List;
+        for (final entry in entries) {
+          final draft = LocalDraft.fromJson(Map<String, dynamic>.from(entry));
+          if (draft.diary.userId == userId) _drafts[draft.diary.id!] = draft;
+        }
+      } catch (_) {
+        _drafts.clear();
+        final corrupt = File('${file.path}.corrupt');
+        try {
+          if (await corrupt.exists()) await corrupt.delete();
+          await file.rename(corrupt.path);
+        } on FileSystemException {
+          /* Keep going with an empty store. */
+        }
+        localError = '기기 저장 내용이 손상되어 불러오지 못했어요';
       }
     }
     // Only collect unused local image files during startup, before the editor can import photos.
@@ -160,6 +177,8 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
 
   // ponytail: One JSON file suits small draft collections; use SQLite if whole-file writes become slow.
   Future<void> _persist() {
+    _persistTimer?.cancel();
+    _unsaved = false;
     _pendingWrites++;
     final task = _writes.catchError((Object _) {}).then((_) async {
       if (_directory == null) throw StateError('로그인이 필요합니다');
@@ -186,15 +205,29 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
     );
   }
 
+  void _persistSoon() {
+    final first = !_unsaved;
+    _unsaved = true;
+    _persistTimer?.cancel();
+    _persistTimer = Timer(
+      const Duration(milliseconds: 300),
+      () => unawaited(_persist().catchError((Object _) {})),
+    );
+    if (first) _notify();
+  }
+
   Future<void> flush() async {
     await ready;
     await _persist();
   }
 
-  bool _empty(DiaryPostModel d) =>
-      d.subject.trim().isEmpty &&
-      QuillContentUtil.contentToPlainText(d.content).trim().isEmpty &&
-      !d.content.contains('"image"');
+  bool _empty(DiaryPostModel d) {
+    if (d.subject.trim().isNotEmpty) return false;
+    final doc = QuillContentUtil.contentToDocument(d.content);
+    return QuillContentUtil.documentToPlainText(doc).isEmpty &&
+        QuillContentUtil.countImages(doc) == 0;
+  }
+
   Future<void> update(DiaryPostModel diary) async {
     await ready;
     if (!_authorized || completing) return;
@@ -214,11 +247,12 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
     );
     _drafts[diary.id!] = LocalDraft(
       next,
+      completionMutationId: old?.completionMutationId,
       dirty: true,
       images: Map.of(old?.images ?? {}),
       conflict: old?.conflict ?? false,
     );
-    await _persist();
+    _persistSoon();
     _schedule();
   }
 
@@ -317,24 +351,37 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
   Future<DiaryPostModel> _upload(LocalDraft draft) async {
     final doc = QuillContentUtil.contentToDocument(draft.diary.content);
     final paths = QuillContentUtil.extractLocalImagePaths(doc).toSet().toList();
+    final pending = <MapEntry<String, String>>[];
     for (final path in paths) {
       if (!_authorized) throw StateError('계정이 변경되었어요');
-      if (!draft.images.containsKey(path)) {
-        // Legacy cached paths are copied once, and their stable mapping is persisted before upload.
-        var uploadPath = path;
-        if (!path.startsWith('${_directory!.path}/')) {
-          uploadPath = draft.images['local:$path'] ?? await importImage(path);
-          draft.images['local:$path'] = uploadPath;
-          _drafts[draft.diary.id]?.images.addAll(draft.images);
-          await _persist();
+      if (draft.images.containsKey(path)) continue;
+      // Legacy cached paths are copied once, and their stable mapping is persisted before upload.
+      var uploadPath = path;
+      if (!path.startsWith('${_directory!.path}/')) {
+        final cached = draft.images['local:$path'];
+        if (cached == null && !await File(path).exists()) {
+          throw StateError(_brokenImage);
         }
-        final uploaded = (await _source.uploadImage([uploadPath])).single;
-        if (!_authorized) throw StateError('계정이 변경되었어요');
-        draft.images[path] = uploaded;
-        // The current in-memory revision may have changed during the network request.
+        uploadPath = cached ?? await importImage(path);
+        draft.images['local:$path'] = uploadPath;
         _drafts[draft.diary.id]?.images.addAll(draft.images);
         await _persist();
       }
+      if (!await File(uploadPath).exists()) throw StateError(_brokenImage);
+      pending.add(MapEntry(path, uploadPath));
+    }
+    for (var i = 0; i < pending.length; i += 10) {
+      final chunk = pending.skip(i).take(10).toList();
+      final uploaded = await _source.uploadImage(
+        chunk.map((e) => e.value).toList(),
+      );
+      if (!_authorized) throw StateError('계정이 변경되었어요');
+      for (var j = 0; j < chunk.length; j++) {
+        draft.images[chunk[j].key] = uploaded[j];
+      }
+      // The current in-memory revision may have changed during the network request.
+      _drafts[draft.diary.id]?.images.addAll(draft.images);
+      await _persist();
     }
     return draft.diary.copyWith(
       content: QuillContentUtil.replaceImagePaths(
@@ -377,6 +424,7 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
 
   Future<void> _syncAll() async {
     await ready;
+    String? failure;
     try {
       await _persist();
       for (final local
@@ -385,40 +433,52 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
               .toList()) {
         if (!_authorized || completing) break;
         if (!local.dirty) continue;
-        final outgoing = local.deleted ? local.diary : await _upload(local);
-        if (!_authorized) break;
-        final result = await _source.mutate(
-          local.deleted ? 'delete_draft' : 'save_draft',
-          outgoing,
-          local.mutationId,
-        );
-        if (!_authorized) break;
-        final current = _drafts[local.diary.id];
-        if (result['status'] == 'saved') {
-          final server = DiaryPostModel.fromJson(
-            Map<String, dynamic>.from(result['diary']),
+        try {
+          final outgoing = local.deleted ? local.diary : await _upload(local);
+          if (!_authorized) break;
+          final result = await _source.mutate(
+            local.deleted ? 'delete_draft' : 'save_draft',
+            outgoing,
+            local.mutationId,
           );
-          if (current != null) {
-            current.diary = current.diary.copyWith(revision: server.revision);
-            if (current.mutationId == local.mutationId) current.dirty = false;
+          if (!_authorized) break;
+          final current = _drafts[local.diary.id];
+          if (result['status'] == 'saved') {
+            final server = DiaryPostModel.fromJson(
+              Map<String, dynamic>.from(result['diary']),
+            );
+            if (current != null) {
+              current.diary = current.diary.copyWith(revision: server.revision);
+              if (current.mutationId == local.mutationId) current.dirty = false;
+            }
+          } else if (result['status'] == 'completed' &&
+              result['diary']?['lastMutationId'] ==
+                  local.completionMutationId &&
+              local.completionMutationId != null &&
+              current?.mutationId == local.mutationId) {
+            _drafts.remove(local.diary.id);
+          } else if (result['status'] == 'deleted' && local.deleted) {
+            _drafts.remove(local.diary.id);
+          } else {
+            await _fork(local, result);
           }
-        } else if (result['status'] == 'completed' &&
-            result['diary']?['lastMutationId'] == local.completionMutationId &&
-            local.completionMutationId != null &&
-            current?.mutationId == local.mutationId) {
-          _drafts.remove(local.diary.id);
-        } else if (result['status'] == 'deleted' && local.deleted) {
-          _drafts.remove(local.diary.id);
-        } else {
-          await _fork(local, result);
+          await _persist();
+        } catch (e) {
+          if (e is StateError && e.message == _brokenImage) {
+            failure = _brokenImage;
+          } else {
+            failure ??= '동기화 실패';
+          }
         }
-        await _persist();
       }
-      error = null;
-      _retry = 0;
     } catch (_) {
-      error = '동기화 실패';
-      if (_retry < 4) _schedule(Duration(seconds: [2, 5, 15, 30][_retry++]));
+      failure ??= '동기화 실패';
+    }
+    error = failure;
+    if (failure == null) {
+      _retry = 0;
+    } else if (failure != _brokenImage && _retry < 4) {
+      _schedule(Duration(seconds: [2, 5, 15, 30][_retry++]));
     }
   }
 
@@ -436,18 +496,20 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
   Future<DiaryPostModel> complete(String id) async {
     await ready;
     if (completing) throw StateError('저장 중이에요');
-    _timer?.cancel();
-    await _syncing;
-    if (!_authorized) throw StateError('로그인이 필요합니다');
-    final local = _drafts[id];
-    if (local == null) throw StateError('임시저장 목록에서 보존된 글을 다시 열어 주세요');
     completing = true;
-    local.completionMutationId ??= const Uuid().v4();
     _notify();
+    _timer?.cancel();
+    String? sentToken;
     try {
+      await _syncing;
+      if (!_authorized) throw StateError('로그인이 필요합니다');
+      final local = _drafts[id];
+      if (local == null) throw StateError('임시저장 목록에서 보존된 글을 다시 열어 주세요');
+      local.completionMutationId ??= const Uuid().v4();
       await _persist();
       final outgoing = await _upload(local);
       if (!_authorized) throw StateError('계정이 변경되었어요');
+      sentToken = local.completionMutationId;
       final result = await _source.mutate(
         'finalize_diary',
         outgoing,
@@ -468,15 +530,22 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
       _drafts.remove(id);
       await _persist();
       return diary;
-    } on TimeoutException {
-      final server = await _source.getById(id);
-      if (server != null &&
-          !server.isDraft &&
-          server.lastMutationId == local.completionMutationId! &&
-          _authorized) {
-        _drafts.remove(id);
-        await _persist();
-        return server;
+    } catch (e) {
+      if (e is StateError) rethrow;
+      if (sentToken != null) {
+        try {
+          final server = await _source.getById(id);
+          if (server != null &&
+              !server.isDraft &&
+              server.lastMutationId == sentToken &&
+              _authorized) {
+            _drafts.remove(id);
+            await _persist();
+            return server;
+          }
+        } catch (_) {
+          /* Report the original failure. */
+        }
       }
       rethrow;
     } finally {
@@ -489,6 +558,7 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
   Future<void> suspend() async {
     _suspended = true;
     _timer?.cancel();
+    if (_unsaved) await _persist().catchError((Object _) {});
     await _syncing;
     await _writes;
   }
@@ -500,6 +570,8 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
 
   Future<void> purge() async {
     _timer?.cancel();
+    _persistTimer?.cancel();
+    _unsaved = false;
     await _syncing;
     await _writes;
     _drafts.clear();
@@ -516,6 +588,7 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
       unawaited(refresh());
     } else {
       _timer?.cancel();
+      if (_unsaved) unawaited(_persist().catchError((Object _) {}));
     }
   }
 
@@ -523,6 +596,7 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
   void dispose() {
     _disposed = true;
     _timer?.cancel();
+    if (_unsaved) unawaited(_persist().catchError((Object _) {}));
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

@@ -10,6 +10,7 @@ Future<void> _showColorPicker(
 ) async {
   final Color? picked = await showModalBottomSheet<Color>(
     context: context,
+    backgroundColor: Colors.white,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
@@ -33,15 +34,15 @@ Future<void> _showColorPicker(
     return;
   }
 
-  ref.read(recentColorsProvider.notifier).add(picked);
   if (isBackground) {
+    ref.read(recentBackgroundColorsProvider.notifier).add(picked);
     ref.read(frequentBackgroundColorsProvider.notifier).record(picked);
   } else {
+    ref.read(recentColorsProvider.notifier).add(picked);
     ref.read(frequentTextColorsProvider.notifier).record(picked);
   }
 
-  final hex =
-      '#${picked.toARGB32().toRadixString(16).padLeft(8, '0').substring(2)}';
+  final hex = _colorToStorageHex(picked);
   if (isBackground) {
     final attr = BackgroundAttribute(hex);
     controller.formatSelection(attr);
@@ -104,7 +105,7 @@ const _bgColorPreviews = [
   Color(0xFF9FA8DA), // 남색
   Color(0xFFB39DDB), // 보라
   Color(0xFFCE93D8), // 자주
-  Color(0xFFFFAB91), // 코랄
+  Color(0xFFEF9A9A), // 코랄
   Color(0xFFBCAAA4), // 베이지
   Color(0xFFD7CCC8), // 모카
   Color(0xFFB0BEC5), // 그레이블루
@@ -209,6 +210,11 @@ final recentColorsProvider =
       return RecentColorsNotifier();
     });
 
+final recentBackgroundColorsProvider =
+    StateNotifierProvider<RecentColorsNotifier, List<Color>>((ref) {
+      return RecentColorsNotifier();
+    });
+
 final frequentTextColorsProvider =
     StateNotifierProvider<FrequentColorsNotifier, List<Color>>((ref) {
       return FrequentColorsNotifier(
@@ -232,7 +238,12 @@ class _ColorPickerSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recentColors = ref.watch(recentColorsProvider);
+    final recentColors = isBackground
+        ? ref.watch(recentBackgroundColorsProvider)
+        : ref.watch(recentColorsProvider);
+    final recentDisplayColors = isBackground
+        ? recentColors.map(_backgroundPreviewForActual).toList(growable: false)
+        : recentColors;
     final frequentColors = isBackground
         ? ref.watch(frequentBackgroundColorsProvider)
         : ref.watch(frequentTextColorsProvider);
@@ -259,7 +270,8 @@ class _ColorPickerSheet extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             _ColorGrid(
-              colors: recentColors,
+              colors: recentDisplayColors,
+              actualColors: isBackground ? recentColors : null,
               onSelect: (c) => Navigator.of(context).pop(c),
             ),
           ],
