@@ -54,7 +54,7 @@ bundle exec fastlane lanes
 - **임시저장과 완료 저장:** 일기 저장 변경 시 신규 작성·임시저장·이어쓰기·완료 전환 경로를 함께 확인합니다. 날짜 판정은 [날짜 유틸](lib/util/diary_post_date_util.dart)을 사용하고 완료일은 한국 시간 기준 서버 `diaryDate`를 따릅니다. 기기 저장 완료와 서버 동기화 완료를 구분하며, 충돌 시 미반영 내용을 새 초안으로 보존합니다.
 - **목록과 상태 갱신:** [diaryListProvider](lib/provider/diary_list.dart)는 완료된 일기를, 같은 파일의 `paginatedDiaryProvider`는 완료된 일기의 검색·페이지 목록을 제공합니다. 초안은 [DraftStore](lib/service/draft_store.dart)의 사용자별 로컬 저장과 서버 동기화를 사용합니다. 완료 후 [완료 화면](lib/view/write/write_selecting_emotion.dart)에서 provider를 갱신하므로 목록·프로필·홈 위젯의 반영 경로를 함께 확인합니다.
 - **모델과 실제 쓰기 데이터:** [일기 모델](lib/model/diary_post.dart)의 ID·임시저장 여부·생성/수정 시각은 기본 `toJson()`에서 제외됩니다. 모델이나 저장 필드 변경 시 [DataSource](lib/dataSource/diary_post.dart)에서 구성하는 쓰기 데이터도 확인합니다.
-- **화면 이동:** `/write`와 `/select`는 `extra`로 임시저장 ID를 전달합니다. `/read/:id`는 일기 UUID를 사용하며 `extra` 없이도 조회합니다. `/drafts`는 임시저장 전용 목록입니다.
+- **화면 이동:** `/write`와 `/select`는 `extra`로 임시저장 ID를 전달합니다. `/read/:id`는 일기 UUID를 사용하며 `extra` 없이도 조회합니다. `/drafts`는 임시저장 전용 목록입니다. 알림과 홈 위젯에서 작성 화면으로 들어가는 경로는 [NavigationService](lib/util/navigation_service.dart)의 `openWrite`를 공유합니다.
 - **네이티브 홈 위젯:** [StreakService](lib/service/streak_service.dart)와 [Android](android/app/src/main/kotlin/com/jihyuk/potatodiary/PotatoDiaryWidget.kt)·[iOS](ios/PotatoDiaryWidget/PotatoDiaryWidget.swift)의 구현을 함께 확인합니다. 공유 데이터 키, App Group, 위젯에서 앱으로 진입하는 경로의 연결을 확인합니다.
 - **서버 구현의 경계:** [서버 변경 안내](supabase/README.md)의 적용 순서와 RPC 계약을 확인합니다. 이미지 업로드는 별도 [supabase_upload_image](https://github.com/withJihyuk/supabase_upload_image) 저장소입니다. 신규 앱에는 서버 변경을 먼저 배포해야 하며 실제 운영 반영 여부는 별도로 확인합니다.
 
@@ -75,7 +75,7 @@ CI는 모델 코드를 재생성하고 커밋된 생성 파일과 차이가 없�
 CI 구성은 다음과 같습니다.
 
 - `changes`가 변경 파일(`*.md`, `docs/`만 바뀌었는지)과 스토어 릴리즈 여부를 판정합니다. 문서만 바뀌면 빌드·테스트를 건너뛰고 `verify`는 성공으로 끝납니다.
-- `static`(포맷·코드 생성·분석·테스트)과 `android-build`(디버그 APK), `verify-ios`는 병렬로 실행됩니다. 브랜치 보호의 필수 체크는 이들을 집계하는 `verify`와 `verify-ios`입니다.
+- `static`(포맷·코드 생성·분석·테스트)과 `android-build`(디버그 APK), `verify-ios`는 병렬로 실행됩니다. `verify`는 `changes`·`static`·`android-build`의 결과를 집계하며, `master` 브랜치 보호의 필수 체크는 `verify`뿐입니다. `verify-ios`는 필수 체크가 아니므로 병합 화면이 막아주지 않습니다.
 - 같은 PR에 새 커밋이 올라오면 이전 실행은 취소됩니다. `develop`·`master` push 실행은 취소되지 않습니다.
 
 ```sh
@@ -93,11 +93,11 @@ bundle exec fastlane lanes
 
 ## 브랜치와 릴리즈
 
-- 일반 작업은 `develop`에서 분기하고 PR로 `develop`에 병합합니다.
+- 일반 작업은 `develop`에서 분기하고 PR로 `develop`에 병합합니다. PR 설명은 [템플릿](.github/PULL_REQUEST_TEMPLATE.md)을 따르고, 확인하지 못한 항목도 적습니다.
 - 스토어 릴리즈는 `develop`에서 `master`로 보내는 PR로만 진행합니다.
 - `master` 릴리즈에서는 `pubspec.yaml`의 버전명과 빌드 번호를 모두 올리고 `fastlane/metadata/ko/release_notes.txt`도 수정해야 합니다.
 - 빌드 번호는 저장소의 직전 값과 각 스토어의 현재 최고 값을 모두 초과해야 합니다.
-- 병합 전 `verify`(Android 빌드 포함)와 iOS `verify-ios`가 모두 성공했는지 확인합니다. 두 스토어 릴리즈 job은 둘 다 성공해야 시작합니다.
+- 병합 전 `verify`(Android 빌드 포함)와 iOS `verify-ios`가 모두 성공했는지 직접 확인합니다. 두 스토어 릴리즈 job은 둘 다 성공해야 시작합니다.
 - 과거 실패 실행을 재실행하면 당시 SHA와 워크플로가 다시 사용됩니다. 워크플로 수정 후에는 새 커밋으로 새 릴리즈를 만듭니다.
 
 ### 프로덕션 Secret 이름
@@ -110,7 +110,7 @@ bundle exec fastlane lanes
 
 ### Fastlane 동작
 
-- Android `submit`은 CI에서 미리 서명한 AAB를 Google Play `production` 트랙에 `completed` 상태로 올립니다. 단계적 출시가 아니라 전체 출시입니다.
+- Android `submit`은 CI에서 미리 서명한 AAB를 Google Play `production` 트랙에 `completed` 상태로 올립니다. 단계적 출시가 아니라 전체 출시입니다. 스토어 메타데이터와 릴리즈 노트는 올리지 않으므로 필요하면 Play Console에서 직접 수정합니다.
 - iOS `submit`은 `setup_ci`, 읽기 전용 `match`, Xcode 26.3을 사용해 빌드하고 심사에 제출합니다. 심사 승인 후 자동 출시하며 단계적 출시는 사용하지 않습니다.
 - 로컬이나 `master`가 아닌 브랜치에서 `submit` lane을 실행하지 않습니다.
 
