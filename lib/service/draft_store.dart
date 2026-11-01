@@ -128,6 +128,8 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
     );
     await _directory!.create(recursive: true);
     final file = File('${_directory!.path}/drafts.json');
+    final corrupt = File('${file.path}.corrupt');
+    var unreadable = await corrupt.exists();
     if (await file.exists()) {
       try {
         final entries = jsonDecode(await file.readAsString()) as List;
@@ -137,7 +139,7 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
         }
       } catch (_) {
         _drafts.clear();
-        final corrupt = File('${file.path}.corrupt');
+        unreadable = true;
         try {
           if (await corrupt.exists()) await corrupt.delete();
           await file.rename(corrupt.path);
@@ -146,6 +148,11 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
         }
         localError = '기기 저장 내용이 손상되어 불러오지 못했어요';
       }
+    }
+    // The unreadable file may still reference these images, so keep them for recovery.
+    if (unreadable) {
+      _notify();
+      return;
     }
     // Only collect unused local image files during startup, before the editor can import photos.
     final referenced = <String>{};
@@ -247,7 +254,6 @@ class DraftStore extends ChangeNotifier with WidgetsBindingObserver {
     );
     _drafts[diary.id!] = LocalDraft(
       next,
-      completionMutationId: old?.completionMutationId,
       dirty: true,
       images: Map.of(old?.images ?? {}),
       conflict: old?.conflict ?? false,

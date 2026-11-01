@@ -27,7 +27,7 @@ class ProfileNotifier extends StateNotifier<AsyncValue<ProfileModel>> {
         state = AsyncValue.data(profile);
       }
     } catch (error, stackTrace) {
-      if (mounted && generation == _generation) {
+      if (mounted && generation == _generation && !state.hasValue) {
         state = AsyncValue.error(error, stackTrace);
       }
     }
