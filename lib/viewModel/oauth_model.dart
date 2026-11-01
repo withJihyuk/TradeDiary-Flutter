@@ -28,43 +28,63 @@ class OauthViewModel {
   /// Authenticates with Google and creates a Supabase session.
   Future<AuthResponse?> nativeGoogleLogin() async {
     if (Platform.isAndroid || Platform.isIOS) {
+      var stage = 'initialize';
       try {
         await _initializeGoogleSignIn();
+        stage = 'authenticate';
         final googleUser = await _googleSignIn.authenticate();
 
         final googleAuth = googleUser.authentication;
         final idToken = googleAuth.idToken;
 
         if (idToken == null) {
-          throw AuthenticationException('구글 로그인 인증에 실패했습니다');
+          throw AuthenticationException(
+            '구글 로그인 인증에 실패했습니다',
+            code: 'missing_id_token',
+            stage: stage,
+          );
         }
 
+        stage = 'authorize';
         final authorizationClient = googleUser.authorizationClient;
         const scopes = ['email'];
         final authorization =
             await authorizationClient.authorizationForScopes(scopes) ??
             await authorizationClient.authorizeScopes(scopes);
 
+        stage = 'supabase';
         // ignore: experimental_member_use
         return await supabase.auth.signInWithIdToken(
           provider: OAuthProvider.google,
           idToken: idToken,
           accessToken: authorization.accessToken,
         );
-      } on GoogleSignInException catch (e) {
+      } on GoogleSignInException catch (e, st) {
         if (e.code == GoogleSignInExceptionCode.canceled) {
           return null;
         }
-        throw AuthenticationException('구글 로그인 중 오류가 발생했습니다', originalError: e);
-      } catch (e) {
+        throw AuthenticationException(
+          '구글 로그인 중 오류가 발생했습니다',
+          code: e.code.name,
+          originalError: e,
+          originalStackTrace: st,
+          stage: stage,
+        );
+      } catch (e, st) {
         if (e is AuthenticationException) rethrow;
-        throw AuthenticationException('구글 로그인 중 오류가 발생했습니다', originalError: e);
+        throw AuthenticationException(
+          '구글 로그인 중 오류가 발생했습니다',
+          originalError: e,
+          originalStackTrace: st,
+          stage: stage,
+        );
       }
     }
     return null;
   }
 
   Future<AuthResponse?> signInWithApple() async {
+    var stage = 'authenticate';
     try {
       final rawNonce = supabase.auth.generateRawNonce();
       final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
@@ -79,21 +99,37 @@ class OauthViewModel {
 
       final idToken = credential.identityToken;
       if (idToken == null) {
-        throw AuthenticationException('애플 로그인 인증에 실패했습니다');
+        throw AuthenticationException(
+          '애플 로그인 인증에 실패했습니다',
+          code: 'missing_id_token',
+          stage: stage,
+        );
       }
 
+      stage = 'supabase';
       // ignore: experimental_member_use
       return await supabase.auth.signInWithIdToken(
         provider: OAuthProvider.apple,
         idToken: idToken,
         nonce: rawNonce,
       );
-    } on SignInWithAppleAuthorizationException catch (e) {
+    } on SignInWithAppleAuthorizationException catch (e, st) {
       if (e.code == AuthorizationErrorCode.canceled) return null;
-      throw AuthenticationException('애플 로그인 중 오류가 발생했습니다', originalError: e);
-    } catch (e) {
+      throw AuthenticationException(
+        '애플 로그인 중 오류가 발생했습니다',
+        code: e.code.name,
+        originalError: e,
+        originalStackTrace: st,
+        stage: stage,
+      );
+    } catch (e, st) {
       if (e is AuthenticationException) rethrow;
-      throw AuthenticationException('애플 로그인 중 오류가 발생했습니다', originalError: e);
+      throw AuthenticationException(
+        '애플 로그인 중 오류가 발생했습니다',
+        originalError: e,
+        originalStackTrace: st,
+        stage: stage,
+      );
     }
   }
 

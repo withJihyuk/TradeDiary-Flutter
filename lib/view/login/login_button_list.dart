@@ -18,7 +18,27 @@ class _LoginButtonListState extends State<_LoginButtonList> {
         await OauthViewModel().nativeGoogleLogin();
       }
     } catch (e, st) {
-      unawaited(Sentry.captureException(e, stackTrace: st));
+      final authError = e is AuthenticationException ? e : null;
+      unawaited(
+        Sentry.captureException(
+          authError?.originalError ?? e,
+          stackTrace: authError?.originalStackTrace ?? st,
+          withScope: (scope) {
+            scope.setTag('auth.provider', apple ? 'apple' : 'google');
+            if (authError?.stage case final stage?) {
+              scope.setTag('auth.stage', stage);
+            }
+            if (authError?.code case final code?) {
+              scope.setTag('auth.code', code);
+            }
+            if (authError != null) {
+              scope.setContexts('authentication', {
+                'message': authError.message,
+              });
+            }
+          },
+        ),
+      );
       if (mounted) {
         ScaffoldMessenger.of(
           context,
