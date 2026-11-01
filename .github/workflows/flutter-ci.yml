@@ -188,7 +188,8 @@ jobs:
   release-android:
     needs: [changes, verify, verify-ios]
     if: needs.changes.outputs.release == 'true'
-    runs-on: ubuntu-latest
+    # ruby/setup-ruby has no Ruby 3.3.1 build for ubuntu-26.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     environment: production
     steps:
@@ -318,6 +319,8 @@ jobs:
       - run: flutter pub get
       - name: Build and submit to App Store review
         env:
+          # The default 3s base times out while Xcode loads the Swift package graph on slow runners.
+          FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: "60"
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_KEY_BASE64 }}
