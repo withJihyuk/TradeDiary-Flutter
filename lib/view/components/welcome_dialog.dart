@@ -20,8 +20,16 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
   bool _widgetEnabled = false;
 
   Future<void> _onConfirm() async {
+    final messenger = ScaffoldMessenger.of(context);
     if (_notificationEnabled) {
-      await NotificationService().setNotificationEnabled(true);
+      final enabled = await NotificationService().setNotificationEnabled(true);
+      if (!enabled) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('알림 권한이 꺼져 있어요. 설정에서 허용하면 알림을 받을 수 있어요'),
+          ),
+        );
+      }
     }
     if (_widgetEnabled) {
       if (Platform.isAndroid) {

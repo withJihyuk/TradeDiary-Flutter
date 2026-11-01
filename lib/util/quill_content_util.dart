@@ -51,6 +51,14 @@ class QuillContentUtil {
       .join()
       .trim();
 
+  /// Document에 포함된 이미지 개수
+  static int countImages(Document document) => document
+      .toDelta()
+      .toList()
+      .where((op) => op.isInsert && op.value is Map)
+      .where((op) => (op.value as Map).containsKey('image'))
+      .length;
+
   /// Document Delta에서 로컬 이미지 파일 경로만 추출
   static List<String> extractLocalImagePaths(Document document) {
     final paths = <String>[];

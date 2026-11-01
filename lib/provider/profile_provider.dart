@@ -21,13 +21,13 @@ class ProfileNotifier extends StateNotifier<AsyncValue<ProfileModel>> {
   Future<void> loadProfile() async {
     final generation = ++_generation;
     try {
-      state = const AsyncValue.loading();
+      if (!state.hasValue) state = const AsyncValue.loading();
       final profile = await _viewModel.getInfo();
       if (mounted && generation == _generation) {
         state = AsyncValue.data(profile);
       }
     } catch (error, stackTrace) {
-      if (mounted && generation == _generation) {
+      if (mounted && generation == _generation && !state.hasValue) {
         state = AsyncValue.error(error, stackTrace);
       }
     }

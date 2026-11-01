@@ -1,8 +1,10 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/material.dart';
+import 'package:trade_diary/util/navigation_service.dart';
 
 import 'dart:io' show Platform;
 
@@ -14,9 +16,50 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin _notifications =
       FlutterLocalNotificationsPlugin();
   static const String notificationEnabledKey = 'notification_enabled';
+  static const String notificationHourKey = 'notification_hour';
+  static const String notificationMinuteKey = 'notification_minute';
+  static const String notificationSkipDayKey = 'notification_skip_day';
+
+  Future<TimeOfDay> getNotificationTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    return TimeOfDay(
+      hour: prefs.getInt(notificationHourKey) ?? 20,
+      minute: prefs.getInt(notificationMinuteKey) ?? 0,
+    );
+  }
+
+  Future<void> setNotificationTime(TimeOfDay time) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(notificationHourKey, time.hour);
+    await prefs.setInt(notificationMinuteKey, time.minute);
+    if (await isNotificationEnabled()) await scheduleDailyNotification();
+  }
+
+  String _koreanDayKey() {
+    final day = tz.TZDateTime.now(tz.getLocation('Asia/Seoul'));
+    return '${day.year}-${day.month}-${day.day}';
+  }
+
+  Future<void> _useDeviceTimeZone() async {
+    try {
+      final info = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(info.identifier));
+    } catch (_) {
+      tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
+    }
+  }
+
+  /// 오늘 일기를 완료했으면 오늘 알림은 건너뛰고 내일부터 다시 울린다.
+  Future<void> rescheduleAfterDiary() async {
+    if (!await isNotificationEnabled()) return;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(notificationSkipDayKey, _koreanDayKey());
+    await scheduleDailyNotification();
+  }
 
   Future<void> init() async {
     tz.initializeTimeZones();
+    await _useDeviceTimeZone();
 
     const androidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
@@ -35,9 +78,15 @@ class NotificationService {
     await _notifications.initialize(
       settings: initSettings,
       onDidReceiveNotificationResponse: (details) {
-        debugPrint('알림 응답 받음: ${details.payload}');
+        NavigationService.openWrite();
       },
     );
+
+    final launchDetails = await _notifications
+        .getNotificationAppLaunchDetails();
+    if (launchDetails?.didNotificationLaunchApp ?? false) {
+      NavigationService.pendingWidgetRoute = '/write';
+    }
   }
 
   Future<void> _requestPermissions() async {
@@ -115,37 +164,37 @@ class NotificationService {
     }
   }
 
-  Future<void> scheduleDailyNotification() async {
-    const androidDetails = AndroidNotificationDetails(
+  NotificationDetails _details(String category) => NotificationDetails(
+    android: const AndroidNotificationDetails(
       'daily_diary_reminder',
       '일기 작성 알림',
-      channelDescription: '매일 오후 8시경 일기 작성을 알려드려요.',
-    );
-    const iosDetails = DarwinNotificationDetails(
+      channelDescription: '정해진 시간에 일기 작성을 알려드려요.',
+    ),
+    iOS: DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
-      categoryIdentifier: 'diary_reminder',
-    );
+      categoryIdentifier: category,
+    ),
+  );
 
-    const notificationDetails = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
-
-    tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
+  Future<void> scheduleDailyNotification() async {
+    await _useDeviceTimeZone();
 
     final now = tz.TZDateTime.now(tz.local);
+    final time = await getNotificationTime();
+    final prefs = await SharedPreferences.getInstance();
     var scheduledDate = tz.TZDateTime(
       tz.local,
       now.year,
       now.month,
       now.day,
-      20,
-      0,
+      time.hour,
+      time.minute,
     );
 
-    if (scheduledDate.isBefore(now)) {
+    if (scheduledDate.isBefore(now) ||
+        prefs.getString(notificationSkipDayKey) == _koreanDayKey()) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
@@ -154,7 +203,7 @@ class NotificationService {
       title: '오늘의 일기를 작성해보세요! 📝',
       body: '하루를 마무리하며 오늘 있었던 일을 기록해보세요.',
       scheduledDate: scheduledDate,
-      notificationDetails: notificationDetails,
+      notificationDetails: _details('diary_reminder'),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
@@ -170,28 +219,11 @@ class NotificationService {
       throw StateError('알림 권한을 먼저 허용해 주세요');
     }
 
-    const androidDetails = AndroidNotificationDetails(
-      'daily_diary_reminder',
-      '일기 작성 알림',
-      channelDescription: '매일 오후 8시경 일기 작성을 알려드려요.',
-    );
-    const iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-      categoryIdentifier: 'diary_test',
-    );
-
-    const notificationDetails = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
-
     await _notifications.show(
       id: 999,
       title: '테스트 알림입니다 📝',
       body: '알림이 잘 작동하고 있습니다!',
-      notificationDetails: notificationDetails,
+      notificationDetails: _details('diary_test'),
     );
   }
 }

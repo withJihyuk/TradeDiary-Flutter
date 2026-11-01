@@ -158,7 +158,7 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
       _lastValidCursorOffset = sel.baseOffset;
     }
 
-    final toggledInline = _inlineOf(c.toggledStyle);
+    final toggledInline = _inlineStyleOnly(c.toggledStyle);
     _imeStyleLogLazy(
       () =>
           'capture ${_selectionLog(sel)} '
@@ -253,7 +253,7 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
       () =>
           'onBeforeReplace index:$index len:$len data:"$data" '
           '${_selectionLog(c.selection)} '
-          'toggled:${_styleLog(_inlineOf(c.toggledStyle))} '
+          'toggled:${_styleLog(_inlineStyleOnly(c.toggledStyle))} '
           'pending:${_styleLog(_pendingInputStyle)} '
           'pendingOffset:$_pendingInputOffset '
           'explicit:${_styleLog(explicitPendingStyle)} '
@@ -270,7 +270,7 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
 
       if (explicitTouchesRange) {
         final caretInline = _inlineAtCursor(c, index);
-        forcedIntentStyle = _mergeStylesPreserveNull(
+        forcedIntentStyle = _mergeInlinePreserveNull(
           caretInline,
           explicitPendingStyle,
         );
@@ -314,7 +314,7 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
     _imeStyleLogLazy(() => 'onBeforeReplace pendingMatch:$pendingMatch');
     if (pendingMatch) {
       final caretInline = _inlineAtCursor(c, index);
-      final pendingMerged = _mergeStylesPreserveNull(
+      final pendingMerged = _mergeInlinePreserveNull(
         caretInline,
         _pendingInputStyle,
       );
@@ -413,7 +413,7 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
           }
         }
 
-        final currentInline = _inlineOf(
+        final currentInline = _inlineStyleOnly(
           c.document.collectStyle(formatIndex, formatLen),
         );
         _imeStyleLogLazy(
@@ -444,14 +444,16 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
   }
 
   static Style _inlineAtCursor(QuillController c, int index) {
-    return _inlineOf(c.document.collectStyle(_safeDocIndex(c, index), 0));
+    return _inlineStyleOnly(
+      c.document.collectStyle(_safeDocIndex(c, index), 0),
+    );
   }
 
   static Style _resolveInlineStyle(QuillController c, int index, int len) {
     final caretStyle = _inlineAtCursor(c, index);
     Style base = caretStyle;
     if (len > 0) {
-      final replacedIntersection = _inlineOf(
+      final replacedIntersection = _inlineStyleOnly(
         c.document.collectStyle(index, len),
       );
       if (replacedIntersection.isNotEmpty) {
@@ -462,9 +464,9 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
       }
     }
 
-    final toggled = _inlineOf(c.toggledStyle);
+    final toggled = _inlineStyleOnly(c.toggledStyle);
     if (toggled.isNotEmpty) {
-      return _mergeStylesPreserveNull(base, toggled);
+      return _mergeInlinePreserveNull(base, toggled);
     }
     if (base.isNotEmpty) return base;
 
@@ -476,23 +478,10 @@ class _WriteContentInputState extends ConsumerState<_WriteContentInput> {
     final start = index.clamp(0, c.document.length - 1);
     final end = (index + len - 1).clamp(0, c.document.length - 1);
     for (var i = end; i >= start; i--) {
-      final s = _inlineOf(c.document.collectStyle(i, 1));
+      final s = _inlineStyleOnly(c.document.collectStyle(i, 1));
       if (s.isNotEmpty) return s;
     }
     return const Style();
-  }
-
-  static Style _mergeStylesPreserveNull(Style base, Style overlay) {
-    final merged = <String, Attribute>{
-      ...base.attributes,
-      ...overlay.attributes,
-    };
-    return Style.attr(merged);
-  }
-
-  /// Style에서 인라인 속성만 추출
-  static Style _inlineOf(Style style) {
-    return _inlineStyleOnly(style);
   }
 
   @override

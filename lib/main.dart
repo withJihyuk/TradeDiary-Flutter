@@ -18,6 +18,7 @@ import 'package:trade_diary/util/navigation_service.dart';
 import 'package:trade_diary/service/notification_service.dart';
 import 'package:trade_diary/service/streak_service.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:trade_diary/provider/profile_provider.dart';
 import 'package:trade_diary/provider/session.dart';
 import 'package:trade_diary/provider/diary_list.dart';
 import 'package:trade_diary/provider/widget_update_provider.dart';
@@ -28,13 +29,19 @@ const Size kDesignSize = Size(390, 844);
 /// Initializes application services and launches the Flutter app.
 void main() async {
   try {
-    WidgetsFlutterBinding.ensureInitialized();
+    SentryWidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
 
     await EnvConfig.initialize();
+    await SentryFlutter.init((options) {
+      options.dsn = kDebugMode ? '' : EnvConfig.sentryDsn;
+      options.tracesSampleRate = kDebugMode ? 1.0 : 0.2;
+      // ignore: experimental_member_use
+      options.profilesSampleRate = kDebugMode ? 1.0 : 0.2;
+    });
     await initializeDateFormatting();
 
     await Supabase.initialize(
@@ -50,31 +57,13 @@ void main() async {
       NavigationService.pendingWidgetRoute = '/write';
     }
 
-    await SentryFlutter.init(
-      (options) {
-        options.dsn = kDebugMode ? '' : EnvConfig.sentryDsn;
-        options.tracesSampleRate = 1.0;
-        // ignore: experimental_member_use
-        options.profilesSampleRate = 1.0;
-      },
-      appRunner: () => runApp(
-        const ProviderScope(retry: _disableProviderRetry, child: MyApp()),
-      ),
-    );
-
     await NotificationService().init();
+
+    runApp(const ProviderScope(retry: _disableProviderRetry, child: MyApp()));
 
     HomeWidget.widgetClicked.listen((uri) {
       if (!NavigationService.isWidgetWriteUri(uri)) return;
-      if (Supabase.instance.client.auth.currentSession == null) {
-        NavigationService.pendingWidgetRoute = '/write';
-        PageRouter.router.go('/login');
-      } else if (![
-        '/write',
-        '/select',
-      ].contains(PageRouter.router.routeInformationProvider.value.uri.path)) {
-        PageRouter.router.push('/write');
-      }
+      NavigationService.openWrite();
     });
   } catch (e, stackTrace) {
     if (e is AppException) {
@@ -126,6 +115,12 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       ref.invalidate(koreanDayProvider);
       ref.invalidate(diaryListProvider);
+      if (ref.exists(paginatedDiaryProvider)) {
+        ref.read(paginatedDiaryProvider.notifier).refresh();
+      }
+      if (ref.exists(profileProvider)) {
+        ref.read(profileProvider.notifier).refresh();
+      }
     }
   }
 

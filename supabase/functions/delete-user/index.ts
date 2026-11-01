@@ -18,6 +18,9 @@ Deno.serve(async (request) => {
   const { data: { user }, error } = await client.auth.getUser(token);
   if (error || !user) return reply(401, { error: 'Login required' });
   const { error: deletionError } = await client.auth.admin.deleteUser(user.id);
-  if (deletionError) return reply(500, { error: '계정을 삭제하지 못했어요. 다시 시도해 주세요.' });
+  if (deletionError) {
+    console.error('delete-user failed', deletionError);
+    return reply(500, { error: '계정을 삭제하지 못했어요. 다시 시도해 주세요.' });
+  }
   return reply(200, { deleted: true });
 });

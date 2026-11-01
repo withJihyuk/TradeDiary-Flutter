@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/view/components/button.dart';
@@ -41,7 +44,8 @@ class _NicknamePageState extends ConsumerState<NicknamePage> {
         _loading = false;
         _error = null;
       });
-    } catch (_) {
+    } catch (e, st) {
+      unawaited(Sentry.captureException(e, stackTrace: st));
       if (mounted) {
         setState(() {
           _loading = false;
@@ -70,7 +74,8 @@ class _NicknamePageState extends ConsumerState<NicknamePage> {
       if (!mounted) return;
       ref.invalidate(profileProvider);
       PageRouter.router.go('/my');
-    } catch (_) {
+    } catch (e, st) {
+      unawaited(Sentry.captureException(e, stackTrace: st));
       if (mounted) setState(() => _error = '이름을 저장하지 못했어요. 다시 시도해 주세요');
     } finally {
       if (mounted) setState(() => _saving = false);

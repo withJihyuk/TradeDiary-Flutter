@@ -26,6 +26,9 @@ class LevelSystem {
     return levelExp[level - 2];
   }
 
+  int getEarnedExp(int exp) =>
+      (exp - getCurrentLevelExp(getLevel(exp))).clamp(0, expToNextLevel(exp));
+
   int getRemainingExp(int currentExp) {
     int currentLevel = getLevel(currentExp);
     if (currentLevel > levelExp.length) return 0;

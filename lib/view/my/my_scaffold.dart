@@ -13,24 +13,17 @@ class _Scaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 24,
-                ),
-                child: Column(
-                  children: [
-                    header,
-                    SizedBox(height: headerMargin),
-                    settingOptions,
-                  ],
-                ),
-              ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+            child: Column(
+              children: [
+                header,
+                SizedBox(height: headerMargin),
+                settingOptions,
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

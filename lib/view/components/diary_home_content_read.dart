@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
+import 'package:trade_diary/util/emotion.dart';
 
 class DiaryHomeContentRead extends StatelessWidget {
   const DiaryHomeContentRead({
@@ -31,6 +32,15 @@ class DiaryHomeContentRead extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (Emotion.emotionMap[contentEmotion] != null) ...[
+            Image.asset(
+              Emotion.emotionMap[contentEmotion]!,
+              width: 40,
+              height: 40,
+              excludeFromSemantics: true,
+            ),
+            const SizedBox(width: 12),
+          ],
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,

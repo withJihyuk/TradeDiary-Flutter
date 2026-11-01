@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
 import 'package:trade_diary/view/components/button.dart';
@@ -17,26 +21,59 @@ class _DeleteIdPageState extends ConsumerState<DeleteIdPage> {
   bool _deleting = false;
   Future<void> _delete() async {
     if (_deleting) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          '정말 탈퇴할까요?',
+          style: AppTextStyle.m2Semi.copyWith(color: DiaryMainGrey.grey900),
+        ),
+        content: const Text('탈퇴하면 모든 기록이 삭제되고 되돌릴 수 없어요.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            style: TextButton.styleFrom(foregroundColor: DiaryMainGrey.grey800),
+            child: const Text('계속 함께하기'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(
+              foregroundColor: const Color(0xFFB33D32),
+            ),
+            child: const Text('탈퇴'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
     setState(() => _deleting = true);
     final store = ref.read(draftStoreProvider);
     try {
       await store.suspend();
       await OauthViewModel().deleteAccount();
-      try {
-        await store.purge();
-      } finally {
-        await OauthViewModel().logout();
-      }
-    } catch (_) {
+    } catch (e, st) {
+      unawaited(Sentry.captureException(e, stackTrace: st));
       store.resume();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('탈퇴 처리를 완료하지 못했어요. 다시 시도해 주세요')),
         );
+        setState(() => _deleting = false);
       }
-    } finally {
-      if (mounted) setState(() => _deleting = false);
+      return;
     }
+    try {
+      await store.purge();
+    } catch (e, st) {
+      unawaited(Sentry.captureException(e, stackTrace: st));
+    }
+    try {
+      await OauthViewModel().logout();
+    } catch (e, st) {
+      unawaited(Sentry.captureException(e, stackTrace: st));
+      await Supabase.instance.client.auth.signOut(scope: SignOutScope.local);
+    }
+    if (mounted) setState(() => _deleting = false);
   }
 
   @override

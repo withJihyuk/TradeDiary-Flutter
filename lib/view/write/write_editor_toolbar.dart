@@ -88,6 +88,7 @@ class _MainToolbar extends ConsumerWidget {
           _ToolbarButton(
             label: '사진 추가',
             icon: Icons.image_outlined,
+            isActive: ref.watch(imageImportingProvider),
             onTap: () => _pickAndInsertImages(context, ref),
           ),
           const _ToolbarDivider(),
@@ -231,24 +232,21 @@ class _AddPanelItem extends StatelessWidget {
 }
 
 Future<void> _pickAndInsertImages(BuildContext context, WidgetRef ref) async {
+  final importing = ref.read(imageImportingProvider.notifier);
+  if (importing.state) return;
   final controller = ref.read(quillControllerProvider);
   final store = ref.read(draftStoreProvider);
+  importing.state = true;
   try {
-    final files = await ImagePicker().pickMultiImage(imageQuality: 50);
-    if (!context.mounted || files.isEmpty) return;
-    final existing = controller.document
-        .toDelta()
-        .toList()
-        .where(
-          (op) => op.value is Map && (op.value as Map).containsKey('image'),
-        )
-        .length;
+    final files = await ImagePicker().pickMultiImage(imageQuality: 100);
+    if (!importing.mounted || files.isEmpty) return;
+    final existing = QuillContentUtil.countImages(controller.document);
     if (existing + files.length > 10) {
       throw StateError('사진은 최대 10장까지 추가할 수 있어요');
     }
     for (final file in files) {
       final path = await store.importImage(file.path);
-      if (!context.mounted) return;
+      if (!importing.mounted) return;
       final selection = controller.selection;
       final index = selection.start.clamp(0, controller.document.length - 1);
       final end = selection.end.clamp(index, controller.document.length - 1);
@@ -266,10 +264,14 @@ Future<void> _pickAndInsertImages(BuildContext context, WidgetRef ref) async {
           content: Text(
             e is StateError
                 ? e.message.toString()
+                : e is NetworkException
+                ? e.message
                 : '사진을 추가하지 못했어요. 다시 시도해 주세요',
           ),
         ),
       );
     }
+  } finally {
+    if (importing.mounted) importing.state = false;
   }
 }

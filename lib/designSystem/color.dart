@@ -4,6 +4,7 @@ class DiaryColor {
   static const Color globalMainColor = Color(0xFFD8A980);
   static const Color buttonSpecificColor = Color(0xFFC49D7B);
   static const Color backgroundColor = Color(0xFF94CFE8);
+  static const Color errorColor = Color(0xFFCB1111);
 }
 
 class DiaryMainGrey {

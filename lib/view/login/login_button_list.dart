@@ -17,7 +17,8 @@ class _LoginButtonListState extends State<_LoginButtonList> {
       } else {
         await OauthViewModel().nativeGoogleLogin();
       }
-    } catch (_) {
+    } catch (e, st) {
+      unawaited(Sentry.captureException(e, stackTrace: st));
       if (mounted) {
         ScaffoldMessenger.of(
           context,

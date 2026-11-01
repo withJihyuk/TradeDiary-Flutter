@@ -48,7 +48,7 @@ class PotatoDiaryWidget : HomeWidgetProvider() {
     private fun createSmallLayout(context: Context, widgetData: SharedPreferences): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.potato_diary_widget)
 
-        val streak = widgetData.getInt("streak_count", 0)
+        val streak = currentStreak(widgetData)
         val currentLevel = widgetData.getInt("current_level", 1)
         val currentExp = widgetData.getInt("current_exp", 0)
         val nextLevelExp = widgetData.getInt("next_level_exp", 15)
@@ -69,7 +69,7 @@ class PotatoDiaryWidget : HomeWidgetProvider() {
     private fun createMediumLayout(context: Context, widgetData: SharedPreferences): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.potato_diary_widget_medium)
 
-        val streak = widgetData.getInt("streak_count", 0)
+        val streak = currentStreak(widgetData)
         val currentLevel = widgetData.getInt("current_level", 1)
         val currentExp = widgetData.getInt("current_exp", 0)
         val nextLevelExp = widgetData.getInt("next_level_exp", 15)
@@ -94,6 +94,16 @@ class PotatoDiaryWidget : HomeWidgetProvider() {
         views.setProgressBar(R.id.exp_progress, 100, progress.coerceIn(0, 100), false)
 
         return views
+    }
+
+    private fun currentStreak(widgetData: SharedPreferences): Int {
+        val formatter = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+        formatter.timeZone = java.util.TimeZone.getTimeZone("Asia/Seoul")
+        val now = java.util.Date()
+        val yesterday = java.util.Date(now.time - 24L * 60 * 60 * 1000)
+        val end = widgetData.getString("streak_end_date", "")
+        val alive = end == formatter.format(now) || end == formatter.format(yesterday)
+        return if (alive) widgetData.getInt("streak_count", 0) else 0
     }
 
     private fun getPotatoResId(context: Context, level: Int): Int {

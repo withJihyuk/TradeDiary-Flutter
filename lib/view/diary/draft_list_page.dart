@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
+import 'package:trade_diary/model/diary_post.dart';
 import 'package:trade_diary/service/draft_store.dart';
 import 'package:trade_diary/router.dart';
 import 'package:trade_diary/util/emotion.dart';
@@ -186,6 +187,19 @@ class _DraftCard extends StatelessWidget {
   final LocalDraft draft;
   final DraftStore store;
 
+  static final _contentInfo = Expando<({String preview, bool hasImage})>();
+
+  static ({String preview, bool hasImage}) _infoOf(DiaryPostModel diary) =>
+      _contentInfo[diary] ??= () {
+        final doc = QuillContentUtil.contentToDocument(diary.content);
+        return (
+          preview: QuillContentUtil.documentToPlainText(doc)
+              .replaceAll(RegExp(r'\s+'), ' ')
+              .trim(),
+          hasImage: QuillContentUtil.countImages(doc) > 0,
+        );
+      }();
+
   String _editedAt() {
     final value = draft.diary.updatedAt ?? draft.diary.createdAt;
     if (value == null) return '';
@@ -244,10 +258,7 @@ class _DraftCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final diary = draft.diary;
-    final preview = QuillContentUtil.contentToPlainText(diary.content)
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim();
-    final hasImage = diary.content.contains('"image"');
+    final (:preview, :hasImage) = _infoOf(diary);
     return Material(
       color: DiaryMainGrey.grey50,
       shape: RoundedRectangleBorder(
