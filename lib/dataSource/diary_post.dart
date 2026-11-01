@@ -14,13 +14,24 @@ class DiaryPostDataSource {
 
   Future<List<DiaryPostModel>> getDiary() async {
     // Fetch every page: neither widget streaks nor historical dates may be truncated.
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) return [];
     final result = <DiaryPostModel>[];
     while (true) {
-      final page = await getDiaryPaginated(
-        page: result.length ~/ 100,
-        pageSize: 100,
+      final page = await supabase
+          .from('diary')
+          .select(
+            'id,userId,subject,emotion,isDraft,createdAt,updatedAt,completedAt,diaryDate,revision,lastMutationId',
+          )
+          .eq('userId', userId)
+          .or('isDraft.is.null,isDraft.eq.false')
+          .order('diaryDate', ascending: false)
+          .order('id', ascending: false)
+          .range(result.length, result.length + 99)
+          .timeout(timeout);
+      result.addAll(
+        page.map((row) => DiaryPostModel.fromJson({...row, 'content': ''})),
       );
-      result.addAll(page);
       if (page.length < 100) return result;
     }
   }

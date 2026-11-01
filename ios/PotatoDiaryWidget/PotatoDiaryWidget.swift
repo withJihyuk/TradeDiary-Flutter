@@ -42,7 +42,7 @@ struct PotatoDiaryProvider: TimelineProvider {
         return PotatoDiaryEntry(
             date: Date(),
             nickname: nickname,
-            hasData: !nickname.isEmpty,
+            hasData: defaults?.bool(forKey: "logged_in") ?? false,
             weeklyEmotions: weeklyEmotions
         )
     }

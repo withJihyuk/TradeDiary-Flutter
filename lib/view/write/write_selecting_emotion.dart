@@ -10,7 +10,9 @@ import 'package:trade_diary/provider/profile_provider.dart';
 import 'package:trade_diary/provider/write_diary.dart';
 import 'package:trade_diary/router.dart';
 import 'package:trade_diary/service/draft_store.dart';
+import 'package:trade_diary/service/notification_service.dart';
 import 'package:trade_diary/util/emotion.dart';
+import 'package:trade_diary/util/level.dart';
 import 'package:trade_diary/util/quill_content_util.dart';
 import 'package:trade_diary/view/components/button.dart';
 import 'package:trade_diary/view/components/top_navigation_bar.dart';
@@ -47,6 +49,9 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
   Future<void> _complete() async {
     if (_saving) return;
     setState(() => _saving = true);
+    final messenger = ScaffoldMessenger.of(context);
+    final container = ProviderScope.containerOf(context);
+    final expBefore = ref.read(profileProvider).value?.exp;
     try {
       final plain = QuillContentUtil.documentToPlainText(
         ref.read(quillControllerProvider).document,
@@ -59,12 +64,28 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
       await _saveEmotion(ref.read(diaryProvider).emotion);
       if (!mounted) return;
       await ref.read(draftStoreProvider).complete(id);
+      container.invalidate(diaryListProvider);
+      container.invalidate(paginatedDiaryProvider);
+      container.invalidate(profileProvider);
+      unawaited(
+        NotificationService().rescheduleAfterDiary().catchError((Object _) {}),
+      );
+      container.read(diaryProvider.notifier).reset();
       if (!mounted) return;
-      ref.invalidate(diaryListProvider);
-      ref.invalidate(paginatedDiaryProvider);
-      ref.invalidate(profileProvider);
-      ref.read(diaryProvider.notifier).reset();
       PageRouter.router.go('/diary');
+      if (expBefore != null) {
+        final levels = LevelSystem();
+        final levelAfter = levels.getLevel(expBefore + 1);
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              levelAfter > levels.getLevel(expBefore)
+                  ? '감자가 LV.$levelAfter로 성장했어요!'
+                  : '오늘도 감자가 쑥쑥 자랐어요',
+            ),
+          ),
+        );
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -145,7 +166,10 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                                             );
                                           },
                                     style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.all(30),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 12,
+                                      ),
                                       backgroundColor: isSelected
                                           ? const Color(0xFFF5E0CE)
                                           : DiaryMainGrey.grey50,
@@ -159,11 +183,27 @@ class _WriteSelectingEmotionState extends ConsumerState<WriteSelectingEmotion> {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    child: Image.asset(
-                                      entry.value,
-                                      width: 100.w,
-                                      height: 100.h,
-                                      excludeFromSemantics: true,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Flexible(
+                                          child: Image.asset(
+                                            entry.value,
+                                            width: 100.w,
+                                            height: 100.h,
+                                            excludeFromSemantics: true,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          entry.key,
+                                          maxLines: 1,
+                                          style: AppTextStyle.labelRegular
+                                              .copyWith(
+                                                color: DiaryMainGrey.grey800,
+                                              ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 );

@@ -9,9 +9,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
+import 'package:trade_diary/provider/diary_list.dart';
 import 'package:trade_diary/provider/font_provider.dart';
 import 'package:trade_diary/provider/write_diary.dart';
 import 'package:trade_diary/router.dart';
+import 'package:trade_diary/util/app_exception.dart';
 import 'package:trade_diary/util/diary_image_embed_builder.dart';
 import 'package:trade_diary/util/quill_content_util.dart';
 import 'package:trade_diary/service/draft_store.dart';
@@ -70,8 +72,6 @@ class _WritePageState extends ConsumerState<WritePage> {
         throw StateError('임시저장 글이 없거나 이미 완료되었어요');
       }
       ref.read(diaryProvider.notifier).reset();
-      ref.read(writeStartTimeProvider.notifier).state =
-          draft?.createdAt ?? DateTime.now();
       ref.read(inlineTypingStyleProvider.notifier).state = const Style();
       ref.read(inlineTypingOffsetProvider.notifier).state = null;
       final controller = ref.read(quillControllerProvider);
@@ -133,6 +133,14 @@ class _WritePageState extends ConsumerState<WritePage> {
       if (next) {
         await PageRouter.router.push('/select', extra: _store.activeId ?? _id);
       } else {
+        final hasContent =
+            _subjectController.text.trim().isNotEmpty ||
+            QuillContentUtil.documentToPlainText(_attached!.document)
+                .isNotEmpty;
+        if (hasContent) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('임시저장에 보관했어요')));
+        }
         setState(() => _allowPop = true);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted) return;
@@ -181,9 +189,13 @@ class _WritePageState extends ConsumerState<WritePage> {
 
   @override
   Widget build(BuildContext context) {
-    final store = ref.watch(draftStoreProvider);
-    final status = store.status(store.activeId ?? _id);
-    final saveFailed = store.localError != null || store.error != null;
+    final store = ref.read(draftStoreProvider);
+    final (status, localError, error) = ref.watch(
+      draftStoreProvider.select(
+        (s) => (s.status(s.activeId ?? _id), s.localError, s.error),
+      ),
+    );
+    final saveFailed = localError != null || error != null;
     if (_loading || _loadError != null) {
       return Scaffold(
         appBar: AppBar(title: const Text('일기')),
@@ -200,6 +212,7 @@ class _WritePageState extends ConsumerState<WritePage> {
         ),
       );
     }
+    final todayDone = ref.watch(todayDiaryProvider) != null;
     return PopScope(
       canPop: _allowPop,
       onPopInvokedWithResult: (didPop, _) {
@@ -207,52 +220,98 @@ class _WritePageState extends ConsumerState<WritePage> {
       },
       child: _Scaffold(
         header: TopNavigationBar(title: '일기', onBack: () => _leave()),
-        autoSaveStatus: Container(
-          width: double.infinity,
-          color: saveFailed ? const Color(0xFFFFF5EC) : Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-          child: Row(
-            children: [
-              Icon(
-                store.localError != null
-                    ? Icons.error_outline_rounded
-                    : store.error != null
-                    ? Icons.cloud_off_outlined
-                    : status == '저장 중' || status == '동기화 중'
-                    ? Icons.sync_rounded
-                    : status == '자동 저장됨'
-                    ? Icons.cloud_done_outlined
-                    : Icons.save_outlined,
-                size: 15,
-                color: DiaryMainGrey.grey700,
-              ),
-              const SizedBox(width: 6),
-              Expanded(
+        autoSaveStatus: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (todayDone)
+              Container(
+                width: double.infinity,
+                color: const Color(0xFFFFF5EC),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 8,
+                ),
                 child: Text(
-                  status,
+                  '오늘 일기는 이미 완료했어요. 이 글은 임시저장으로 보관돼요',
                   style: AppTextStyle.labelRegular.copyWith(
                     fontSize: 12,
                     color: DiaryMainGrey.grey800,
                   ),
                 ),
               ),
-              if (saveFailed)
-                TextButton(
-                  onPressed: () async {
-                    try {
-                      await _save();
-                      await store.flush();
-                      await store.sync();
-                    } catch (_) {}
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: DiaryMainGrey.grey900,
-                    textStyle: AppTextStyle.labelRegular.copyWith(fontSize: 12),
+            Container(
+              width: double.infinity,
+              color: saveFailed ? const Color(0xFFFFF5EC) : Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(
+                    localError != null
+                        ? Icons.error_outline_rounded
+                        : error != null
+                        ? Icons.cloud_off_outlined
+                        : status == '저장 중' || status == '동기화 중'
+                        ? Icons.sync_rounded
+                        : status == '자동 저장됨'
+                        ? Icons.cloud_done_outlined
+                        : Icons.save_outlined,
+                    size: 15,
+                    color: DiaryMainGrey.grey700,
                   ),
-                  child: const Text('다시 시도'),
-                ),
-            ],
-          ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      status,
+                      style: AppTextStyle.labelRegular.copyWith(
+                        fontSize: 12,
+                        color: DiaryMainGrey.grey800,
+                      ),
+                    ),
+                  ),
+                  Consumer(
+                    builder: (context, ref, _) {
+                      final controller = ref.watch(quillControllerProvider);
+                      return ListenableBuilder(
+                        listenable: controller,
+                        builder: (context, _) {
+                          final charCount =
+                              QuillContentUtil.documentToPlainText(
+                                controller.document,
+                              ).length;
+                          return Text(
+                            '$charCount/500',
+                            style: AppTextStyle.labelRegular.copyWith(
+                              fontSize: 12,
+                              color: charCount > 500
+                                  ? const Color(0xffCB1111)
+                                  : DiaryMainGrey.grey700,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  if (saveFailed)
+                    TextButton(
+                      onPressed: () async {
+                        try {
+                          await _save();
+                          await store.flush();
+                          await store.sync();
+                        } catch (_) {}
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: DiaryMainGrey.grey900,
+                        textStyle: AppTextStyle.labelRegular.copyWith(
+                          fontSize: 12,
+                        ),
+                      ),
+                      child: const Text('다시 시도'),
+                    ),
+                ],
+              ),
+            ),
+          ],
         ),
         subjectInput: _WriteSubjectInput(
           editorFocusNode: _editorFocusNode,
@@ -262,6 +321,7 @@ class _WritePageState extends ConsumerState<WritePage> {
         toolbar: _EditorToolbar(editorFocusNode: _editorFocusNode),
         submitButton: DiaryButton(
           onPressed: () => _leave(next: true),
+          isDisabled: todayDone,
           text: _leaving ? '저장 중' : '다음',
         ),
       ),

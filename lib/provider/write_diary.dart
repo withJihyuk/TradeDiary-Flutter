@@ -40,22 +40,14 @@ final quillControllerProvider = StateProvider.autoDispose<QuillController>((
   return controller;
 });
 
-/// 쓰기 시작 시간
-final writeStartTimeProvider = StateProvider.autoDispose<DateTime?>(
-  (ref) => null,
-);
-
-/// 마지막 수정 시간
-final lastModifiedTimeProvider = StateProvider.autoDispose<DateTime?>(
-  (ref) => null,
-);
-
 /// 툴바 서브패널 상태
 enum ToolbarPanel { none, add, text }
 
 final toolbarPanelProvider = StateProvider.autoDispose<ToolbarPanel>(
   (ref) => ToolbarPanel.none,
 );
+
+final imageImportingProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 /// 툴바에서 마지막으로 선택한 인라인 스타일 의도
 final inlineTypingStyleProvider = StateProvider<Style>((ref) => const Style());

@@ -72,6 +72,12 @@ bundle exec fastlane lanes
 
 CI는 모델 코드를 재생성하고 커밋된 생성 파일과 차이가 없는지도 검사합니다.
 
+CI 구성은 다음과 같습니다.
+
+- `changes`가 변경 파일(`*.md`, `docs/`만 바뀌었는지)과 스토어 릴리즈 여부를 판정합니다. 문서만 바뀌면 빌드·테스트를 건너뛰고 `verify`는 성공으로 끝납니다.
+- `static`(포맷·코드 생성·분석·테스트)과 `android-build`(디버그 APK), `verify-ios`는 병렬로 실행됩니다. 브랜치 보호의 필수 체크는 이들을 집계하는 `verify`와 `verify-ios`입니다.
+- 같은 PR에 새 커밋이 올라오면 이전 실행은 취소됩니다. `develop`·`master` push 실행은 취소되지 않습니다.
+
 ```sh
 git diff --check
 dart format --output=none --set-exit-if-changed lib test
@@ -91,7 +97,7 @@ bundle exec fastlane lanes
 - 스토어 릴리즈는 `develop`에서 `master`로 보내는 PR로만 진행합니다.
 - `master` 릴리즈에서는 `pubspec.yaml`의 버전명과 빌드 번호를 모두 올리고 `fastlane/metadata/ko/release_notes.txt`도 수정해야 합니다.
 - 빌드 번호는 저장소의 직전 값과 각 스토어의 현재 최고 값을 모두 초과해야 합니다.
-- 병합 전 Android `verify`와 iOS `verify-ios`가 모두 성공했는지 확인합니다.
+- 병합 전 `verify`(Android 빌드 포함)와 iOS `verify-ios`가 모두 성공했는지 확인합니다. 두 스토어 릴리즈 job은 둘 다 성공해야 시작합니다.
 - 과거 실패 실행을 재실행하면 당시 SHA와 워크플로가 다시 사용됩니다. 워크플로 수정 후에는 새 커밋으로 새 릴리즈를 만듭니다.
 
 ### 프로덕션 Secret 이름

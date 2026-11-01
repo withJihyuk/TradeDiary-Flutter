@@ -6,6 +6,7 @@ import 'package:trade_diary/service/streak_service.dart';
 final widgetUpdateProvider = FutureProvider<void>((ref) async {
   final diaryState = ref.watch(diaryListProvider);
   final profileState = ref.watch(profileProvider);
+  if (diaryState.isLoading || profileState.isLoading) return;
 
   final diaries = diaryState.value;
   final profile = profileState.value;

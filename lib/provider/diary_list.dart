@@ -86,8 +86,7 @@ class PaginatedDiaryNotifier extends StateNotifier<PaginatedDiaryState> {
 
   Future<void> loadInitial() async {
     final generation = ++_generation;
-    _page = 0;
-    state = PaginatedDiaryState(isLoading: true, query: state.query);
+    state = state.copyWith(isLoading: true);
     try {
       final items = await _dataSource.getDiaryPaginated(
         page: 0,
@@ -95,6 +94,7 @@ class PaginatedDiaryNotifier extends StateNotifier<PaginatedDiaryState> {
         query: state.query.isEmpty ? null : state.query,
       );
       if (!mounted || generation != _generation) return;
+      _page = 0;
       state = PaginatedDiaryState(
         items: items,
         hasMore: items.length >= _pageSize,
@@ -102,7 +102,7 @@ class PaginatedDiaryNotifier extends StateNotifier<PaginatedDiaryState> {
       );
     } catch (e) {
       if (!mounted || generation != _generation) return;
-      state = PaginatedDiaryState(error: e, query: state.query);
+      state = state.copyWith(isLoading: false, error: e);
     }
   }
 
@@ -131,11 +131,16 @@ class PaginatedDiaryNotifier extends StateNotifier<PaginatedDiaryState> {
   }
 
   void setQuery(String query) {
-    state = state.copyWith(query: query);
+    _page = 0;
+    state = state.copyWith(query: query, items: const [], hasMore: true);
     loadInitial();
   }
 
-  void refresh() => loadInitial();
+  // Reloading only the first page would drop the pages the user scrolled to,
+  // and search_diaries caps p_limit at 100, so they can't be refetched at once.
+  void refresh() {
+    if (_page == 0) loadInitial();
+  }
 }
 
 final paginatedDiaryProvider =

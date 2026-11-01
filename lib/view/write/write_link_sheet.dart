@@ -9,6 +9,7 @@ void _showLinkSheet(BuildContext context, WidgetRef ref) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
+    backgroundColor: Colors.white,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
@@ -22,6 +23,36 @@ void _showLinkSheet(BuildContext context, WidgetRef ref) {
       },
     ),
   );
+}
+
+InputDecoration _inputDecoration(String hint, {String? errorText}) {
+  OutlineInputBorder border(Color color) => OutlineInputBorder(
+    borderRadius: BorderRadius.circular(10),
+    borderSide: BorderSide(color: color, width: 1),
+  );
+  return InputDecoration(
+    hintText: hint,
+    errorText: errorText,
+    hintStyle: AppTextStyle.m3Regular.copyWith(color: DiaryMainGrey.grey400),
+    filled: true,
+    fillColor: Colors.white,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+    border: border(DiaryMainGrey.grey200),
+    enabledBorder: border(DiaryMainGrey.grey200),
+    focusedBorder: border(DiaryColor.globalMainColor),
+  );
+}
+
+String? _normalizeLink(String input) {
+  if (input.isEmpty) return input;
+  final value = input.contains('://') ? input : 'https://$input';
+  final uri = Uri.tryParse(value);
+  if (uri == null ||
+      !(uri.scheme == 'http' || uri.scheme == 'https') ||
+      uri.host.isEmpty) {
+    return null;
+  }
+  return value;
 }
 
 // ─── 링크 삽입 바텀시트 ───
@@ -44,6 +75,7 @@ class _LinkSheet extends StatefulWidget {
 class _LinkSheetState extends State<_LinkSheet> {
   late final TextEditingController _textController;
   late final TextEditingController _linkController;
+  String? _linkError;
 
   @override
   void initState() {
@@ -86,39 +118,7 @@ class _LinkSheetState extends State<_LinkSheet> {
             style: AppTextStyle.m3Regular.copyWith(
               color: DiaryMainGrey.grey900,
             ),
-            decoration: InputDecoration(
-              hintText: '링크에 표시될 텍스트',
-              hintStyle: AppTextStyle.m3Regular.copyWith(
-                color: DiaryMainGrey.grey400,
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 12,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: DiaryMainGrey.grey200,
-                  width: 1,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: DiaryMainGrey.grey200,
-                  width: 1,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: DiaryColor.globalMainColor,
-                  width: 1,
-                ),
-              ),
-            ),
+            decoration: _inputDecoration('링크에 표시될 텍스트'),
           ),
           const SizedBox(height: 14),
           Text(
@@ -135,49 +135,19 @@ class _LinkSheetState extends State<_LinkSheet> {
             style: AppTextStyle.m3Regular.copyWith(
               color: DiaryMainGrey.grey900,
             ),
-            decoration: InputDecoration(
-              hintText: 'https://',
-              hintStyle: AppTextStyle.m3Regular.copyWith(
-                color: DiaryMainGrey.grey400,
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 12,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: DiaryMainGrey.grey200,
-                  width: 1,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: DiaryMainGrey.grey200,
-                  width: 1,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: DiaryColor.globalMainColor,
-                  width: 1,
-                ),
-              ),
-            ),
+            decoration: _inputDecoration('https://', errorText: _linkError),
           ),
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
             child: TextButton(
               onPressed: () {
-                widget.onSubmit(
-                  _textController.text.trim(),
-                  _linkController.text.trim(),
-                );
+                final link = _normalizeLink(_linkController.text.trim());
+                if (link == null) {
+                  setState(() => _linkError = '올바른 주소를 입력해 주세요');
+                  return;
+                }
+                widget.onSubmit(_textController.text.trim(), link);
                 Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(

@@ -44,6 +44,9 @@ class StreakService {
     return jsonEncode(weekData);
   }
 
+  static String _dateKey(DateTime d) =>
+      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
   static Future<void> _pending = Future.value();
   static Future<void> _enqueue(Future<void> Function() action) {
     final next = _pending.catchError((Object _) {}).then((_) => action());
@@ -65,6 +68,7 @@ class StreakService {
     var day = DateTime.utc(now.year, now.month, now.day);
     final dates = diaries.map(diaryDateOnly).toSet();
     if (!dates.contains(day)) day = day.subtract(const Duration(days: 1));
+    final streakEnd = day;
     var streak = 0;
     while (dates.contains(day)) {
       streak++;
@@ -81,16 +85,17 @@ class StreakService {
         'today_emotion',
         getTodayEmotion(diaries),
       ),
+      HomeWidget.saveWidgetData<String>('data_date', _dateKey(now)),
       HomeWidget.saveWidgetData<String>(
-        'data_date',
-        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}',
+        'streak_end_date',
+        streak > 0 ? _dateKey(streakEnd) : '',
       ),
       HomeWidget.saveWidgetData<bool>('logged_in', true),
       HomeWidget.saveWidgetData<int>('streak_count', streak),
       HomeWidget.saveWidgetData<int>('current_level', level),
       HomeWidget.saveWidgetData<int>(
         'current_exp',
-        (profile.exp - levels.getCurrentLevelExp(level)).clamp(0, span),
+        levels.getEarnedExp(profile.exp),
       ),
       HomeWidget.saveWidgetData<int>('next_level_exp', span),
     ]);
@@ -106,6 +111,7 @@ class StreakService {
       HomeWidget.saveWidgetData<String>('weekly_emotions', '{}'),
       HomeWidget.saveWidgetData<String>('today_emotion', ''),
       HomeWidget.saveWidgetData<String>('data_date', ''),
+      HomeWidget.saveWidgetData<String>('streak_end_date', ''),
       HomeWidget.saveWidgetData<bool>('logged_in', false),
       for (final key in [
         'streak_count',
