@@ -118,3 +118,5 @@ bundle exec fastlane lanes
 
 - Google Play가 업로드 키 불일치를 보고하면 Play Console의 활성 업로드 인증서 SHA-1과 빌드 AAB의 서명 인증서 SHA-1을 비교합니다. 원인 확인 없이 새 키를 다시 만들지 않습니다.
 - iOS SDK 버전 오류가 나면 `DEVELOPER_DIR`와 `xcodebuild -version`을 먼저 확인합니다.
+- `setup-ruby`가 Ruby 버전을 찾지 못하면 러너 이미지를 확인합니다. `release-android`는 Ruby 3.3.1 빌드가 있는 `ubuntu-24.04`에 고정되어 있습니다.
+- 스토어 제출 전에 릴리즈가 실패해서 다시 출시할 때는 버전명·빌드 번호·릴리즈 노트를 모두 바꾼 새 커밋이 필요합니다. 하나라도 그대로면 CI가 릴리즈로 판정하지 않거나 실패 처리합니다.
