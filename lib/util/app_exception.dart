@@ -18,7 +18,16 @@ class DatabaseException extends AppException {
 }
 
 class AuthenticationException extends AppException {
-  AuthenticationException(super.message, {super.code, super.originalError});
+  final StackTrace? originalStackTrace;
+  final String? stage;
+
+  AuthenticationException(
+    super.message, {
+    super.code,
+    super.originalError,
+    this.originalStackTrace,
+    this.stage,
+  });
 }
 
 class ValidationException extends AppException {

@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:trade_diary/designSystem/color.dart';
 import 'package:trade_diary/designSystem/fontsize.dart';
+import 'package:trade_diary/util/app_exception.dart';
 import 'package:trade_diary/viewModel/oauth_model.dart';
 
 part 'login_scaffold.dart';
